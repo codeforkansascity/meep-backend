@@ -1,16 +1,21 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+
 from config import config
 
-app = Flask(__name__)
+# globally accessible database connection
+db = SQLAlchemy()
+from models import User, Role, Project, ProjectType, Location
 
-app.config['SQLALCHEMY_DATABASE_URI'] = \
-    'mysql+pymysql://meep:meep@localhost:3306/meep_dev'
-db = SQLAlchemy(app)
+def create_app(config_name='dev'):
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_object(config[config_name])
+    with app.app_context():
+        # initialize extensions
+        db.init_app(app)
+        from resources import api_blueprint
 
-@app.route('/')
-def index():
-    return '<h1>MEEP!</h1>'
+        # register blueprints
+        app.register_blueprint(api_blueprint)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+        return app

@@ -30,6 +30,12 @@ class Project(db.Model):
     type = db.relationship('ProjectType',
                            backref=db.backref('projects', lazy='select'))
 
+
+class ProjectType(db.Model):
+    __tablename__ = 'project_types'
+    id = db.Column(db.Integer, primary_key=True)
+    type_name = db.Column(db.String(30), nullable=False, unique=True)
+
 class Location(db.Model):
     __tablename__ = 'locations'
     id = db.Column(db.Integer, primary_key=True)
@@ -41,9 +47,4 @@ class Location(db.Model):
     longitude = db.Column(db.Float)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
 
-    project = db.relationship('Project', backref='locations', lazy='dynamic')
-
-class ProjectType(db.Model):
-    __tablename__ = 'project_types'
-    id = db.Column(db.Integer, primary_key=True)
-    type_name = db.Column(db.String(30), nullable=False, unique=True)
+    project = db.relationship('Project', backref='locations') #, lazy='dynamic')
