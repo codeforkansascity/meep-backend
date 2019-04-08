@@ -19,14 +19,33 @@ parser.add_argument('ghg_reduced')
 
 parser.add_argument('project_type')
 
+project_fields = {
+    'name': fields.String,
+    'description': fields.String,
+    'photoUrl': fields.String(attribute='photo_url'),
+    'websiteUrl': fields.String(attribute='website_url'),
+    'year': fields.Integer,
+    'ggeReduced': fields.Float(attribute='gge_reduced'),
+    'ghgReduced': fields.Float(attribute='ghg_reduced')
+}
+
+project_list_fields = {'projects': fields.List(fields.Nested(project_fields))}
 
 class ProjectAPI(Resource):
 
+    @marshal_with(project_fields)
     def get(self, id):
-        pass
+        project = Project.query.get(id)
+        return project.json
 
     def put(self, id):
-        pass
+        args = parser.parse_args()
+        project = Project.query.get(id)
+        for k, v in args.items():
+            if v is not None or "null":
+                setattr(project, k, v)
+        db.session.add(project)
+        db.session.commit()
 
     def delete(self, id):
         pass
@@ -46,8 +65,11 @@ class ProjectListAPI(Resource):
         db.session.add(new_project)
         db.session.commit()
 
+    @marshal_with(project_list_fields)
     def get(self):
-        pass
+        projects = Project.query.all()
+        return {'projects': [project.json for project in projects]}
+
 
 
 api.add_resource(ProjectAPI, '/projects/<int:id>', endpoint='project')

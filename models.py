@@ -30,6 +30,10 @@ class Project(db.Model):
     type = db.relationship('ProjectType',
                            backref=db.backref('projects', lazy='select'))
 
+    @property
+    def json(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 
 class ProjectType(db.Model):
     __tablename__ = 'project_types'
