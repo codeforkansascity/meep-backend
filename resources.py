@@ -42,13 +42,14 @@ class ProjectAPI(Resource):
         args = parser.parse_args()
         project = Project.query.get(id)
         for k, v in args.items():
-            if v is not None or "null":
+            if v is not None:
                 setattr(project, k, v)
-        db.session.add(project)
         db.session.commit()
 
     def delete(self, id):
-        pass
+        project = Project.query.get(id)
+        db.session.delete(project)
+        db.session.commit()
 
 class ProjectListAPI(Resource):
     def post(self):
