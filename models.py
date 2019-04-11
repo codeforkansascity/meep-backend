@@ -1,5 +1,9 @@
 from app import db
 
+
+# by convention, all foreign key Columns must end in '_id'
+# this will ensure that the parser object in resource.py will work correctly
+
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -9,10 +13,12 @@ class User(db.Model):
 
     role = db.relationship('Role', backref=db.backref('users', lazy='select'))
 
+
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
     role_name = db.Column(db.String(20), nullable=False, unique=True)
+
 
 class Project(db.Model):
     __tablename__ = 'projects'
@@ -30,15 +36,12 @@ class Project(db.Model):
     type = db.relationship('ProjectType',
                            backref=db.backref('projects', lazy='select'))
 
-    @property
-    def json(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
 
 class ProjectType(db.Model):
     __tablename__ = 'project_types'
     id = db.Column(db.Integer, primary_key=True)
     type_name = db.Column(db.String(30), nullable=False, unique=True)
+
 
 class Location(db.Model):
     __tablename__ = 'locations'
