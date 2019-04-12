@@ -8,37 +8,6 @@ api_blueprint = Blueprint('api', __name__)
 api = Api(api_blueprint)
 
 
-
-
-
-
-
-
-# project_fields = {
-#     'name': fields.String,
-#     'description': fields.String,
-#     'photoUrl': fields.String(attribute='photo_url'),
-#     'websiteUrl': fields.String(attribute='website_url'),
-#     'year': fields.Integer,
-#     'ggeReduced': fields.Float(attribute='gge_reduced'),
-#     'ghgReduced': fields.Float(attribute='ghg_reduced')
-# }
-
-location_fields = {
-    'address': fields.String,
-    'city': fields.String,
-    'state': fields.String,
-    'zipCode': fields.Integer(attribute='zip_code'),
-    'latitude': fields.Float,
-    'longitude': fields.Float
-}
-
-# project_list_fields = {'projects': fields.List(fields.Nested(project_fields))}
-# location_list_fields = (
-#     {'locations': fields.List(fields.Nested(location_fields))}
-# )
-
-
 class BaseAPI(Resource):
 
     def __init__(self):
@@ -80,7 +49,7 @@ class BaseListAPI(Resource):
     @property
     def output_fields(self):
         output_fields = dict([])
-        output_fields[self.base.model.__table__] = (
+        output_fields[self.base.model.__tablename__] = (
             fields.List(fields.Nested(self.base.output_fields))
         )
         print(output_fields)
@@ -95,19 +64,19 @@ class BaseListAPI(Resource):
         return 200
 
     def get(self):
+        # import pdb; pdb.set_trace()
         resources = self.base.model.query.all()
         json = dict([])
-        json[self.base.model.__table__] = (
+        json[self.base.model.__tablename__] = (
             [resource.json for resource in resources]
         )
         return marshal(json, self.output_fields), 200
 
 
-
 class ProjectAPI(BaseAPI):
-
     model = Project
     output_fields = {
+        'id': fields.Integer,
         'name': fields.String,
         'description': fields.String,
         'photoUrl': fields.String(attribute='photo_url'),
@@ -119,38 +88,68 @@ class ProjectAPI(BaseAPI):
 
 
 class ProjectListAPI(BaseListAPI):
-
     base = ProjectAPI
 
 
-# class LocationAPI(Resource):
-#
-#     @marshal_with(location_fields)
-#     def get(self, id):
-#         location = Location.query.get(id)
-#         return location.json
-#
-#     def put(self, id):
-#         pass
-#
-#     def delete(self, id):
-#         pass
-#
-#
-# class LocationListAPI(Resource):
-#
-#     def post(self):
-#         args = parser.parse_args()
-#         attrs = ('address', 'city', 'state', 'zip_code', 'latitude',
-#                  'longitude')
-#         new_location = Location(**{attr: args.get(attr) for attr in attrs})
-#         db.session.add(new_location)
-#         db.session.commit()
+class LocationAPI(BaseAPI):
+    model = Location
+    output_fields = {
+        'id': fields.String(),
+        'address': fields.String,
+        'city': fields.String,
+        'state': fields.String,
+        'zipCode': fields.Integer(attribute='zip_code'),
+        'latitude': fields.Float,
+        'longitude': fields.Float
+    }
 
 
+class LocationListAPI(BaseListAPI):
+    base = LocationAPI
+
+
+class ProjectTypeAPI(BaseAPI):
+    model = ProjectType
+    output_fields = {
+        'id': fields.Integer,
+        'typeName': fields.String(attribute='type_name')
+    }
+
+
+class ProjectTypeListAPI(BaseListAPI):
+    base = ProjectTypeAPI
+
+
+class UserAPI(BaseAPI):
+    model = User
+    output_fields = {
+        'id': fields.Integer,
+        'email': fields.String
+    }
+
+
+class UserListAPI(BaseListAPI):
+    base = UserAPI
+
+
+class RoleAPI(BaseAPI):
+    model = Role
+    output_fields = {
+        'id': fields.Integer,
+        'role': fields.String(attribute='role_name')
+    }
+
+class RoleListAPI(BaseListAPI):
+    base = RoleAPI
 
 
 api.add_resource(ProjectAPI, '/projects/<int:id>', endpoint='project')
 api.add_resource(ProjectListAPI, '/projects', endpoint='project_list')
-# api.add_resource(LocationAPI, '/locations/<int:id>', endpoint='location')
-# api.add_resource(LocationListAPI, '/locations', endpoint='location_list')
+api.add_resource(LocationAPI, '/locations/<int:id>', endpoint='location')
+api.add_resource(LocationListAPI, '/locations', endpoint='location_list')
+api.add_resource(UserAPI, '/users/<int:id>', endpoint='user')
+api.add_resource(UserListAPI, '/users', endpoint='user_list')
+api.add_resource(RoleAPI, '/roles/<int:id>', endpoint='role')
+api.add_resource(RoleListAPI, '/roles', endpoint='role_list')
+api.add_resource(ProjectTypeAPI, '/project-types/<int:id>', endpoint='project_type')
+api.add_resource(ProjectTypeListAPI, '/project-types', endpoint='project_type_list')
