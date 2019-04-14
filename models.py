@@ -7,7 +7,7 @@ from app import db
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    password_hash = db.Column(db.String(20), nullable=False)
+    password_hash = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(20), nullable=False, unique=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
@@ -23,7 +23,7 @@ class Role(db.Model):
 class Project(db.Model):
     __tablename__ = 'projects'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30), nullable=False, unique=True)
+    name = db.Column(db.String(100), nullable=False, unique=True)
     description = db.Column(db.String(250))
     photo_url = db.Column(db.String(250))
     website_url = db.Column(db.String(250))
