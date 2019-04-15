@@ -134,6 +134,12 @@ class ProjectTypeListProjectsAPI(Resource):
         return {'projects': [project.json for project in projects]}
 
 
+class ProjectLocationsAPI(Resource):
+    def get(self, id):
+        project = Project.query.get(id)
+        return {'locations': [loc.json for loc in project.locations]}
+
+
 class UserAPI(BaseAPI):
     model = User
     output_fields = {
@@ -170,3 +176,4 @@ api.add_resource(ProjectTypeListAPI, '/project-types', endpoint='project_type_li
 
 api.add_resource(LocationProjectAPI, '/locations/<int:id>/project', endpoint='location_project')
 api.add_resource(ProjectTypeListProjectsAPI, '/project-types/<int:id>/projects', endpoint='project_type_project_list')
+api.add_resource(ProjectLocationsAPI, '/projects/<int:id>/locations', endpoint='project_locations')
