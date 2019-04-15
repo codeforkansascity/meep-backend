@@ -111,14 +111,19 @@ class LocationListAPI(BaseListAPI):
         min_year = request.args.get('min-year')
         max_year = request.args.get('max-year')
         print(request.args)
-        if min_year is not None and max_year is not None:
-            q = Project.query.join(Project.locations)
-            q = q.filter(Project.year <= max_year, Project.year >= min_year)
-            locs = [loc.json for loc in q]
+        if not request.args:
+            locs = [loc.json for loc in Project.query.all()]
             return {'locations': locs}
-        else:
-            locs = [loc.json for loc in Location.query.all()]
-            return {'locations': locs}
+
+        q = Project.query.join(Project.locations)
+        if min_year is not None:
+            q = q.filter(Project.year >= min_year)
+
+        if max_year is not None:
+            q = q.filter(Project.year <= max_year)
+
+        locs = [loc.json for loc in q]
+        return {'locations': locs}
 
 
 class LocationProjectAPI(Resource):
