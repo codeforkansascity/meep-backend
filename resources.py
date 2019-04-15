@@ -1,5 +1,5 @@
 from models import *
-from flask import Blueprint
+from flask import Blueprint, request
 from flask_restful import Api, Resource, reqparse, fields, marshal, marshal_with
 
 from models import db, Project, ProjectType, Location
@@ -107,6 +107,19 @@ class LocationAPI(BaseAPI):
 class LocationListAPI(BaseListAPI):
     base = LocationAPI
 
+    def get(self):
+        min_year = request.args.get('min-year')
+        max_year = request.args.get('max-year')
+        print(request.args)
+        if min_year is not None and max_year is not None:
+            q = Project.query.join(Project.locations)
+            q = q.filter(Project.year <= max_year, Project.year >= min_year)
+            locs = [loc.json for loc in q]
+            return {'locations': locs}
+        else:
+            locs = [loc.json for loc in Location.query.all()]
+            return {'locations': locs}
+
 
 class LocationProjectAPI(Resource):
 
@@ -166,7 +179,7 @@ class RoleListAPI(BaseListAPI):
 api.add_resource(ProjectAPI, '/projects/<int:id>', endpoint='project')
 api.add_resource(ProjectListAPI, '/projects', endpoint='project_list')
 api.add_resource(LocationAPI, '/locations/<int:id>', endpoint='location')
-api.add_resource(LocationListAPI, '/locations', endpoint='location_list')
+api.add_resource(LocationListAPI, '/locations', '/locations/')
 api.add_resource(UserAPI, '/users/<int:id>', endpoint='user')
 api.add_resource(UserListAPI, '/users', endpoint='user_list')
 api.add_resource(RoleAPI, '/roles/<int:id>', endpoint='role')

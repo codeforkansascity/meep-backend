@@ -54,4 +54,10 @@ class Location(db.Model):
     longitude = db.Column(db.Float)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
 
-    project = db.relationship('Project', backref='locations') #, lazy='dynamic')
+    project = db.relationship('Project', backref='locations')
+
+    def __repr__(self):
+        return 'Location(address={self.address}, city={self.city}, '\
+               'state={self.state}, zip_code={self.zip_code}, '\
+               'latitude={self.latitude}, longitude={self.longitude}, '\
+               'project_id={self.project_id})'.format(self=self)
