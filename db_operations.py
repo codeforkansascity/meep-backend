@@ -4,6 +4,11 @@ from app import db
 from models import *
 from app import create_app
 
+def reset():
+    drop_tables()
+    create_tables()
+    seed_db()
+
 def drop_tables():
     app = create_app('dev')
     with app.app_context():
@@ -37,24 +42,32 @@ def seed_db():
         building = ProjectType(type_name='Building')
         vehicle_transportation = ProjectType(type_name='Vehicle Transportation')
         infastructure_transportation = ProjectType(type_name='Infastructure Transportation')
+        for pt in building, vehicle_transportation, infastructure_transportation:
+            db.session.add(pt)
 
         # projects
-        p1 = Project(name='Black Hills Energy- KS', year=2013, gge_reduced=1995, ghg_reduced=2.5845225)
-        p1.project_type = building
-        p2 = Project(name='Central States Beverage Company', year=2012, gge_reduced=2891.461077, ghg_reduced=1.133452742)
-        p2.project_type = building
-        p3 = Project(name='City of Kansas City Missouri - CNG Shuttle', year=2017, gge_reduced=269133.3, ghg_reduced=226.6102386)
-        p3.project_type = infastructure_transportation
-        p4 = Project(name='City of Kansas City Missouri - CNG Vans', year=2017, gge_reduced=87652.7, ghg_reduced=113.5540729)
-        p4.project_type = vehicle_transportation
-        p5 = Project(name='Dart Long-Haul Fleet', year=2015, gge_reduced=720000, ghg_reduced=606.24)
-        p5.project_type = vehicle_transportation
-        p6 = Project(name='Lincoln Airport Authority -CNG', year=2017, gge_reduced=11970, ghg_reduced=15.507135)
-        p6.project_type = building
-        p7 = Project(name=' State of Missouri - Propane', year=2017, gge_reduced=903.101, ghg_reduced=1.276533264)
-        p7.project_type = building
-        p8 = Project(name='Zarco 66 Heavy Duty B20', year=2014, gge_reduced=1093.80128, ghg_reduced=9.578417809)
-        p8.project_type = vehicle_transportation
+        p1 = Project(name='Black Hills Energy- KS', year=2013,
+                     gge_reduced=1995, ghg_reduced=2.5845225, type=building)
+        p2 = Project(name='Central States Beverage Company', year=2012,
+                     gge_reduced=2891.461077, ghg_reduced=1.133452742,
+                     type=building)
+        p3 = Project(name='City of Kansas City Missouri - CNG Shuttle',
+                     year=2017, gge_reduced=269133.3, ghg_reduced=226.6102386,
+                     type=infastructure_transportation)
+        p4 = Project(name='City of Kansas City Missouri - CNG Vans',
+                     year=2017, gge_reduced=87652.7, ghg_reduced=113.5540729,
+                     type=vehicle_transportation)
+        p5 = Project(name='Dart Long-Haul Fleet', year=2015,
+                     gge_reduced=720000, ghg_reduced=606.24,
+                     type=vehicle_transportation)
+        p6 = Project(name='Lincoln Airport Authority -CNG', year=2017,
+                     gge_reduced=11970, ghg_reduced=15.507135, type=building)
+        p7 = Project(name=' State of Missouri - Propane', year=2017,
+                     gge_reduced=903.101, ghg_reduced=1.276533264,
+                     type=building)
+        p8 = Project(name='Zarco 66 Heavy Duty B20', year=2014,
+                     gge_reduced=1093.80128, ghg_reduced=9.578417809,
+                     type=vehicle_transportation)
 
         # locations
         p1.locations.append(Location(address='601 N Iowa St', city='Lawrence', state='KS', zip_code=66044, latitude=38.9930314, longitude=-95.2632409))
@@ -94,5 +107,7 @@ if __name__ == '__main__':
         create_tables()
     elif cmd == 'seed':
         seed_db()
+    elif cmd == 'reset':
+        reset()
     else:
         print('Unknown command. Use drop, create, or seed.')
