@@ -36,11 +36,17 @@ class Project(db.Model):
     type = db.relationship('ProjectType',
                            backref=db.backref('projects', lazy='select'))
 
+    def __repr__(self):
+        return f'Project(name={self.name}, description={self.description}, photo_url={self.photo_url}, website_url={self.website_url}, year={self.year}, ghg_reduced={self.ghg_reduced}, gge_reduced={self.gge_reduced})'
+
 
 class ProjectType(db.Model):
     __tablename__ = 'project_types'
     id = db.Column(db.Integer, primary_key=True)
     type_name = db.Column(db.String(30), nullable=False, unique=True)
+
+    def __repr__(self):
+        return f'ProjectType(type_name={self.type_name})'
 
 
 class Location(db.Model):
