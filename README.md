@@ -13,16 +13,20 @@
   5. pip install requiremnets ```pip install -r requirements.txt```
   6. create a sqlite database ```touch dev.db```
   7. set dev database environment variable ```export DEV_DATABASE_URL=sqlite:///dev.db```
-  8. create and populate tables ```python db_operations.py reset```  
-  9. set flask environment variable to development
+  8. create ```sqlite3 dev.db```  
+  9. create and populate tables ```python db_operations.py reset``` 
+  10. check to see if it created the tables ```.tables```
+  11. try to display data from a table ```select * from projects;``` you should see a list of projects display
+  
+  12. set flask environment variable to development
     ```
     export FLASK_ENV=development
     ```
-  10. run the app
+  13. run the app
     ```
     flask run
     ```
-  11. test to see if it worked: in a browser, type 
+  14. test to see if it worked: in a browser, type localhost:5000/projects you should see some json containing project data
   
   
   
