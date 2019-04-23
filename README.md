@@ -12,21 +12,19 @@
   4. activate the virtual environment ```source venv/bin/activate```
   5. pip install requiremnets ```pip install -r requirements.txt```
   6. create a sqlite database ```touch dev.db```
-  7. set dev database environment variable ```export DEV_DATABASE_URL=sqlite:///dev.db```
-  8. create ```sqlite3 dev.db```  
-  9. create and populate tables ```python db_operations.py reset``` 
-  10. check to see if it created the tables ```.tables```
-  11. try to display data from a table ```select * from projects;``` you should see a list of projects display
+  7. set dev database environment variable ```export DEV_DATABASE_URL=sqlite:///dev.db``` 
+  8. check to see if it created the tables ```.tables```
+  9. try to display data from a table ```select * from projects;``` you should see a list of projects display
   
-  12. set flask environment variable to development
+  10. set flask environment variable to development
     ```
     export FLASK_ENV=development
     ```
-  13. run the app
+  11. run the app
     ```
     flask run
     ```
-  14. test to see if it worked: in a browser, type localhost:5000/projects you should see some json containing project data
+  12. test to see if it worked: in a browser, type ```localhost:5000/projects``` you should see some json containing project data
   
   
   
@@ -39,7 +37,14 @@
   5. create a virtual environment in the project root directory
   6. activate the virtual environment ```venv\Scripts\activate```
   7. pip install requirements ```pip install -r requirements.txt```
-  8. In mysql, create a new database named 'meep_dev'.
-  9. Add a user called 'meep' to this database. 
-  10. Create a password 'meep' for the user 'meep'.
+  8. set dev database environment variable ```set DEV_DATABASE_URL=sqlite:///dev.db```
+  9. set flask environment variable to development
+    ```
+    set FLASK_ENV=development
+    ```
+  10. run the app
+    ```
+    flask run
+    ```
+  11. test to see if it worked: in a browser, type ```localhost:5000/projects``` you should see some json containing project data
   
