@@ -113,8 +113,6 @@ class LocationListAPI(BaseListAPI):
         max_year = request.args.get('max-year')
         project_types = request.args.getlist('project-type')
 
-
-
         if not request.args:
             locs = [loc.json for loc in Project.query.all()]
             return {'locations': locs}
@@ -174,7 +172,7 @@ class UserAPI(BaseAPI):
         'id': fields.Integer,
         'email': fields.String
     }
-
+    
 
 class UserListAPI(BaseListAPI):
     base = UserAPI
