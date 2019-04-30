@@ -27,9 +27,13 @@ def create_app(config_name='dev'):
     with app.app_context():
         # initialize extensions
         db.init_app(app)
-        from resources import api_blueprint
+        from resources.locations import api_locations_blueprint
+        from resources.projects import api_projects_blueprint
+        from resources.users import api_users_blueprint
 
         # register blueprints
-        app.register_blueprint(api_blueprint)
+        app.register_blueprint(api_locations_blueprint)
+        app.register_blueprint(api_projects_blueprint)
+        app.register_blueprint(api_users_blueprint)
 
         return app
