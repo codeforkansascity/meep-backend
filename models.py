@@ -1,3 +1,9 @@
+# see flask_sqlalchemy docs for details on how the library works
+# https://flask-sqlalchemy.palletsprojects.com/en/2.x/
+# also, the plain sqlalchemy docs
+# https://www.sqlalchemy.org/
+
+# Model base class is defined in app.py, and is imported in db.
 from app import db
 
 
@@ -5,6 +11,9 @@ from app import db
 # this will ensure that the parser object in resource.py will work correctly
 
 class User(db.Model):
+    '''
+    A user of the application.
+    '''
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     password_hash = db.Column(db.String(100), nullable=False)
