@@ -35,15 +35,15 @@ def create_app(config_name='dev'):
     for info on this pattern.
     '''
     app = Flask(__name__, instance_relative_config=True)
-    
+
     # config data defined in config.py
     app.config.from_object(config[config_name])
     with app.app_context():
         # initialize extensions
         db.init_app(app)
-        from resources import api_blueprint
 
-        # register blueprints
+        # blueprints defined in resources files
+        from resources import api_blueprint
         app.register_blueprint(api_blueprint)
 
         return app
