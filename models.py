@@ -13,6 +13,9 @@ class User(db.Model):
 
     role = db.relationship('Role', backref=db.backref('users', lazy='select'))
 
+    def __init__(self, email):
+        self.email = email
+
 
 class Role(db.Model):
     __tablename__ = 'roles'
