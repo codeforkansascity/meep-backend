@@ -169,10 +169,10 @@ class LocationListAPI(BaseListAPI):
     base = LocationAPI
 
     def get(self):
-    '''
-    overrides inherited get method from BaseListAPI in order to implement
-    query string parameters
-    '''
+        '''
+        overrides inherited get method from BaseListAPI in order to implement
+        query string parameters
+        '''
         #query string parameters
         min_year = request.args.get('min-year')
         max_year = request.args.get('max-year')
