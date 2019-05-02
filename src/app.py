@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy, Model
 
-from config import config
+from src.config import config
 
 
 class BaseModel(Model):
@@ -42,9 +42,9 @@ def create_app(config_name='dev'):
     with app.app_context():
         # initialize extensions
         db.init_app(app)
-        from resources.locations import api_locations_blueprint
-        from resources.projects import api_projects_blueprint
-        from resources.users import api_users_blueprint
+        from src.resources.locations import api_locations_blueprint
+        from src.resources.projects import api_projects_blueprint
+        from src.resources.users import api_users_blueprint
 
         # register blueprints
         app.register_blueprint(api_locations_blueprint)

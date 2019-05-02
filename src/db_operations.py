@@ -14,9 +14,8 @@ python db_operations.py reset
 '''
 import sys
 
-from app import db
-from models import *
-from app import create_app
+from src.models import *
+from src.app import create_app
 
 def reset():
     drop_tables()

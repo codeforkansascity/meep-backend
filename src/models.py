@@ -4,7 +4,7 @@
 # https://www.sqlalchemy.org/
 
 # Model base class is defined in app.py, and is imported in db.
-from app import db
+from src.app import db
 
 
 class User(db.Model):
