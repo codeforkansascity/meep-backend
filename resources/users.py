@@ -6,6 +6,11 @@ from models import User, Role
 api_users_blueprint = Blueprint('api_users', __name__)
 api = Api(api_users_blueprint)
 
+'''
+defining a list api resource entails subclassing BaseListAPI and referring
+to the base API resource it is built on
+'''
+
 
 class UserAPI(BaseAPI):
     model = User
