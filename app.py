@@ -12,9 +12,7 @@ class BaseModel(Model):
 
     @property
     def json(self):
-        """
-        return json representation of model
-        """
+        """return json representation of model"""
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     @classmethod
@@ -37,7 +35,6 @@ def create_app(config_name='dev'):
     for info on this pattern.
     Later can implement other configs like test and prod.
     """
-
     app = Flask(__name__, instance_relative_config=True)
 
     # config data defined in config.py

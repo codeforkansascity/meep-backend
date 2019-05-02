@@ -7,36 +7,31 @@
 from app import db
 
 
-# by convention, all foreign key Columns must end in '_id'
-# this will ensure that the parser object in resource.py will work correctly
-
 class User(db.Model):
-    '''
-    A user of the application.
-    '''
+    """A user of the application.
+    By convention, all foreign key Columns must end in '_id'
+    This will ensure that the parser object in resource.py will work correctly.
+    """
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     password_hash = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(20), nullable=False, unique=True)
-    #many to one relationship with role
+    # Many to one relationship with role
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
     role = db.relationship('Role', backref=db.backref('users', lazy='select'))
 
 
 class Role(db.Model):
-    '''
-    User role for priveleges.
-    '''
+    """User role for privileges."""
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
     role_name = db.Column(db.String(20), nullable=False, unique=True)
-    # TODO: Add fields for priveleges
+    # TODO: Add fields for privileges
+
 
 class Project(db.Model):
-    '''
-    An MEC project.
-    '''
+    """An MEC project."""
     __tablename__ = 'projects'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
@@ -46,7 +41,7 @@ class Project(db.Model):
     year = db.Column(db.Integer)
     gge_reduced = db.Column(db.Float)
     ghg_reduced = db.Column(db.Float)
-    #Many to one relationship with project types
+    # Many to one relationship with project types
     project_type_id = db.Column(db.Integer, db.ForeignKey('project_types.id'))
 
     type = db.relationship('ProjectType',
@@ -57,11 +52,10 @@ class Project(db.Model):
 
 
 class ProjectType(db.Model):
-    '''
-    Different categories of projects. I.e. building, vehicle transportation,
-    infastructure transportation, etc. This could potentially be moved into
+    """Different categories of projects. I.e. building, vehicle transportation,
+    infrastructure transportation, etc. This could potentially be moved into
     a column in the project model, if no new fields are added in the future.
-    '''
+    """
     __tablename__ = 'project_types'
     id = db.Column(db.Integer, primary_key=True)
     type_name = db.Column(db.String(30), nullable=False, unique=True)
@@ -71,9 +65,7 @@ class ProjectType(db.Model):
 
 
 class Location(db.Model):
-    '''
-    Model for spatial data.
-    '''
+    """Model for spatial data."""
     __tablename__ = 'locations'
     id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.String(50))
