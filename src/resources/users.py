@@ -1,10 +1,15 @@
 from flask import Blueprint
 from flask_restful import Api, fields
-from resources.base import BaseAPI, BaseListAPI
-from models import User, Role
+from src.resources.base import BaseAPI, BaseListAPI
+from src.models import User, Role
 
 api_users_blueprint = Blueprint('api_users', __name__)
 api = Api(api_users_blueprint)
+
+'''
+defining a list api resource entails subclassing BaseListAPI and referring
+to the base API resource it is built on
+'''
 
 
 class UserAPI(BaseAPI):

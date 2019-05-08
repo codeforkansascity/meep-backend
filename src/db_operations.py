@@ -1,8 +1,21 @@
+'''
+basic operations for creating and dropping tables, reseting the database,
+and seeding with data for development
+
+to run as a script, from the command line do one of:
+
+python db_operations.py drop
+
+python db_operations.py create
+
+python db_operations.py seed
+
+python db_operations.py reset
+'''
 import sys
 
-from app import db
-from models import *
-from app import create_app
+from src.models import *
+from src.app import create_app
 
 def reset():
     drop_tables()

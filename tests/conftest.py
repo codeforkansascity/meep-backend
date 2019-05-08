@@ -1,6 +1,6 @@
 import pytest
 
-from models import User
+from src.models import User
 
 
 @pytest.fixture(scope='module')
