@@ -20,11 +20,15 @@
     ```
     export FLASK_ENV=development
     ```
-  11. run the app
+  11. Set flask app environment variable
+    ```
+    export FLASK_APP="src/app:create_app()"
+    ```
+  12. run the app
     ```
     flask run
     ```
-  12. test to see if it worked: in a browser, type ```localhost:5000/projects``` you should see some json containing project data
+  13. test to see if it worked: in a browser, type ```localhost:5000/projects``` you should see some json containing project data
 
   
 
