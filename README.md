@@ -6,13 +6,17 @@
   1. Install Docker
   2. Build docker image from dockerfile:
     ```
-    docker build -t meep-backend:gunicorn
+    docker build -t meep-backend:gunicorn src
     ```
   3. Create and run a container from the image:
     ```
-    docker run -p 8000:8000 meep-backend:gunicorn
+    docker run -p 8001:8000 meep-backend:gunicorn
     ```
-  4. In a browser, try typing ```http://localhost:8000/locations``` to see
+    or to allow live editing of the code in the container, do
+    ```
+    docker run -p 8001:8000 -v $(pwd)/src:/meep/api/src meep-backend:gunicorn
+    ```
+  4. In a browser, try typing ```http://localhost:8001/locations``` to see
     if it worked.
 
 ### Unix

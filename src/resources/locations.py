@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_restful import Api, Resource, fields
-from src.resources.base import BaseAPI, BaseListAPI
-from src.models import db, Project, ProjectType, Location
+from .base import BaseAPI, BaseListAPI
+from models import db, Project, ProjectType, Location
 
 
 api_locations_blueprint = Blueprint('api_locations', __name__)

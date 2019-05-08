@@ -4,7 +4,7 @@
 # https://www.sqlalchemy.org/
 
 # Model base class is defined in app.py, and is imported in db.
-from src.app import db
+from app import db
 
 
 class User(db.Model):
@@ -78,7 +78,7 @@ class Location(db.Model):
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
-    
+
     project = db.relationship('Project', backref='locations')
 
     def __repr__(self):
