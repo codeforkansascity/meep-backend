@@ -12,10 +12,10 @@
   4. activate the virtual environment ```source venv/bin/activate```
   5. pip install requiremnets ```pip install -r requirements.txt```
   6. create a sqlite database ```touch dev.db```
-  7. set dev database environment variable ```export DEV_DATABASE_URL=sqlite:///dev.db``` 
+  7. set dev database environment variable ```export DEV_DATABASE_URL=sqlite:///dev.db```
   8. Open the database in sqlite with ```sqlite3 dev.db;``` check to see if it created the tables with ```.tables```
   9. try to display data from a table ```select * from projects;``` you should see a list of projects display
-  
+
   10. set flask environment variable to development
     ```
     export FLASK_ENV=development
@@ -26,7 +26,7 @@
     ```
   12. test to see if it worked: in a browser, type ```localhost:5000/projects``` you should see some json containing project data
 
-  
+
 
 
 ### Windows
@@ -42,9 +42,12 @@
     ```
     set FLASK_ENV=development
     ```
-  10. run the app
+  10. set flask app variable to point towards app.py
+    ```
+    set FLASK_APP=src\app.py
+    ```
+  11. run the app
     ```
     flask run
     ```
-  11. test to see if it worked: in a browser, type ```localhost:5000/projects``` you should see some json containing project data
-
+  12. test to see if it worked: in a browser, type ```localhost:5000/projects``` you should see some json containing project data
