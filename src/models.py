@@ -1,10 +1,24 @@
+from flask_sqlalchemy import SQLAlchemy, Model
+
 # see flask_sqlalchemy docs for details on how the library works
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/
 # also, the plain sqlalchemy docs
 # https://www.sqlalchemy.org/
 
-# Model base class is defined in app.py, and is imported in db.
-from src.app import db
+# base class shared by all models. Needed to instantiate SQLAlchemy object.
+class BaseModel(Model):
+    @property
+    def json(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    # TODO: make this a property instead of a getter method
+    @classmethod
+    def get_columns(cls):
+        return [c.name for c in cls().__table__.columns]
+
+
+# globally accessible database connection
+db = SQLAlchemy(model_class=BaseModel)
 
 
 class User(db.Model):
@@ -78,7 +92,7 @@ class Location(db.Model):
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
-    
+
     project = db.relationship('Project', backref='locations')
 
     def __repr__(self):
