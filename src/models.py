@@ -1,11 +1,9 @@
-<<<<<<< HEAD:models.py
 from flask_sqlalchemy import SQLAlchemy, Model
-=======
+
 # see flask_sqlalchemy docs for details on how the library works
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/
 # also, the plain sqlalchemy docs
 # https://www.sqlalchemy.org/
->>>>>>> master:src/models.py
 
 # Model base class is defined in app.py, and is imported in db.
 from src.app import db
@@ -98,7 +96,7 @@ class Location(db.Model):
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
-    
+
     project = db.relationship('Project', backref='locations')
 
     def __repr__(self):
