@@ -5,10 +5,6 @@ from flask_sqlalchemy import SQLAlchemy, Model
 # also, the plain sqlalchemy docs
 # https://www.sqlalchemy.org/
 
-# Model base class is defined in app.py, and is imported in db.
-from src.app import db
-
-
 # base class shared by all models. Needed to instantiate SQLAlchemy object.
 class BaseModel(Model):
     @property
