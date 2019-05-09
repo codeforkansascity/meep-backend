@@ -1,10 +1,15 @@
 from flask import Blueprint
 from flask_restful import Api, Resource, fields
-from resources.base import BaseAPI, BaseListAPI
-from models import Project, ProjectType
+from src.resources.base import BaseAPI, BaseListAPI
+from src.models import Project, ProjectType
 
 api_projects_blueprint = Blueprint('api_projects', __name__)
 api = Api(api_projects_blueprint)
+
+'''
+defining a list api resource entails subclassing BaseListAPI and referring
+to the base API resource it is built on
+'''
 
 
 class ProjectAPI(BaseAPI):
@@ -50,6 +55,7 @@ api.add_resource(ProjectTypeListAPI, '/project-types', endpoint='project_type_li
 
 
 class ProjectTypeListProjectsAPI(Resource):
+    """Return all projects with a given project type"""
     def get(self, id):
         project_type = ProjectType.query.get(id)
         projects = project_type.projects
@@ -60,6 +66,7 @@ api.add_resource(ProjectTypeListProjectsAPI, '/project-types/<int:id>/projects',
 
 
 class ProjectLocationsAPI(Resource):
+    """Return all locations associated with a given project"""
     def get(self, id):
         project = Project.query.get(id)
         return {'locations': [loc.json for loc in project.locations]}
