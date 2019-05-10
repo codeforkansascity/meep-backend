@@ -20,9 +20,9 @@ def create_app(config_name='dev'):
     with app.app_context():
         # initialize extensions
         db.init_app(app)
-        from src.resources.locations import api_locations_blueprint
-        from src.resources.projects import api_projects_blueprint
-        from src.resources.users import api_users_blueprint
+        from resources.locations import api_locations_blueprint
+        from resources.projects import api_projects_blueprint
+        from resources.users import api_users_blueprint
 
         # register blueprints
         app.register_blueprint(api_locations_blueprint)

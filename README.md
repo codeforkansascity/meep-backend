@@ -2,6 +2,25 @@
 
 ## Setup
 
+### Docker
+  1. Install Docker
+  2. Build docker image from dockerfile:
+    ```
+    docker build -t meep-backend:gunicorn src
+    ```
+  3. Create and run a container from the image:
+    ```
+    docker run -p 8001:8000 meep-backend:gunicorn
+    ```
+    or to allow live editing of the code in the container, do
+    ```
+    docker run -p 8001:8000 -v $(pwd)/src:/meep/api/src meep-backend:gunicorn
+    ```
+    
+      - On windows, the command for live editing probably won't work. instead of ```$(pwd)/src``` on the left side of the           bind mount, you will have to provide an absolute path to the project folder that contains the Dockerfile (src at the         time of writing). After that, there is a chance that you will get a different error. Restart docker and try again. It         usually works on the second attempt. Please note that this is a temporary workaround while we find a less annoying way       to run the project on windows.  
+  4. In a browser, try typing ```http://localhost:8001/locations``` to see
+    if it worked.
+
 ### Unix
   1. Install python
      ```
@@ -33,6 +52,7 @@
 
 
 
+
 ### Windows
   1. Install python
   2. Install pip
@@ -54,4 +74,4 @@
     ```
     flask run
     ```
-  12. test to see if it worked: in a browser, type ```localhost:5000/projects``` you should see some json containing project data
+  11. test to see if it worked: in a browser, type ```localhost:5000/projects``` you should see some json containing project data

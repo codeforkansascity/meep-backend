@@ -1,4 +1,4 @@
-from src.app import db
+from app import db
 from flask_restful import Resource, reqparse, marshal, fields
 
 '''There are two base classes for resources. The first is BaseAPI, and has GET,
