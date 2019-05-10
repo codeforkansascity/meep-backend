@@ -1,28 +1,6 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy, Model
-
-from config import config
-
-
-class BaseModel(Model):
-    """Base class shared by all models to implement common attributes and methods.
-    Needed to instantiate SQLAlchemy object.
-    TODO: find a way to move this to models.py without breaking the app
-    """
-
-    @property
-    def json(self):
-        """return json representation of model"""
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
-    @classmethod
-    def get_columns(cls):
-        # TODO: make this a property instead of a getter method
-        return [c.name for c in cls().__table__.columns]
-
-
-# globally accessible database connection
-db = SQLAlchemy(model_class=BaseModel)
+from src.config import config
+from src.models import db
 
 # for some reason doing this import makes models accessible to create_app
 # TODO: see if app can be instantiated without this import
