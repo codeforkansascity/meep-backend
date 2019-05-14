@@ -1,6 +1,6 @@
 from flask import Flask
-from src.config import config
-from src.models import db
+from config import config
+from models import db
 
 # for some reason doing this import makes models accessible to create_app
 # TODO: see if app can be instantiated without this import
