@@ -2,7 +2,12 @@
 
 ## Setup
 
-### Docker
+### Docker-compose
+  1. Install Docker. Compose should be bundled with it.
+  2. Run ```docker-compose up``` in the project root directory.
+  3. In a browser, try typing ```localhost/meep/api/v1/locations``` to see if it worked. 
+
+### Run only the api container with Docker:
   1. Install Docker
   2. Build docker image from dockerfile:
     ```
@@ -16,12 +21,12 @@
     ```
     docker run -p 8001:8000 -v $(pwd)/src:/meep/api/src meep-backend:gunicorn
     ```
-    
+
       - On windows, the command for live editing probably won't work. instead of ```$(pwd)/src``` on the left side of the           bind mount, you will have to provide an absolute path to the project folder that contains the Dockerfile (src at the         time of writing). After that, there is a chance that you will get a different error. Restart docker and try again. It         usually works on the second attempt. Please note that this is a temporary workaround while we find a less annoying way       to run the project on windows.  
   4. In a browser, try typing ```http://localhost:8001/locations``` to see
     if it worked.
 
-### Unix
+### Unix without docker
   1. Install python
      ```
      sudo apt-get install python3
@@ -49,11 +54,7 @@
     ```
   13. test to see if it worked: in a browser, type ```localhost:5000/projects``` you should see some json containing project data
 
-
-
-
-
-### Windows
+### Windows without docker
   1. Install python
   2. Install pip
   3. Install virtualenv

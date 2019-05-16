@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+    web_server:
+        build: web_server
+        ports:
+          - 80:80
+          - 443:443
+        volumes:
+          - ./web_server/nginx.conf:/etc/nginx/nginx.conf
+
+    api:
+        build: api/src
+        volumes:
+          - ./api/src:/meep/api/src
+        expose:
+          - "8000"
