@@ -4,9 +4,9 @@
 
 ### Docker-compose
   1. Install Docker. Compose should be bundled with it.
-  2. ```docker-compose build```
-  3. ```docker-compose up -d```
-  4. ```docker container exec meep-backend_api_1 python /meep/api/src/db_operations.py reset```
+  2. Start the containers: ```docker compose up --build -d```.
+  3. Seed the development database: ```docker container exec meep-backend_api_1 python /meep/api/src/db_operations.py reset```
+  4. In a browser, or some other client, type ```localhost/api/locations```. If you see a bunch of json data, it worked!
 
 ### Useful docker commands
   - Shell into database:
