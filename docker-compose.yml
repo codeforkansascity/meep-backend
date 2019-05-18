@@ -8,8 +8,8 @@ services:
           - 443:443
         volumes:
           - ./web_server/nginx.conf:/etc/nginx/nginx.conf
-        network:
-          - web_net
+        links:
+          - api
 
 
     api:
@@ -24,9 +24,9 @@ services:
           - db
         environment:
           - DEV_DATABASE_URL=postgres://meep:supersafe@db:5432/meep_api
-        network:
-          - web_net
-          - db_net
+        links:
+          - db
+
 
     db:
         image: postgres:11.3
@@ -34,9 +34,3 @@ services:
           - POSTGRES_USER=meep
           - POSTGRES_PASSWORD=supersafe
           - POSTGRES_DB=meep_api
-        network:
-          - db_net
-
-network:
-  - db_net
-  - web_net
