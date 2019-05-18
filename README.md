@@ -4,8 +4,28 @@
 
 ### Docker-compose
   1. Install Docker. Compose should be bundled with it.
-  2. Run ```docker-compose up``` in the project root directory.
-  3. In a browser, try typing ```localhost/meep/api/v1/locations``` to see if it worked. 
+  2. ```docker-compose build```
+  3. ```docker-compose up -d```
+  4. ```docker container exec meep-backend_api_1 python /meep/api/src/db_operations.py reset```
+
+### Useful docker commands
+  - Shell into database:
+    ```
+    docker container exec -it meep-backend_db_1 psql -U meep -h meep-backend_db_1 -d meep_api
+    ```
+    password: ```supersafe```
+  - Shell into api container
+    ```
+    docker container exec -it meep-backend_api_1 /bin/ash
+    ```
+  - Shell into nginx container
+    ```
+    docker container exec -it meep-backend_web_server_1 /bin/bash
+    ```
+  - view log files (similar for api)
+    ```
+    docker logs meep-backend_web_server_1
+    ```
 
 ### Run only the api container with Docker:
   1. Install Docker

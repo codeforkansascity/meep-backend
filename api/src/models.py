@@ -40,8 +40,9 @@ class User(db.Model):
 
     role = db.relationship('Role', backref=db.backref('users', lazy='select'))
 
-    def __init__(self, email):
+    def __init__(self, email, password_hash):
         self.email = email
+        self.password_hash = password_hash
 
 
 class Role(db.Model):

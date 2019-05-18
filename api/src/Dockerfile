@@ -4,7 +4,9 @@ WORKDIR /meep/api/src
 
 COPY requirements.txt .
 
-RUN pip install --upgrade pip \
+RUN apk --no-cache add build-base \
+    && apk --no-cache add postgresql-dev \
+    && pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
     && pip install gunicorn==19.9.0
 
