@@ -34,3 +34,8 @@ services:
           - POSTGRES_USER=meep
           - POSTGRES_PASSWORD=supersafe
           - POSTGRES_DB=meep_api
+        volumes:
+          - "postgres_data:/var/lib/postgresql/data"
+
+volumes:
+    postgres_data:
