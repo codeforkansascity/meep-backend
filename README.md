@@ -39,7 +39,9 @@
      ```
      virtualenv venv
   6. activate the virtual environment ```source venv/bin/activate```
-  7. pip install requiremnets ```pip install -r requirements.txt```
+  7. pip install requiremnets
+     ```
+     pip install -r src/requirements.txt
   8. create a sqlite database ```touch dev.db```
   9. set dev database environment variable ```export DEV_DATABASE_URL=sqlite:///dev.db```
   10. Open the database in sqlite with ```sqlite3 dev.db;``` check to see if it created the tables with ```.tables```
