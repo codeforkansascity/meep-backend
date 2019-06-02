@@ -23,12 +23,12 @@ def create_app(config_name='dev'):
         from resources.locations import api_locations_blueprint
         from resources.projects import api_projects_blueprint
         from resources.users import api_users_blueprint
-        # from resources.uploads import api_uploads_blueprint
+        from resources.uploads import api_uploads_blueprint
 
         # register blueprints
         app.register_blueprint(api_locations_blueprint)
         app.register_blueprint(api_projects_blueprint)
         app.register_blueprint(api_users_blueprint)
-        # app.register_blueprint(api_uploads_blueprint)
+        app.register_blueprint(api_uploads_blueprint)
 
         return app
