@@ -13,7 +13,7 @@ services:
 
 
     api:
-        build: api/src
+        build: api
         volumes:
           - ./api/src:/meep/api/src
         expose:
@@ -23,7 +23,7 @@ services:
         depends_on:
           - db
         environment:
-          - DEV_DATABASE_URL=postgres://meep:supersafe@db:5432/meep_api
+          - DEV_DATABASE_URL=postgresql://meep:supersafe@db:5432/meep_api
         links:
           - db
 
