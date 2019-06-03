@@ -4,7 +4,7 @@
 
 ### Docker-compose
   1. Install Docker. Compose should be bundled with it.
-  2. Start the containers: ```docker compose up --build -d```.
+  2. Start the containers: ```docker-compose up --build -d```.
   3. Seed the development database: ```docker container exec meep-backend_api_1 python /meep/api/src/db_operations.py reset```. You should only need to do this the first time you run the app.
   4. In a browser, or some other client, type ```localhost/api/locations```. If you see a bunch of json data, it worked!
 
