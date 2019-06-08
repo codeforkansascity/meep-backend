@@ -1,0 +1,5 @@
+flask
+flask-SQLAlchemy
+pymysql
+flask-restful
+pytest
