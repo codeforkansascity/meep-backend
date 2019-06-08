@@ -1,11 +1,7 @@
 from flask import Flask
+
 from config import config
 from models import db
-
-# for some reason doing this import makes models accessible to create_app
-# TODO: see if app can be instantiated without this import
-# from models import User, Role, Project, ProjectType, Location
-
 
 def create_app(config_name='dev'):
     """App factory method for initializing flask extensions and registering

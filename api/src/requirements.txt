@@ -1,0 +1,5 @@
+flask
+flask-restful
+flask-SQLAlchemy
+psycopg2
+pytest

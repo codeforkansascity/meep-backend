@@ -2,7 +2,32 @@
 
 ## Setup
 
-### Docker
+### Docker-compose
+  1. Install Docker. Compose should be bundled with it.
+  2. Start the containers: ```docker-compose up --build -d```.
+  3. Seed the development database: ```docker container exec meep-backend_api_1 python /meep/api/src/db_operations.py reset```. You should only need to do this the first time you run the app.
+  4. In a browser, or some other client, type ```localhost/api/locations```. If you see a bunch of json data, it worked!
+
+### Useful docker commands
+  - Shell into database:
+    ```
+    docker container exec -it meep-backend_db_1 psql -U meep -h meep-backend_db_1 -d meep_api
+    ```
+    password: ```supersafe```
+  - Shell into api container
+    ```
+    docker container exec -it meep-backend_api_1 /bin/ash
+    ```
+  - Shell into nginx container
+    ```
+    docker container exec -it meep-backend_web_server_1 /bin/bash
+    ```
+  - view log files (similar for api)
+    ```
+    docker logs meep-backend_web_server_1
+    ```
+
+### Run only the api container with Docker:
   1. Install Docker
   2. Build docker image from dockerfile:
     ```
@@ -16,12 +41,12 @@
     ```
     docker run -p 8001:8000 -v $(pwd)/src:/meep/api/src meep-backend:gunicorn
     ```
-    
+
       - On windows, the command for live editing probably won't work. instead of ```$(pwd)/src``` on the left side of the           bind mount, you will have to provide an absolute path to the project folder that contains the Dockerfile (src at the         time of writing). After that, there is a chance that you will get a different error. Restart docker and try again. It         usually works on the second attempt. Please note that this is a temporary workaround while we find a less annoying way       to run the project on windows.  
   4. In a browser, try typing ```http://localhost:8001/locations``` to see
     if it worked.
 
-### Unix
+### Unix without docker
   1. Install python
      ```
      sudo apt-get install python3
@@ -66,11 +91,7 @@
     ```
   16. test to see if it worked: in a browser, type ```localhost:5000/projects``` you should see some json containing project data
 
-
-
-
-
-### Windows
+### Windows without docker
   1. Install python
   2. Install pip
   3. Install virtualenv
