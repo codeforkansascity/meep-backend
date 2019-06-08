@@ -1,0 +1,420 @@
+[
+  {
+    "project": "I-70 CNG",
+    "subrecipient_organization": "24/7 Travel Stores",
+    "locations": [
+      {
+        "address1": "429 North Ohio Street",
+        "address2": NaN,
+        "city": "Salina",
+        "state": "KS",
+        "phone": NaN,
+        "website": "https://24-7stores.com/"
+      },
+      {
+        "address1": "P.O. Box 647",
+        "address2": NaN,
+        "city": "Salina",
+        "state": "KS",
+        "phone": NaN,
+        "website": NaN
+      },
+      {
+        "address1": "617 Westport Avenue",
+        "address2": NaN,
+        "city": "Salina",
+        "state": "KS ",
+        "phone": NaN,
+        "website": NaN
+      }
+    ],
+    "contacts": [
+      {
+        "contact_type": "Primary Contact",
+        "prefix": "Mr.",
+        "first": "Mark",
+        "last": "Augustine",
+        "title": "President, 24/7 Travel Stores",
+        "phone": "(785) 823-7839 x 104",
+        "cell": "(785) 823-3545",
+        "email": "marka@triplettinc.com"
+      }
+    ]
+  },
+  {
+    "project": "BSSD",
+    "subrecipient_organization": "Blue Springs R-IV Schools",
+    "locations": [
+      {
+        "address1": "Bartow Administrative Center",
+        "address2": "1801 NW Vesper Drive",
+        "city": "Blue Springs",
+        "state": "MO",
+        "phone": "(816 874-3200",
+        "website": "https://www.bssd.net/"
+      },
+      {
+        "address1": "McMillan Transportation Center",
+        "address2": "200 East Highway 4o",
+        "city": "Blue Springs",
+        "state": "MO",
+        "phone": "(816) 874-3799",
+        "website": "https://www.bssd.net/Page/13950"
+      }
+    ],
+    "contacts": [
+      {
+        "contact_type": "Primary Contract",
+        "prefix": "Mr.",
+        "first": "Steve",
+        "last": "Brown",
+        "title": "Director",
+        "phone": "(816) 874-3799",
+        "cell": NaN,
+        "email": "sbrown@BSSD.NET"
+      },
+      {
+        "contact_type": "Secondary Contact",
+        "prefix": "Dr. ",
+        "first": "Bill",
+        "last": "Cowling",
+        "title": "Assistant Superintendent",
+        "phone": "(816) 874-3200",
+        "cell": NaN,
+        "email": "bcowling@BSSD.NET"
+      }
+    ]
+  },
+  {
+    "project": "El Dorado, KS",
+    "subrecipient_organization": "City of El Dorado Public Works Department",
+    "locations": [
+      {
+        "address1": "222 East 2nd Avenue",
+        "address2": NaN,
+        "city": "El Dorado",
+        "state": "KS",
+        "phone": "(316) 322-4481",
+        "website": "http://www.eldoks.com/153/Public-Works"
+      },
+      {
+        "address1": "222 East 2nd Avenue",
+        "address2": NaN,
+        "city": "El Dorado",
+        "state": "KS",
+        "phone": "(316) 322-4481",
+        "website": NaN
+      }
+    ],
+    "contacts": [
+      {
+        "contact_type": "Primary Contract",
+        "prefix": "Mr.",
+        "first": "Brad",
+        "last": "Meyer",
+        "title": "Director",
+        "phone": "(316) 322-4481",
+        "cell": NaN,
+        "email": "bmeyer@eldoks.com"
+      },
+      {
+        "contact_type": "Secondary Contact",
+        "prefix": NaN,
+        "first": NaN,
+        "last": NaN,
+        "title": NaN,
+        "phone": NaN,
+        "cell": NaN,
+        "email": NaN
+      }
+    ]
+  },
+  {
+    "project": "Garden City, KS",
+    "subrecipient_organization": "City of Garden City Public Works Department",
+    "locations": [
+      {
+        "address1": "301 North 8th Street",
+        "address2": NaN,
+        "city": "Garden City",
+        "state": "KS",
+        "phone": "(620) 276-1260",
+        "website": "http://www.garden-city.org/government/departments/public-works"
+      },
+      {
+        "address1": "301 North 8th Street",
+        "address2": NaN,
+        "city": "Garden City",
+        "state": "KS",
+        "phone": NaN,
+        "website": NaN
+      }
+    ],
+    "contacts": [
+      {
+        "contact_type": "Primary Contract",
+        "prefix": "Mr.",
+        "first": "Sam",
+        "last": "Curran",
+        "title": "Director",
+        "phone": "(620) 276-1260",
+        "cell": "(620) 640-8310",
+        "email": "sam.curran@gardencityks.us"
+      },
+      {
+        "contact_type": "Secondary Contact",
+        "prefix": "Ms.",
+        "first": "Rhoda",
+        "last": "Griffin",
+        "title": "Administrative Assistant",
+        "phone": "(620) 276-1260",
+        "cell": NaN,
+        "email": "rhonda.griffin@gardencityks.us"
+      }
+    ]
+  },
+  {
+    "project": "Sparq NG",
+    "subrecipient_organization": NaN,
+    "locations": [
+      {
+        "address1": "TBD",
+        "address2": NaN,
+        "city": "Wakeeney/Goodland",
+        "state": "KS ",
+        "phone": NaN,
+        "website": NaN
+      }
+    ],
+    "contacts": [
+      {
+        "contact_type": "Primary Contact",
+        "prefix": "Mr.",
+        "first": "Norman",
+        "last": "Herrera",
+        "title": "Chief Executive Officer, Sparq CNG",
+        "phone": "(405) 896-5099",
+        "cell": "972-313-5184",
+        "email": "norman.herrera@sparqng.com"
+      },
+      {
+        "contact_type": "Secondary Contact",
+        "prefix": "Mr.",
+        "first": "Tristan",
+        "last": "Adler",
+        "title": "CFO, Sparq Natural Gas",
+        "phone": "(405) 896-5096",
+        "cell": NaN,
+        "email": "tristan.adler@sparqng.com"
+      },
+      {
+        "contact_type": "Secondary Contact",
+        "prefix": "Mr. ",
+        "first": "John",
+        "last": "Bolte",
+        "title": "Small Arrow Engineering",
+        "phone": NaN,
+        "cell": NaN,
+        "email": NaN
+      }
+    ]
+  },
+  {
+    "project": "Grain Valley ",
+    "subrecipient_organization": "Grain Valley School District R-5",
+    "locations": [
+      {
+        "address1": "30606 NE Pink Hill Road",
+        "address2": NaN,
+        "city": "Grain Valley",
+        "state": "MO",
+        "phone": "(816) 847-5006",
+        "website": "http://www.gvr5.net/"
+      },
+      {
+        "address1": "105 NW Sni-A-Bar Parkway",
+        "address2": NaN,
+        "city": "Grain Valley",
+        "state": "MO",
+        "phone": "(816) 847-5004",
+        "website": "http://www.gvr5.net/District/Portal/32-Transportation"
+      }
+    ],
+    "contacts": [
+      {
+        "contact_type": "Primary Contract",
+        "prefix": "Mr.",
+        "first": "Shawn",
+        "last": "Brady",
+        "title": "Director",
+        "phone": "(816) 847-5004",
+        "cell": "816-810-4870",
+        "email": "sbrady@gvr5.net"
+      },
+      {
+        "contact_type": "Secondary Contact",
+        "prefix": "Mr.",
+        "first": "Nathan",
+        "last": "Ediger",
+        "title": "Ferrellgas",
+        "phone": "(913) 661-1510",
+        "cell": NaN,
+        "email": "NathanEdiger@ferrellgas.com"
+      },
+      {
+        "contact_type": "Secondary Contact",
+        "prefix": NaN,
+        "first": NaN,
+        "last": NaN,
+        "title": NaN,
+        "phone": NaN,
+        "cell": NaN,
+        "email": NaN
+      }
+    ]
+  },
+  {
+    "project": "KCI",
+    "subrecipient_organization": "Kansas City Aviation Department",
+    "locations": [
+      {
+        "address1": "601 Brasilia Avenue",
+        "address2": NaN,
+        "city": "Kansas City",
+        "state": "MO",
+        "phone": NaN,
+        "website": "www.flykci.com"
+      },
+      {
+        "address1": "601 Brasilia Avenue",
+        "address2": NaN,
+        "city": "Kansas City",
+        "state": "MO",
+        "phone": NaN,
+        "website": NaN
+      }
+    ],
+    "contacts": [
+      {
+        "contact_type": "Primary Contract",
+        "prefix": "Mr.",
+        "first": "Kenneth",
+        "last": "Williams",
+        "title": "Fleet Manger, KC Aviation Dept",
+        "phone": "(816) 243-5055",
+        "cell": "(816) 719-0667",
+        "email": "Kenneth.Williams@kcmo.org"
+      },
+      {
+        "contact_type": "Secondary Contact",
+        "prefix": "Mr.",
+        "first": "Luis",
+        "last": "Esquilin",
+        "title": "Fleet Maintenance Supervisor, KC Aviation Department",
+        "phone": NaN,
+        "cell": NaN,
+        "email": "Luis.Esquilin@kcmo.org"
+      },
+      {
+        "contact_type": "Secondary Contact",
+        "prefix": "Mr.",
+        "first": "Ian",
+        "last": "Redhead",
+        "title": "Deputy Aviation Director",
+        "phone": "(816) 243-3000",
+        "cell": NaN,
+        "email": "Ian.Redhead@kcmo.org"
+      }
+    ]
+  },
+  {
+    "project": "SAPP BROTHERS",
+    "subrecipient_organization": "Sapp Brothers Travel Centers",
+    "locations": [
+      {
+        "address1": "9915 South 48th Street",
+        "address2": NaN,
+        "city": "Omaha",
+        "state": "NE",
+        "phone": "(402) 895-2202",
+        "website": "http://www.sappbros.net/travel-centers/"
+      },
+      {
+        "address1": "27603 Outer Road",
+        "address2": NaN,
+        "city": "Harrisonville",
+        "state": "MO",
+        "phone": "(816) 884-3306",
+        "website": "http://www.sappbros.net/travel-centers/locations/harrisonville/"
+      }
+    ],
+    "contacts": [
+      {
+        "contact_type": "Primary Contract",
+        "prefix": "Mr.",
+        "first": "Kirk",
+        "last": "McClymont",
+        "title": "President, Stirk CNG",
+        "phone": "(855) 364-6264",
+        "cell": "(308) 991-3811",
+        "email": "kirk@stirkcng.com"
+      },
+      {
+        "contact_type": "Secondary Contact",
+        "prefix": "Mr.",
+        "first": "Mike",
+        "last": "Hoelscher",
+        "title": "Managing Member, Stirk CNG",
+        "phone": "(855) 364-6264",
+        "cell": "(402) 304-3614",
+        "email": "mike@stirkcng.com"
+      },
+      {
+        "contact_type": "Secondary Contact",
+        "prefix": "Mr.",
+        "first": "Dave",
+        "last": "Ferguson",
+        "title": "General Manager, Harrisonville",
+        "phone": "(816) 884-3306",
+        "cell": NaN,
+        "email": NaN
+      }
+    ]
+  },
+  {
+    "project": "UNIVERSITY OF KANSAS",
+    "subrecipient_organization": NaN,
+    "locations": [
+      {
+        "address1": "Materials, Measurement & Sustainable Environment Center",
+        "address2": "1536 West 15th Street, Room G-554-558",
+        "city": "Lawrence",
+        "state": "KS",
+        "phone": "(785) 864-3879",
+        "website": "http://biodiesel.ku.edu/"
+      }
+    ],
+    "contacts": [
+      {
+        "contact_type": "Primary Contact",
+        "prefix": "Dr. ",
+        "first": "Susan ",
+        "last": "Stagg-Williams",
+        "title": "Professor of Chemical & Petroleum Engineering",
+        "phone": "(785) 864-2919",
+        "cell": NaN,
+        "email": "m312h412@ku.edu"
+      },
+      {
+        "contact_type": "Secondary Contact",
+        "prefix": NaN,
+        "first": NaN,
+        "last": NaN,
+        "title": NaN,
+        "phone": NaN,
+        "cell": NaN,
+        "email": "smwilliams@ku.edu"
+      }
+    ]
+  }
+]

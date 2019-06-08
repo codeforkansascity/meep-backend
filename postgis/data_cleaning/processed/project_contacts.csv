@@ -1,0 +1,22 @@
+cell,contact_type,email,first,last,phone,prefix,project,subrecipient_organization,title
+(785) 823-3545,Primary Contact,marka@triplettinc.com,Mark,Augustine,(785) 823-7839 x 104,Mr.,I-70 CNG,24/7 Travel Stores,"President, 24/7 Travel Stores"
+,Primary Contract,sbrown@BSSD.NET,Steve,Brown,(816) 874-3799,Mr.,BSSD,Blue Springs R-IV Schools,Director
+,Secondary Contact,bcowling@BSSD.NET,Bill,Cowling,(816) 874-3200,Dr. ,BSSD,Blue Springs R-IV Schools,Assistant Superintendent
+,Primary Contract,bmeyer@eldoks.com,Brad,Meyer,(316) 322-4481,Mr.,"El Dorado, KS",City of El Dorado Public Works Department,Director
+,Secondary Contact,,,,,,"El Dorado, KS",City of El Dorado Public Works Department,
+(620) 640-8310,Primary Contract,sam.curran@gardencityks.us,Sam,Curran,(620) 276-1260,Mr.,"Garden City, KS",City of Garden City Public Works Department,Director
+,Secondary Contact,rhonda.griffin@gardencityks.us,Rhoda,Griffin,(620) 276-1260,Ms.,"Garden City, KS",City of Garden City Public Works Department,Administrative Assistant
+972-313-5184,Primary Contact,norman.herrera@sparqng.com,Norman,Herrera,(405) 896-5099,Mr.,Sparq NG,,"Chief Executive Officer, Sparq CNG"
+,Secondary Contact,tristan.adler@sparqng.com,Tristan,Adler,(405) 896-5096,Mr.,Sparq NG,,"CFO, Sparq Natural Gas"
+,Secondary Contact,,John,Bolte,,Mr. ,Sparq NG,,Small Arrow Engineering
+816-810-4870,Primary Contract,sbrady@gvr5.net,Shawn,Brady,(816) 847-5004,Mr.,Grain Valley ,Grain Valley School District R-5,Director
+,Secondary Contact,NathanEdiger@ferrellgas.com,Nathan,Ediger,(913) 661-1510,Mr.,Grain Valley ,Grain Valley School District R-5,Ferrellgas
+,Secondary Contact,,,,,,Grain Valley ,Grain Valley School District R-5,
+(816) 719-0667,Primary Contract,Kenneth.Williams@kcmo.org,Kenneth,Williams,(816) 243-5055,Mr.,KCI,Kansas City Aviation Department,"Fleet Manger, KC Aviation Dept"
+,Secondary Contact,Luis.Esquilin@kcmo.org,Luis,Esquilin,,Mr.,KCI,Kansas City Aviation Department,"Fleet Maintenance Supervisor, KC Aviation Department"
+,Secondary Contact,Ian.Redhead@kcmo.org,Ian,Redhead,(816) 243-3000,Mr.,KCI,Kansas City Aviation Department,Deputy Aviation Director
+(308) 991-3811,Primary Contract,kirk@stirkcng.com,Kirk,McClymont,(855) 364-6264,Mr.,SAPP BROTHERS,Sapp Brothers Travel Centers,"President, Stirk CNG"
+(402) 304-3614,Secondary Contact,mike@stirkcng.com,Mike,Hoelscher,(855) 364-6264,Mr.,SAPP BROTHERS,Sapp Brothers Travel Centers,"Managing Member, Stirk CNG"
+,Secondary Contact,,Dave,Ferguson,(816) 884-3306,Mr.,SAPP BROTHERS,Sapp Brothers Travel Centers,"General Manager, Harrisonville"
+,Primary Contact,m312h412@ku.edu,Susan ,Stagg-Williams,(785) 864-2919,Dr. ,UNIVERSITY OF KANSAS,,Professor of Chemical & Petroleum Engineering
+,Secondary Contact,smwilliams@ku.edu,,,,,UNIVERSITY OF KANSAS,,
