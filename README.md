@@ -42,7 +42,9 @@
     docker run -p 8001:8000 -v $(pwd)/src:/meep/api/src meep-backend:gunicorn
     ```
 
-      - On windows, the command for live editing probably won't work. instead of ```$(pwd)/src``` on the left side of the           bind mount, you will have to provide an absolute path to the project folder that contains the Dockerfile (src at the         time of writing). After that, there is a chance that you will get a different error. Restart docker and try again. It         usually works on the second attempt. Please note that this is a temporary workaround while we find a less annoying way       to run the project on windows.  
+      - On windows using powershell, replace ```$(pwd)/src``` on the left side of the bind mount with ```${PWD}\src```. 
+      There is a chance that you will get errors when running for the first time. Restart docker and try again. It         usually works on the second attempt.
+      
   4. In a browser, try typing ```http://localhost:8001/locations``` to see
     if it worked.
 
