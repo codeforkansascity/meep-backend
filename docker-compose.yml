@@ -24,6 +24,7 @@ services:
           - db
         environment:
           - DEV_DATABASE_URL=postgresql://meep:supersafe@db:5432/meep_api
+          - TEST_DATABASE_URL=postgresql://meep:supersafe@db:5432/meep_api
         links:
           - db
 
