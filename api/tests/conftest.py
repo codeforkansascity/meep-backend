@@ -54,9 +54,9 @@ def new_location():
     return location
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='session')
 def test_client():
-    flask_app = create_app(config_name='dev')
+    flask_app = create_app(config_name='test')
 
     # Flask provides a way to test your application by exposing the Werkzeug test Client
     # and handling the context locals for you.
