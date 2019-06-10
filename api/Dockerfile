@@ -10,6 +10,8 @@ RUN apk --no-cache add build-base \
     && pip install --no-cache-dir -r requirements.txt \
     && pip install gunicorn==19.9.0
 
+ENV PYTHONPATH /meep/api/src
+
 COPY . ..
 
 EXPOSE 8000

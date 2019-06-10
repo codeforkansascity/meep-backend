@@ -1,8 +1,3 @@
-# Update path so the code from the src directory gets imported correctly for
-# tests without needing to modify module imports in src
-import sys
-sys.path.append('/meep/api/src')
-
 import pytest
 from app import create_app
 from models import User, Role, Project, db, ProjectType
