@@ -3,19 +3,19 @@ from app import create_app
 from models import User, Role, Project, db, ProjectType
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='function')
 def new_user():
     user = User('evan@aol.com', '1289rhth')
     return user
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='function')
 def new_role():
     role = Role(id=8, role_name="admin")
     return role
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='function')
 def new_project():
     project = Project(
         id=1,
@@ -30,7 +30,7 @@ def new_project():
     return project
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='function')
 def new_projectType():
     projectType = ProjectType(
         id=9,
@@ -39,7 +39,7 @@ def new_projectType():
     return projectType
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='function')
 def new_location():
     location = Location(
         id=5,
