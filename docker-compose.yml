@@ -16,6 +16,7 @@ services:
         build: api
         volumes:
           - ./api/src:/meep/api/src
+          - ./api/tests:/meep/api/tests
         expose:
           - 8000
         ports:
