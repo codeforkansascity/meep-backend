@@ -27,7 +27,6 @@ services:
         links:
           - db
 
-
     db:
         image: postgres:11.3
         environment:

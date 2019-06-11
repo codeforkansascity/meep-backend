@@ -1,5 +1,7 @@
 flask
+flask-cors
 flask-restful
 flask-SQLAlchemy
+gunicorn==19.9.0
 psycopg2
 pytest

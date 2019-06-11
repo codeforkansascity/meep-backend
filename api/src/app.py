@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 
 from config import config
 from models import db
@@ -19,6 +20,9 @@ def create_app(config_name='dev'):
         from resources.locations import api_locations_blueprint
         from resources.projects import api_projects_blueprint
         from resources.users import api_users_blueprint
+
+        # DANGEROUS! Configure this to only allow specific origins and headers.
+        CORS(app)
 
         # register blueprints
         app.register_blueprint(api_locations_blueprint)
