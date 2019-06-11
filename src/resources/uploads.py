@@ -1,66 +1,61 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from flask_restful import Api, Resource, fields, reqparse
-from .base import BaseAPI, BaseListAPI
-# from models import User, Role
-import pandas as pd
-
+from models import db, Project
+import csv
+import io
 from app import db
 
 api_uploads_blueprint = Blueprint('api_uploads', __name__)
 api = Api(api_uploads_blueprint)
 
-'''
-defining a list api resource entails subclassing BaseListAPI and referring
-to the base API resource it is built on
-'''
 
-# Uploads api should probably only have put and post requests allowed...
+# TODO: Uploads api should probably only have put and post requests allowed...
 
-class UploadAPI(Resource):  #
+class UploadAPI(Resource):  
     def __init__(self):
         super().__init__()
         self.parser = reqparse.RequestParser()  # for input validation
-        # for col in self.model.get_columns():
-        #     parser.add_argument(col)
-        # self.parser = parser
-
-        self.TODOS = {
-        'todo1': {'task': 'build an API'},
-        'todo2': {'task': '?????'},
-        'todo3': {'task': 'profit!'},
-        }
-
-    def get(self):
-
-        return self.TODOS
-
+        self.parser.add_argument('file')   # TODO: where should this add be?
+    
     def post(self):
-        self.parser.add_argument('file')
-        args = self.parser.parse_args()
-        # args['file']
-        print(args)
+        """
+        Test this endpoint using curl or the requests library
+        ex: using curl enter the following in a command prompt:
+        curl -X POST -F file=@"local_filepath" http://localhost:8001/uploads
 
-        ######
-        df = pd.read_csv(args['file'])
+        check that projects were added to the database by going to the /projects endpoint
+        """
+        # Pull in arguments from the post request
+        file = request.files['file']
 
-        print(df.head)
-        print(df.columns)
-        print(df['project'][0])
-        #######
+        # TODO: add error handling or settings to specify which file extensions are allowed
+        # TODO: add error handling, gives error if trying to add the same project with the same name again. Need to handle that error
+            #sqlite3.IntegrityError: UNIQUE constraint failed: projects.name
 
-        todo_id = int(max(self.TODOS.keys()).lstrip('todo')) + 1
-        todo_id = 'todo%i' % todo_id
-        # self.TODOS[todo_id] = {'task': args['file']}
-        self.TODOS[todo_id] = {'task': df['project'][0]}
+        # convert the incoming file object to a file stream object in the proper mode and encoding setting
+        file.stream.seek(0) # seek to the beginning of the file
+        contents = file.stream.read().decode('utf-8')   # write contents to a string
+        csvfile = io.StringIO(contents)  # open the string as a filestream so we can use csv package tools
+       
+        # use csv package to import the csv
+        # create a Project object for each row and add it to the database
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            print(row)
+            print(row['name'])
+            #for each row, we will add it to the database
+            project = Project(name=row['name'], 
+                description=row['description'], 
+                photo_url=row['photo_url'], 
+                website_url=row['website_url'], 
+                year=row['year'], 
+                ghg_reduced=row['ghg_reduced'], 
+                gge_reduced=row['gge_reduced'])
+            db.session.add(project)
+        db.session.commit()
 
-        return df['project'][0], 200
-
-    def delete(self, id):
-        # # the same ideas from the put method apply here
-        # resource = self.model.query.get(id)
-        # db.session.delete(resource)
-        # db.session.commit()
         return 200
 
+    # TODO: add delete and pull requests??
 
-api.add_resource(UploadAPI, '/uploads', endpoint='upload')  #'/uploads/<int:id>'
+api.add_resource(UploadAPI, '/uploads', endpoint='upload')
