@@ -105,6 +105,6 @@ venv.bak/
 .mypy_cache/
 
 # postgresql
-postgis/data_cleaning/processed/*.csv
-postgis/data_cleaning/processed/*.json
-postgis/data_cleaning/raw/*.xlsx
+ postgis/data_cleaning/processed/*.csv
+ postgis/data_cleaning/processed/*.json
+ postgis/data_cleaning/raw/*.xlsx

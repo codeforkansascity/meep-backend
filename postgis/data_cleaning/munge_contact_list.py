@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from operator import itemgetter
 
 import pandas as pd
 import numpy as np
@@ -41,14 +42,34 @@ def main():
     locations.to_csv(f'processed/project-locations-{date}.csv', index=False)
     contacts.to_csv(f'processed/project-contacts-{date}.csv', index=False)
 
+    #create a projects table from the data
 
-    return projects_json, locations, contacts
+
+    #create addresses table from project locations
+    addresses = locations.drop(['phone', 'project', 'subrecipient_organization', 'website'], axis=1)
+    addresses['address'] = addresses['address2']
+    addresses['address'] = addresses['address'].fillna(addresses['address1'])
+    addresses = addresses.drop(['address1', 'address2'], axis=1)
+    addresses = addresses[addresses.address != 'TBD']
+    addresses['zip'] = addresses.zip.fillna(-1)
+    addresses = addresses.astype({'zip': 'int64'})
+    addresses['address'] = addresses.address.str.split(',').apply(itemgetter(0))
+    addresses.index = pd.RangeIndex(len(addresses))
+    fill_data = np.empty(len(addresses))
+    fill_data[:] = np.nan
+    addresses['latitude'] = pd.Series(data=fill_data)
+    addresses['longitude'] = pd.Series(data=fill_data)
+    addresses['project_id'] = pd.Series(data=fill_data)
+
+    addresses.to_csv(f'processed/addresses-{date}.csv', index_label='id')
+
+    return projects_json, locations, contacts, addresses
 
 
 def set_contact_type(series):
     series = series.copy()
     series = series.str.split(n=1)\
-             .apply(lambda l: l[0])\
+             .apply(itemgetter(0))\
              .str.lower()
     return series
 
@@ -130,6 +151,7 @@ class Location:
         self.city = city
         self.state = state
         self.phone = phone
+        self.zip = zip
         self.website = website
 
     def to_dict(self):
@@ -151,4 +173,4 @@ class Contact:
 
 
 if __name__ == '__main__':
-    projects, locations, contacts = main()
+    projects, locations, contacts, addresses = main()
