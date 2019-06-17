@@ -29,11 +29,7 @@ services:
 
 
     db:
-        image: postgres:11.3
-        environment:
-          - POSTGRES_USER=meep
-          - POSTGRES_PASSWORD=supersafe
-          - POSTGRES_DB=meep_api
+        build: postgis
         volumes:
           - "postgres_data:/var/lib/postgresql/data"
 

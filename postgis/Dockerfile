@@ -1,13 +1,6 @@
-FROM kartoza/postgis
+FROM postgres:11.3
+ENV POSTGRES_USER=meep POSTGRES_PASSWORD=supersafe POSTGRES_DB=meep_api
 
-COPY xlsx /xlsx
+COPY data_cleaning/processed /data
 
 COPY scripts /scripts
-
-RUN rm /etc/postgresql/11/main/pg_hba.conf
-
-COPY pg_hba.conf /etc/postgresql/11/main/pg_hba.conf
-
-RUN apt-get -y update \
-  && apt-get -y install postgis \
-  && ls -la /usr/bin/ | grep shp \
