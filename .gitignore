@@ -107,4 +107,9 @@ venv.bak/
 # postgresql
 postgis/data_cleaning/processed/*.csv
 postgis/data_cleaning/processed/*.json
+postgis/data_cleaning/processed/*.xlsx
+postgis/data_cleaning/processed/.~lock*
 postgis/data_cleaning/raw/*.xlsx
+postgis/data_cleaning/raw/*.csv
+postgis/data_cleaning/raw/*.json
+postgis/data_cleaning/raw/*.~lock*
