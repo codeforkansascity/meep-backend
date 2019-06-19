@@ -14,21 +14,9 @@ def project_type_id(project_class, project_types):
     return idx
 
 
-def project_id(row, contacts):
-    contacts = contacts.copy()
-    project_name = row.name
-    year = row.year
-    mask = ((contacts.name == project_name) & (contacts.year == year))
-    if mask.sum() > 0:
-        [project_id] = contacts.index[mask]
-    else:
-        project_id = -1
-
-    return project_id
-
-
 def format_column_name(c):
     return c.lower().strip().replace(' ', '_')
+
 
 def make_projects(contacts, project_types):
     contacts = contacts.copy()
@@ -46,8 +34,19 @@ def make_locations(contacts):
 
     locations = contacts[['address', 'state', 'zip_code', 'longitude', 'latitude']]
 
-    locations['project_id'] = contacts[['name', 'year']]\
-                              .apply(partial(project_id, contacts=contacts.copy()), axis=1)
+    locations['project_id'] = contacts.index
+
+    locations = locations.dropna(how='all',
+                                 subset=['address', 'state', 'zip_code',
+                                         'longitude', 'latitude'],
+                                 axis='index')
+
+    locations = locations.fillna({'zip_code': -1, 'longitude': -1000, 'latitude': -1000})
+
+
+    locations = locations.astype({'address': 'object', 'state': 'object',
+                                  'zip_code': 'int64', 'longitude': 'float64',
+                                  'latitude': 'float64', 'project_id': 'int64'})
 
     return locations
 
