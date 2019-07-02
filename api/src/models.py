@@ -1,25 +1,30 @@
-from flask_sqlalchemy import SQLAlchemy, Model
-
 # see flask_sqlalchemy docs for details on how the library works
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/
 # also, the plain sqlalchemy docs
 # https://www.sqlalchemy.org/
 
-# base class shared by all models. Needed to instantiate SQLAlchemy object.
+from flask_sqlalchemy import SQLAlchemy, Model
+
+
 class BaseModel(Model):
+    """Base class shared by all models to implement common attributes and methods.
+    Needed to instantiate SQLAlchemy object.
+    TODO: find a way to move this to models.py without breaking the app
+    """
+
     @property
     def json(self):
+        """return json representation of model"""
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
-    # TODO: make this a property instead of a getter method
     @classmethod
     def get_columns(cls):
+        # TODO: make this a property instead of a getter method
         return [c.name for c in cls().__table__.columns]
 
 
 # globally accessible database connection
 db = SQLAlchemy(model_class=BaseModel)
-
 
 class User(db.Model):
     """A user of the application.
@@ -35,8 +40,9 @@ class User(db.Model):
 
     role = db.relationship('Role', backref=db.backref('users', lazy='select'))
 
-    def __init__(self, email):
+    def __init__(self, email, password_hash):
         self.email = email
+        self.password_hash = password_hash
 
 
 class Role(db.Model):
