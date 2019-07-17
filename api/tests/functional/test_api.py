@@ -31,8 +31,6 @@ def test_get_locations_list(app):
         data = response.get_json()
         resp_locations = data.get('locations')
         assert resp_locations is not None
-        print(Location.query.all())
-        print(resp_locations)
         assert json.dumps(resp_locations) == (
         '[{"id": "1", "address": "123 test street", "city": "Kansas City", "state": "MO", "zipCode": 66213, "latitude": 39.123432, "longitude": -83.123456}, {"id": "2", "address": "456 test way", "city": "Kansas City", "state": "KS", "zipCode": 66210, "latitude": 39.654321, "longitude": -83.654321}]')
 
