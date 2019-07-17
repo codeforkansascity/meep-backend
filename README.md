@@ -113,3 +113,8 @@
     flask run
     ```
   11. test to see if it worked: in a browser, type ```localhost:5000/projects``` you should see some json containing project data
+
+
+### Tests
+  1. Start the containers as normal: ```docker-compose up --build -d```.
+  2. Run pytest in the api container: ```docker exec -it meep-backend_api_1 pytest```.
