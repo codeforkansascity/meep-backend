@@ -2,7 +2,7 @@ FROM python:3.7.3-alpine
 
 WORKDIR /meep/api/src
 
-COPY requirements.txt .
+COPY src/requirements.txt .
 
 RUN apk --no-cache add build-base \
     && apk --no-cache add postgresql-dev \
@@ -10,7 +10,9 @@ RUN apk --no-cache add build-base \
     && pip install --no-cache-dir -r requirements.txt \
     && pip install gunicorn==19.9.0
 
-COPY . .
+ENV PYTHONPATH /meep/api/src
+
+COPY . ..
 
 EXPOSE 8000
 

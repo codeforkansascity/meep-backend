@@ -105,3 +105,6 @@ venv.bak/
 
 # postgresql
 /postgresql
+
+# JetBrains IDE files
+.idea/
