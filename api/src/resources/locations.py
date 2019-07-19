@@ -32,39 +32,39 @@ api.add_resource(LocationAPI, '/locations/<int:id>', endpoint='location')
 class LocationListAPI(BaseListAPI):
     base = LocationAPI
 
-    def get(self):
-        """ Overrides inherited get method from BaseListAPI in order to implement
-        query string parameters
-        """
-        # query string parameters
-        min_year = request.args.get('min-year')
-        max_year = request.args.get('max-year')
-        project_types = request.args.getlist('project-type')
-
-        if not request.args:  # if no query string parameters provided
-            # return all locations
-            locs = [loc.json for loc in Project.query.all()]
-            return {'locations': locs}
-
-        # some query parameter was passed, so join project type, project, and
-        # location tables, and filter based on non null queries
-        q = db.session.query(ProjectType, Project, Location)\
-            .filter(ProjectType.id == Project.project_type_id)\
-            .filter(Project.id == Location.project_id)
-
-        if min_year is not None:
-            q = q.filter(Project.year >= min_year)
-
-        if max_year is not None:
-            q = q.filter(Project.year <= max_year)
-
-        if project_types:
-            q = q.filter(ProjectType.type_name.in_(project_types))
-
-        # only return location data, even though projects and project types
-        # were used in the query
-        locs = [loc.json for (type, proj, loc) in q]
-        return {'locations': locs}
+    # def get(self):
+    #     """ Overrides inherited get method from BaseListAPI in order to implement
+    #     query string parameters
+    #     """
+    #     # query string parameters
+    #     min_year = request.args.get('min-year')
+    #     max_year = request.args.get('max-year')
+    #     project_types = request.args.getlist('project-type')
+    #
+    #     if not request.args:  # if no query string parameters provided
+    #         # return all locations
+    #         locs = [loc.json for loc in Project.query.all()]
+    #         return {'locations': locs}
+    #
+    #     # some query parameter was passed, so join project type, project, and
+    #     # location tables, and filter based on non null queries
+    #     q = db.session.query(ProjectType, Project, Location)\
+    #         .filter(ProjectType.id == Project.project_type_id)\
+    #         .filter(Project.id == Location.project_id)
+    #
+    #     if min_year is not None:
+    #         q = q.filter(Project.year >= min_year)
+    #
+    #     if max_year is not None:
+    #         q = q.filter(Project.year <= max_year)
+    #
+    #     if project_types:
+    #         q = q.filter(ProjectType.type_name.in_(project_types))
+    #
+    #     # only return location data, even though projects and project types
+    #     # were used in the query
+    #     locs = [loc.json for (type, proj, loc) in q]
+    #     return {'locations': locs}
 
 
 api.add_resource(LocationListAPI, '/locations', '/locations/')
