@@ -103,7 +103,7 @@ class BaseListAPI(Resource):
         new_resource = self.base.model(**{attr: args.get(attr) for attr in attrs})
         db.session.add(new_resource)
         db.session.commit()
-        return 200
+        return {'status': 'great success!'}, 201
 
     def get(self):
         """return a list of the given resource."""

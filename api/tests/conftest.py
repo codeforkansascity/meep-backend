@@ -58,6 +58,7 @@ def new_location():
 def app():
     app = create_app('test')
     with app.app_context():
+        db.drop_all()
         db.create_all()
         yield app
         db.session.remove()

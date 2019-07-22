@@ -33,34 +33,19 @@ def test_new_project(new_project):
     assert new_project.ghg_reduced == 2.234
 
 
-def test_insert_location():
-    app = create_app('test')
-    ctx = app.app_context()
-    ctx.push()
-    db.create_all()
+
+def test_create_location(app):
     location = Location(address='123 testing way')
     db.session.add(location)
     db.session.commit()
 
-    db.session.delete(location)
-    db.session.commit()
-    ctx.pop()
+    [retrieved_location] = Location.query.all()
+    assert retrieved_location.address == '123 testing way'
 
-def test_select_location():
-    app = create_app('test')
-    ctx = app.app_context()
-    ctx.push()
-    db.create_all()
-    location = Location(address='456 test drive', state='CA')
-    db.session.add(location)
-    db.session.commit()
 
-    selected_location = Location.query.filter_by(state='CA').first()
-    assert selected_location.address == '456 test drive'
 
-    db.session.delete(location)
-    db.session.commit()
-    ctx.pop()
+
+
 
 
 def test_update_location():
