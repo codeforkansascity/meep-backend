@@ -73,7 +73,36 @@ def test_get_location_by_id(app):
     assert data.get('longitude') == -83.123456
 
 def test_put_location(app):
-    pass
+    location = Location(address='123 test street', city='Kansas City',
+        state='MO', zip_code=66213, latitude='39.123452', longitude='-83.123456')
+    db.session.add(location)
+    db.session.commit()
+    del location
+    with app.test_client() as client:
+        response = client.put('/locations/1', json={'address': '456 testing way'})
+    assert response.status_code == 200
+    [location_copy, *_] = Location.query.all()
+    assert location_copy.address == '456 testing way'
+    assert location_copy.city == 'Kansas City'
+
 
 def test_delete_location(app):
-    pass
+    location_1 = Location(address='123 test street', city='Kansas City',
+        state='MO', zip_code=66213, latitude='39.123452', longitude='-83.123456')
+    location_2 = Location(address='456 test way', city='Kansas City',
+        state='KS', zip_code=66210, latitude='39.654321', longitude='-83.654321')
+    db.session.add(location_1)
+    db.session.add(location_2)
+    db.session.commit()
+    del location_1
+    del location_2
+    with app.test_client() as client:
+        response = client.delete('/locations/1')
+    assert response.status_code == 200
+    [location_2_copy] = Location.query.all()
+    assert location_2_copy.address == '456 test way'
+    assert location_2_copy.city == 'Kansas City'
+    assert location_2_copy.state == 'KS'
+    assert location_2_copy.zip_code == 66210
+    assert location_2_copy.latitude == 39.654321
+    assert location_2_copy.longitude == -83.654321
