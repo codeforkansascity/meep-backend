@@ -9,8 +9,11 @@ RUN apk --no-cache add build-base \
     && pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
     && pip install gunicorn==19.9.0
-
+# proj = Project(name='tasty cake')
+# db.session.add(proj)
+# db.session.commit()
 ENV PYTHONPATH /meep/api/src
+ENV TEST_DATABASE_URL postgresql://meep:supersafe@db:5432/meep_api
 
 COPY . ..
 

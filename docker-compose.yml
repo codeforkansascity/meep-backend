@@ -14,6 +14,8 @@ services:
 
     api:
         build: api
+        environment:
+          - DEV_DATABASE_URL
         volumes:
           - ./api/src:/meep/api/src
           - ./api/tests:/meep/api/tests
@@ -23,12 +25,8 @@ services:
           - 8000:8000
         depends_on:
           - db
-        environment:
-          - DEV_DATABASE_URL=postgresql://meep:supersafe@db:5432/meep_api
-          - TEST_DATABASE_URL=postgresql://meep:supersafe@db:5432/meep_api
         links:
           - db
-
 
     db:
         image: postgres:11.3

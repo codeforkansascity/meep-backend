@@ -48,7 +48,7 @@ def new_location():
         state="KS",
         zip_code=66204,
         latitude=38.992762,
-        longitude=-94668954,
+        longitude=-94.668954,
         project_id=1
     )
     return location
