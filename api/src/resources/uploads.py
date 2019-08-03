@@ -58,4 +58,4 @@ class UploadAPI(Resource):
 
     # TODO: add delete and pull requests??
 
-api.add_resource(UploadAPI, '/uploads', endpoint='upload')
+api.add_resource(UploadAPI, '/projects/upload/csv', endpoint='upload')
