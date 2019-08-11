@@ -17,23 +17,23 @@ import sys
 from models import *
 from app import create_app
 
-def reset():
-    drop_tables()
-    create_tables()
-    seed_db()
+def reset(config):
+    drop_tables(config)
+    create_tables(config)
+    seed_db(config)
 
-def drop_tables():
-    app = create_app('dev')
+def drop_tables(config):
+    app = create_app(config)
     with app.app_context():
         db.drop_all()
 
-def create_tables():
-    app = create_app('dev')
+def create_tables(config):
+    app = create_app(config)
     with app.app_context():
         db.create_all()
 
-def seed_db():
-    app = create_app('dev')
+def seed_db(config):
+    app = create_app(config)
     with app.app_context():
         #roles
         user = Role(role_name = 'user')
@@ -114,13 +114,14 @@ def seed_db():
 
 if __name__ == '__main__':
     cmd = sys.argv[1]
+    config = sys.argv[2]
     if cmd == 'drop':
-        drop_tables()
+        drop_tables(config)
     elif cmd == 'create':
-        create_tables()
+        create_tables(config)
     elif cmd == 'seed':
-        seed_db()
+        seed_db(config)
     elif cmd == 'reset':
-        reset()
+        reset(config)
     else:
         print('Unknown command. Use drop, create, or seed.')
