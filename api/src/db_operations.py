@@ -2,15 +2,17 @@
 basic operations for creating and dropping tables, reseting the database,
 and seeding with data for development
 
-to run as a script, from the command line do one of:
+to run as a script from the command line you need to enter 2 arguments: a command and a config. E.g.:
 
-python db_operations.py drop
+python db_operations.py drop test
 
-python db_operations.py create
+python db_operations.py create dev
 
-python db_operations.py seed
+python db_operations.py seed dev
 
-python db_operations.py reset
+python db_operations.py reset test
+
+Currently only dev and test configs work
 '''
 import sys
 
@@ -115,7 +117,9 @@ def seed_db(config):
 if __name__ == '__main__':
     cmd = sys.argv[1]
     config = sys.argv[2]
-    if cmd == 'drop':
+    if config != 'dev' or config != 'test':
+        print("Unknown config: Enter dev or test as 2nd argument")
+    elif cmd == 'drop':
         drop_tables(config)
     elif cmd == 'create':
         create_tables(config)
@@ -124,4 +128,4 @@ if __name__ == '__main__':
     elif cmd == 'reset':
         reset(config)
     else:
-        print('Unknown command. Use drop, create, or seed.')
+        print('Unknown command. Use drop, create, or seed for 1st argument and either dev or test for 2nd argument')
