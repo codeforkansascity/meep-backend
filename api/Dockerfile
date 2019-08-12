@@ -8,7 +8,8 @@ RUN apk --no-cache add build-base \
     && apk --no-cache add postgresql-dev \
     && pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
-    && pip install gunicorn==19.9.0
+    && pip install gunicorn==19.9.0 \
+    && echo 'alias ll="'ls -lah'"' >> /etc/profile
 
 ENV PYTHONPATH /meep/api/src
 
