@@ -56,12 +56,3 @@ def test_update_location(app):
     db.session.commit()
     selected_location = Location.query.filter_by(address='789 test road').first()
     assert selected_location.state == 'CO'
-
-
-    # updated_location = Location.query.filter_by(address='456 test drive').first()
-    # updated_location.state = 'CO'
-    # db.session.add(updated_location)
-    # db.session.commit()
-    # assert updated_location.state == 'CO'
-    # queried_location = Location.query.filter_by(address='456 test drive').first()
-    # assert queried_location.state == 'CO'
