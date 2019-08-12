@@ -33,52 +33,26 @@ def test_new_project(new_project):
     assert new_project.ghg_reduced == 2.234
 
 
-def test_insert_location():
-    app = create_app('test')
-    ctx = app.app_context()
-    ctx.push()
-    db.create_all()
+def test_insert_location(app):
     location = Location(address='123 testing way')
     db.session.add(location)
     db.session.commit()
+    assert location is not None
 
-    db.session.delete(location)
-    db.session.commit()
-    ctx.pop()
-
-def test_select_location():
-    app = create_app('test')
-    ctx = app.app_context()
-    ctx.push()
-    db.create_all()
+def test_select_location(app):
     location = Location(address='456 test drive', state='CA')
     db.session.add(location)
     db.session.commit()
-
     selected_location = Location.query.filter_by(state='CA').first()
     assert selected_location.address == '456 test drive'
 
-    db.session.delete(location)
-    db.session.commit()
-    ctx.pop()
-
-
-def test_update_location():
-    app = create_app('test')
-    ctx = app.app_context()
-    ctx.push()
-    db.create_all()
-    location = Location(address='456 test drive', state='CA')
+def test_update_location(app):
+    location = Location(address='789 test road', state='CA')
     db.session.add(location)
     db.session.commit()
-
-    selected_location = Location.query.filter_by(address='456 test drive').first()
+    selected_location = Location.query.filter_by(address='789 test road').first()
     assert selected_location.state == 'CA'
-
-    location.state = 'CO'
-
-    selected_location = Location.query.filter_by(address='456 test drive').first()
-    assert selected_location.state == 'CO'
-    db.session.delete(location)
+    selected_location.state = 'CO'
     db.session.commit()
-    ctx.pop()
+    selected_location = Location.query.filter_by(address='789 test road').first()
+    assert selected_location.state == 'CO'

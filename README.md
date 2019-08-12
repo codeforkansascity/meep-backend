@@ -117,7 +117,6 @@
 
 ### Tests
   1. Start the containers as normal: `docker-compose up --build -d`
-      - Depending on the state of your local dev database, you might need to reset the database before or after testing since we aren't using a separate test database yet: `docker container exec meep-backend_api_1 python /meep/api/src/db_operations.py reset dev`
   2. Run pytest in the api container to run all discovered tests: `docker exec -it meep-backend_api_1 pytest`
       - Optionally, shell into the api container as normal (`docker container exec -it meep-backend_api_1 /bin/ash`) and then enter the `pytest` command
   - Add -v command line argument for more detailed view of both failing ***and*** passing tests: `pytest -v`
