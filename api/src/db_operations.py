@@ -2,38 +2,40 @@
 basic operations for creating and dropping tables, reseting the database,
 and seeding with data for development
 
-to run as a script, from the command line do one of:
+to run as a script from the command line you need to enter 2 arguments: a command and a config. E.g.:
 
-python db_operations.py drop
+python db_operations.py drop test
 
-python db_operations.py create
+python db_operations.py create dev
 
-python db_operations.py seed
+python db_operations.py seed dev
 
-python db_operations.py reset
+python db_operations.py reset test
+
+Currently only dev and test configs work
 '''
 import sys
 
 from models import *
 from app import create_app
 
-def reset():
-    drop_tables()
-    create_tables()
-    seed_db()
+def reset(config):
+    drop_tables(config)
+    create_tables(config)
+    seed_db(config)
 
-def drop_tables():
-    app = create_app('dev')
+def drop_tables(config):
+    app = create_app(config)
     with app.app_context():
         db.drop_all()
 
-def create_tables():
-    app = create_app('dev')
+def create_tables(config):
+    app = create_app(config)
     with app.app_context():
         db.create_all()
 
-def seed_db():
-    app = create_app('dev')
+def seed_db(config):
+    app = create_app(config)
     with app.app_context():
         #roles
         user = Role(role_name = 'user')
@@ -114,13 +116,16 @@ def seed_db():
 
 if __name__ == '__main__':
     cmd = sys.argv[1]
-    if cmd == 'drop':
-        drop_tables()
+    config = sys.argv[2]
+    if config != 'dev' and config != 'test':
+        print("Unknown config: Enter dev or test as 2nd argument")
+    elif cmd == 'drop':
+        drop_tables(config)
     elif cmd == 'create':
-        create_tables()
+        create_tables(config)
     elif cmd == 'seed':
-        seed_db()
+        seed_db(config)
     elif cmd == 'reset':
-        reset()
+        reset(config)
     else:
-        print('Unknown command. Use drop, create, or seed.')
+        print('Unknown command. Use drop, create, or seed for 1st argument and either dev or test for 2nd argument')

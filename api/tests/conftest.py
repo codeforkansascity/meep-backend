@@ -1,6 +1,7 @@
 import pytest
 from app import create_app
 from models import User, Role, Project, db, ProjectType
+from db_operations import reset
 
 
 @pytest.fixture(scope='function')
@@ -54,7 +55,7 @@ def new_location():
     return location
 
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def app():
     app = create_app('test')
     with app.app_context():
@@ -62,3 +63,4 @@ def app():
         yield app
         db.session.remove()
         db.drop_all()
+    reset('dev')
