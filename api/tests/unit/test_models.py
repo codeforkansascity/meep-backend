@@ -76,7 +76,9 @@ def test_update_location():
     assert selected_location.state == 'CA'
 
     location.state = 'CO'
-    db.session.commit()
 
     selected_location = Location.query.filter_by(address='456 test drive').first()
     assert selected_location.state == 'CO'
+    db.session.delete(location)
+    db.session.commit()
+    ctx.pop()
