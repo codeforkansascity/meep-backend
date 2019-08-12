@@ -117,7 +117,7 @@ def seed_db(config):
 if __name__ == '__main__':
     cmd = sys.argv[1]
     config = sys.argv[2]
-    if config != 'dev' or config != 'test':
+    if config != 'dev' and config != 'test':
         print("Unknown config: Enter dev or test as 2nd argument")
     elif cmd == 'drop':
         drop_tables(config)
