@@ -28,10 +28,10 @@ def test_upload_projects(app):
 
     assert response.status_code == 200
     # get projects from database
-    cool_project, lame_project, best_project  = Project.query.all()
-    print(cool_project)
-    print(lame_project)
-    print(best_project)
+    cool_project = Project.query.filter_by(name='SuperCoolProject').first()
+    lame_project = Project.query.filter_by(name='LameProject').first()
+    best_project = Project.query.filter_by(name='America').first()
+
     assert cool_project.name == 'SuperCoolProject'
     assert cool_project.description == 'the coolest project'
     assert cool_project.photo_url == 'www.superCoolPhoto'
