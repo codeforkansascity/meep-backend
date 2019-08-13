@@ -1,5 +1,5 @@
 '''
-basic operations for creating and dropping tables, reseting the database,
+basic operations for creating and dropping tables, resetting the database,
 and seeding with data for development
 
 to run as a script from the command line you need to enter 2 arguments: a command and a config. E.g.:
