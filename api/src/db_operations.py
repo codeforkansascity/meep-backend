@@ -19,22 +19,22 @@ import sys
 from models import *
 from app import create_app
 
-def reset(config):
+def reset(config='dev'):
     drop_tables(config)
     create_tables(config)
     seed_db(config)
 
-def drop_tables(config):
+def drop_tables(config='dev'):
     app = create_app(config)
     with app.app_context():
         db.drop_all()
 
-def create_tables(config):
+def create_tables(config='dev'):
     app = create_app(config)
     with app.app_context():
         db.create_all()
 
-def seed_db(config):
+def seed_db(config='dev'):
     app = create_app(config)
     with app.app_context():
         #roles
