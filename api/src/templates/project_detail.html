@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+ <head>
+  <meta charset="utf-8">
+  <title></title>
+ </head>
+ <body>
+  <h1>Edit Project</h1>
+  <form class="" action="/forms/projects.html" method="post">
+   <label for="project-name">Project Name</label>
+   <input id="update-project-name" type="text" name="project_name" value="{{ project.name }}">
+
+   <br>
+
+   <label for="update-project-description">Project Description</label>
+   <input type="text-area" name="project_description" value="{{ project.description }}">
+
+   <br>
+
+   <label for="update-project-photo-url">Upload Photo Url</label>
+   <input id='update-project-photo-url' type="text" name="project_photo_url" value="{{ project.photo_url }}">
+
+   <br>
+
+   <label for="update-project-website-url">Project Website</label>
+   <input id='update-project-website-url' type="text" name="project_website_url" value="{{ project.website_url }}">
+
+   <br>
+
+   <label for="project-year">Project Year</label>
+   <input type="text" name="project_year" value="{{ project.year }}">
+
+   <br>
+
+   <label for="update-project-gge-reduced">GGE reduced</label>
+   <input id='update-project-gge-reduced' type="text" name="project_gge_reduced" value="{{ project.gge_reduced }}">
+
+   <br>
+
+   <label for="update-project-ghg-reduced">GHG reduced</label>
+   <input id="update-project-ghg-reduced" type="text" name="project_ghg_reduced" value="{{ project.ghg_reduced }}">
+
+   <br>
+
+   <label for="update-project-type">Select Project Type</label>
+   <select id="update-project-type">
+    <option value="--{{ project.type.type_name }}--"></option>
+    {% for project_type in project_types %}
+      <option value="{{ project_type.type_name }}">{{ project_type.type_name }}</option>
+    {% endfor %}
+   </select>
+
+   <br>
+
+   <button type="submit" name="submit_new_project">Update Project</button>
+  </form>
+
+  <h2>Project Locations</h2>
+  <form>
+   {% for location in project.locations %}
+     <div class="project-location">
+      <label for="location-address">Address</label>
+      <input type="text" name="" value="{{ location.address }}">
+
+      <label for="">City</label>
+      <input type="text" name="" value="{{ location.city }}">
+
+      <label for="">State</label>
+      <input type="text" name="" value="{{ location.state }}">
+
+      <label for="">Zip Code</label>
+      <input type="text" name="" value="{{ location.zip_code }}">
+
+      <button type="button" name="delete-location">Delete</button>
+     </div>
+   {% endfor %}
+  </form>
+  <h2>New Location</h2>
+  <form action="/forms/projects/{{ project.id }}/locations" method="post">
+   <div class="project-location">
+    <label for="location-address">Address</label>
+    <input type="text" name="" value="">
+
+    <label for="">City</label>
+    <input type="text" name="" value="">
+
+    <label for="">State</label>
+    <input type="text" name="" value="">
+
+    <label for="">Zip Code</label>
+    <input type="text" name="" value="">
+
+    <button type="button" name="delete-location">Create</button>
+   </div>
+  </form>
+ </body>
+</html>

@@ -19,31 +19,16 @@ def create_app(config_name='dev'):
         from resources.locations import api_locations_blueprint
         from resources.projects import api_projects_blueprint
         from resources.users import api_users_blueprint
+        from forms import forms_blueprint
 
         # register blueprints
         app.register_blueprint(api_locations_blueprint)
         app.register_blueprint(api_projects_blueprint)
         app.register_blueprint(api_users_blueprint)
+        app.register_blueprint(forms_blueprint)
+
+        @app.route('/ping')
+        def ping():
+            return "<h1>Hellos from MEEP!</h1>"
 
         return app
-
-def create_app(config_name='test'):
-    """App factory for test"""
-    app = Flask(__name__, instance_relative_config=True)
-
-    # config data defined in config.py
-    app.config.from_object(config[config_name])
-    with app.app_context():
-        # initialize extensions
-        db.init_app(app)
-        from resources.locations import api_locations_blueprint
-        from resources.projects import api_projects_blueprint
-        from resources.users import api_users_blueprint
-
-        # register blueprints
-        app.register_blueprint(api_locations_blueprint)
-        app.register_blueprint(api_projects_blueprint)
-        app.register_blueprint(api_users_blueprint)
-
-        return app
-

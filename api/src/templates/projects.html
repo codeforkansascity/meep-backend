@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+ <head>
+  <meta charset="utf-8">
+  <title></title>
+ </head>
+ <body>
+  <form class="" action="/forms/projects.html" method="post">
+   <label for="project-name">Project Name</label>
+   <input id="project-name" type="text" name="project_name" value="">
+
+   <br>
+
+   <label for="project-description">Project Description</label>
+   <input type="text-area" name="project_description" value="">
+
+   <br>
+
+   <label for="project-photo-url">Upload Photo Url</label>
+   <input type="text" name="project_photo_url" value="">
+
+   <br>
+
+   <label for="project-website-url">Project Website</label>
+   <input type="text" name="project_website_url" value="">
+
+   <br>
+
+   <label for="project-year">Project Year</label>
+   <input type="text" name="project_year" value="">
+
+   <br>
+
+   <label for="project-gge-reduced">GGE reduced</label>
+   <input type="text" name="project_gge_reduced" value="">
+
+   <br>
+
+   <label for="project-ghg-reduced">GHG reduced</label>
+   <input type="text" name="project_ghg_reduced" value="">
+
+   <br>
+
+
+   <label for="select-project-type">Select Project Type</label>
+   <select id="select-project-type">
+    <option value="blank"></option>
+    {% for project_type in project_types %}
+      <option value="{{ project_type.type_name }}">{{ project_type.type_name }}</option>
+    {% endfor %}
+   </select>
+
+   <br>
+
+   <button type="submit" name="submit_new_project">Create Project</button>
+  </form>
+
+  <h1>Projects</h1>
+
+  <div id="projects-list">
+   <form class="projects-search">
+    <input type="search" name="" value="">
+    <button type="submit" name="search_for_projects">Search Project Names</button>
+   </form>
+   <ul>
+    {% for project in projects %}
+      <li>
+       <div>
+        <span class='project-name'>{{ project.name }}</span> - <span class='project-year'>{{ project.year }}</span>
+       </div>
+       <div>
+        <span class='project-type'>{{ project.type.type_name }}</span>
+       </div>
+       <div class="update-button">
+        <button type="button" name="button">Update</button>
+       </div>
+      </li>
+    {% endfor %}
+   </ul>
+  </div>
+ </body>
+</html>
