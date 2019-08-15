@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint, request
+from flask import render_template, Blueprint, request, redirect, url_for
 from models import db, Project, ProjectType, Location
 
 forms_blueprint = Blueprint('forms', __name__)
@@ -9,11 +9,21 @@ def project_types_form():
         project_types = ProjectType.query.all()
         return render_template('project_types.html', project_types=project_types)
     elif request.method == 'POST':
-        pass
+        type_name = request.form.get('project_type')
+        project_type = ProjectType(type_name=type_name)
+        db.session.add(project_type)
+        db.session.commit()
+        return redirect(url_for('forms.project_types_form'), code=303)
     else:
         # raise method not found error
         pass
 
+@forms_blueprint.route('/forms/project-types/<int:type_id>', methods=['POST'])
+def delete_project_type(type_id):
+    project_type = ProjectType.query.get(type_id)
+    db.session.delete(project_type)
+    db.session.commit()
+    return redirect(url_for('forms.project_types_form'), code=303)
 
 @forms_blueprint.route('/forms/projects', methods=['GET', 'POST'])
 def projects_form():

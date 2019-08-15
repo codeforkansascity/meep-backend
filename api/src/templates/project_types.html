@@ -6,17 +6,21 @@
  </head>
  <body>
   <h1>Project Types</h1>
+
+  <div class="project-types-list">
+   <ol>
+    {% for project_type in project_types %}
+      <li>
+       <form class="delete-project-type" action="/forms/project-types/{{ project_type.id }}" method="post">
+        {{ project_type.type_name }}
+        <button type="submit">Delete</button>
+       </form>
+      </li>
+    {% endfor %}
+   </ol>
+  </div>
+
   <form action="/forms/project-types" method="post">
-    <div class="project-types-list">
-     <ol>
-      {% for project_type in project_types %}
-        <li>
-          {{ project_type.type_name }}
-          <button type="button" name="button">Delete</button>
-        </li>
-      {% endfor %}
-     </ol>
-    </div>
     <div class="new-project-type">
      <label for="project-type">New Project Type</label>
      <input id="project-type" type="text" name="project_type" value="">
