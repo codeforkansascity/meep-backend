@@ -9,7 +9,7 @@
    <a href="/forms/projects">Back to Projects</a>
   </nav>
   <h1>Edit Project</h1>
-  <form class="" action="/forms/projects.html" method="post">
+  <form class="" action="/forms/projects/{{ project.id }}" method="post">
    <label for="project-name">Project Name</label>
    <input id="update-project-name" type="text" name="project_name" value="{{ project.name }}">
 
@@ -46,7 +46,7 @@
    <br>
 
    <label for="update-project-type">Select Project Type</label>
-   <select id="update-project-type">
+   <select id="update-project-type" name="project_type">
     <option value="--{{ project.type.type_name }}--"></option>
     {% for project_type in project_types %}
       <option value="{{ project_type.type_name }}">{{ project_type.type_name }}</option>
@@ -55,11 +55,10 @@
 
    <br>
 
-   <button type="submit" name="submit_new_project">Update Project</button>
+   <button type="submit" name="update_project">Update Project</button>
   </form>
 
   <h2>Project Locations</h2>
-  <form>
    {% for location in project.locations %}
      <div class="project-location">
       <label for="location-address">Address</label>
@@ -74,26 +73,29 @@
       <label for="">Zip Code</label>
       <input type="text" name="" value="{{ location.zip_code }}">
 
-      <button type="button" name="delete-location">Delete</button>
+      <form class="delete-location" action="/forms/projects/{{ project.id }}/locations/{{ location.id }}" method="post">
+       <button type="submit" name="delete-location">Delete</button>
+      </form>
+
+
      </div>
    {% endfor %}
-  </form>
   <h2>New Location</h2>
   <form action="/forms/projects/{{ project.id }}/locations" method="post">
    <div class="project-location">
     <label for="location-address">Address</label>
-    <input type="text" name="" value="">
+    <input type="text" name="address" value="">
 
     <label for="">City</label>
-    <input type="text" name="" value="">
+    <input type="text" name="city" value="">
 
     <label for="">State</label>
-    <input type="text" name="" value="">
+    <input type="text" name="state" value="">
 
     <label for="">Zip Code</label>
-    <input type="text" name="" value="">
+    <input type="text" name="zip_code" value="">
 
-    <button type="button" name="delete-location">Create</button>
+    <button type="submit" name="new-location">Create</button>
    </div>
   </form>
  </body>

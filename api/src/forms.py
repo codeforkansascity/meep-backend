@@ -60,17 +60,63 @@ def projects_form():
         pass
 
 
-@forms_blueprint.route('/forms/projects/<int:project_id>', methods=['GET', 'PUT'])
-def locations_form(project_id):
+@forms_blueprint.route('/forms/projects/<int:project_id>', methods=['GET', 'POST'])
+def project_details(project_id):
     if request.method == 'GET':
         project_types = ProjectType.query.all()
         project = Project.query.get(project_id)
         return render_template('project_detail.html', project=project, project_types=project_types)
-    elif request.method == 'PUT':
-        pass
+    elif request.method == 'POST':
+        project = Project.query.get(project_id)
+
+        form = request.form
+        project.name = form.get('project_name')
+        project.description = form.get('project_description')
+        project.photo_url = form.get('project_photo_url')
+        project.website_url = form.get('project_website_url')
+        project.year = form.get('project_year')
+        project.gge_reduced = form.get('project_gge_reduced')
+        project.ghg_reduced = form.get('project_ghg_reduced')
+        project.type = ProjectType.query\
+            .filter_by(type_name=form.get('project_type'))\
+            .first()
+
+        db.session.add(project)
+        db.session.commit()
+        return redirect(url_for('forms.project_details', project_id=project_id), code=303)
+
     else:
         # raise method not found error
         pass
+
+
+@forms_blueprint.route('/forms/projects/<int:project_id>/locations', methods=['POST'])
+def project_locations(project_id):
+    form = request.form
+    project = Project.query.get(project_id)
+    location = Location(
+        address=form.get('address'),
+        city=form.get('city'),
+        state=form.get('state'),
+        zip_code=form.get('zip_code')
+    )
+    project.locations.append(location)
+    db.session.add(project)
+    db.session.commit()
+    return redirect(url_for('forms.project_details', project_id=project_id), code=303)
+
+
+@forms_blueprint.route('/forms/projects/<int:project_id>/locations/<int:location_id>', methods=['POST'])
+def delete_locations_by_id(project_id, location_id):
+    project = Project.query.get(project_id)
+    location = Location.query.get(location_id)
+
+    if location is not None:
+        project.locations = [location for locations in project.locations if location.id != location_id]
+        db.session.delete(location)
+        db.session.add(project)
+        db.session.commit()
+    return redirect(url_for('forms.project_details', project_id=project_id), code=303)
 
 
 @forms_blueprint.route('/forms/roles', methods=['GET', 'POST'])
