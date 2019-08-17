@@ -1,6 +1,7 @@
 import pytest
 from app import create_app
 from models import User, Role, Project, db, ProjectType
+from db_operations import reset
 
 
 @pytest.fixture(scope='function')
@@ -55,37 +56,10 @@ def new_location():
 
 
 @pytest.fixture(scope='session')
-def test_client():
-    flask_app = create_app(config_name='test')
-
-    # Flask provides a way to test your application by exposing the Werkzeug test Client
-    # and handling the context locals for you.
-    testing_client = flask_app.test_client()
-
-    # Establish an application context before running the tests.
-    ctx = flask_app.app_context()
-    ctx.push()
-
-    yield testing_client  # this is where the testing happens!
-
-    ctx.pop()
-
-
-# @pytest.fixture(scope='module')
-# def init_database():
-#     # Create the database and the database table
-#     db.create_all()
-#
-#     # Insert user data
-#     app = create_app('dev')
-#     with app.app_context():
-#         # project types
-#         building = ProjectType(type_name='Building')
-#         vehicle_transportation = ProjectType(type_name='Vehicle Transportation')
-#         infastructure_transportation = ProjectType(type_name='Infastructure Transportation')
-#         for pt in building, vehicle_transportation, infastructure_transportation:
-#             db.session.add(pt)
-#
-#     yield db  # this is where the testing happens!
-#
-#     db.drop_all()
+def app():
+    app = create_app('test')
+    with app.app_context():
+        db.create_all()
+        yield app
+        db.session.remove()
+        db.drop_all()
