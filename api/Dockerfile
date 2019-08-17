@@ -15,6 +15,8 @@ RUN apk --no-cache add build-base \
     && echo 'alias ll="'ls -lah'"' >> /etc/profile
 
 ENV PYTHONPATH /meep/api/src
+ENV DEV_DATABASE_URL postgresql+psycopg2://meep_user@ocs-db-pg:codeforkc@ocs-db-pg.postgres.database.azure.com:5432/meep
+
 
 COPY . ..
 

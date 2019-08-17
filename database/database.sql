@@ -20,7 +20,7 @@ create table users (
 
 create table project_types (
  id serial primary key,
- name varchar(30)
+ type_name varchar(30)
 );
 
 create table projects (
