@@ -1,5 +1,10 @@
 FROM python:3.7.3-alpine
 
+ARG db_username=meep_user@ocs-db-pg
+ARG db_name=meep
+ARG db_host=ocs-db-pg.postgres.database.azure.com:5432
+ARG db_password
+
 WORKDIR /meep/api/src
 
 COPY src/requirements.txt .
@@ -15,6 +20,8 @@ RUN apk --no-cache add build-base \
     && echo 'alias ll="'ls -lah'"' >> /etc/profile
 
 ENV PYTHONPATH /meep/api/src
+ENV DEV_DATABASE_URL postgresql+psycopg2://$db_username:$db_password@$db_host/$db_name
+
 
 COPY . ..
 
