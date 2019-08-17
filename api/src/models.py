@@ -4,6 +4,8 @@
 # https://www.sqlalchemy.org/
 
 from flask_sqlalchemy import SQLAlchemy, Model
+from sqlalchemy import func
+from geoalchemy2 import Geometry
 
 
 class BaseModel(Model):
@@ -95,8 +97,7 @@ class Location(db.Model):
     city = db.Column(db.String(50))
     state = db.Column(db.String(2))
     zip_code = db.Column(db.Integer)
-    latitude = db.Column(db.Float)
-    longitude = db.Column(db.Float)
+    location = db.Column(Geometry(geometry_type='POINT'))
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
 
     project = db.relationship('Project', backref='locations')
