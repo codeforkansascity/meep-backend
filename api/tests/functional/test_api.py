@@ -64,18 +64,3 @@ def test_put_project(app):
 
 def test_delete_project(app):
     pass
-
-def test_get_project_type_list(app):
-    pass
-
-def test_get_project_type_by_id(app):
-    pass
-
-def test_post_project_type(app):
-    pass
-
-def test_put_project_type(app):
-    pass
-
-def test_delete_project_type(app):
-    pass
