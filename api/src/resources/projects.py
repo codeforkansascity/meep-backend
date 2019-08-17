@@ -1,10 +1,12 @@
-from flask import Blueprint, request
-from flask_restful import Api, Resource, fields, reqparse
-from .base import BaseAPI, BaseListAPI
-from models import Project, ProjectType
 import csv
 import io
+
+from flask import Blueprint, request
+from flask_restful import Api, Resource, fields, reqparse
+
 from app import db
+from .base import BaseAPI, BaseListAPI
+from models import Project, ProjectType
 
 
 api_projects_blueprint = Blueprint('api_projects', __name__)
@@ -79,12 +81,12 @@ class ProjectLocationsAPI(Resource):
 api.add_resource(ProjectLocationsAPI, '/projects/<int:id>/locations', endpoint='project_locations')
 
 
-class UploadAPI(Resource):  
+class ProjectUploadAPI(Resource):
     def __init__(self):
         super().__init__()
         self.parser = reqparse.RequestParser()  # for input validation
         self.parser.add_argument('file')   # TODO: where should this add be?
-    
+
     def post(self):
         """
         Test this endpoint using curl or the requests library
@@ -104,20 +106,18 @@ class UploadAPI(Resource):
         file.stream.seek(0) # seek to the beginning of the file
         contents = file.stream.read().decode('utf-8')   # write contents to a string
         csvfile = io.StringIO(contents)  # open the string as a filestream so we can use csv package tools
-       
+
         # use csv package to import the csv
         # create a Project object for each row and add it to the database
         reader = csv.DictReader(csvfile)
         for row in reader:
-            print(row)
-            print(row['name'])
             #for each row, we will add it to the database
-            project = Project(name=row['name'], 
-                description=row['description'], 
-                photo_url=row['photo_url'], 
-                website_url=row['website_url'], 
-                year=row['year'], 
-                ghg_reduced=row['ghg_reduced'], 
+            project = Project(name=row['name'],
+                description=row['description'],
+                photo_url=row['photo_url'],
+                website_url=row['website_url'],
+                year=row['year'],
+                ghg_reduced=row['ghg_reduced'],
                 gge_reduced=row['gge_reduced'])
             db.session.add(project)
         db.session.commit()
@@ -126,4 +126,4 @@ class UploadAPI(Resource):
 
     # TODO: add delete and pull requests??
 
-api.add_resource(UploadAPI, '/projects/upload/csv', endpoint='upload')
+api.add_resource(ProjectUploadAPI, '/projects/upload/csv', endpoint='project_uploads')
