@@ -5,7 +5,7 @@
 ### Docker-compose
   1. Install Docker. Compose should be bundled with it.
   2. Start the containers: ```docker-compose up --build -d```.
-  3. Seed the development database: ```docker container exec meep-backend_api_1 python /meep/api/src/db_operations.py reset```. You should only need to do this the first time you run the app.
+  3. Seed the development database: ```docker container exec meep-backend_api_1 python /meep/api/src/db_operations.py reset dev```. You should only need to do this the first time you run the app.
   4. In a browser, or some other client, type ```localhost/api/locations```. If you see a bunch of json data, it worked!
 
 ### Useful docker commands
@@ -116,5 +116,10 @@
 
 
 ### Tests
-  1. Start the containers as normal: ```docker-compose up --build -d```.
-  2. Run pytest in the api container: ```docker exec -it meep-backend_api_1 pytest```.
+  1. Start the containers as normal: `docker-compose up --build -d`
+  2. Run pytest in the api container to run all discovered tests: `docker exec -it meep-backend_api_1 pytest`
+      - Optionally, shell into the api container as normal (`docker container exec -it meep-backend_api_1 /bin/ash`) and then enter the `pytest` command
+  - Add -v command line argument for more detailed view of both failing ***and*** passing tests: `pytest -v`
+  - Only run tests in a specific package by specifying its directory: `pytest ../tests/unit`
+  - Only run tests in a specific module by specifying its directory and filename: `pytest ../tests/unit/test_models.py`
+  - Only run a specific test in a specific module: `pytest ../tests/unit/test_models.py::test_insert_location`
