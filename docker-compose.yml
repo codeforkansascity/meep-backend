@@ -33,7 +33,7 @@ services:
 
 
     db:
-        image: postgres:11.3
+        image: kartoza/postgis
         environment:
           - POSTGRES_USER=meep
           - POSTGRES_PASSWORD=supersafe
@@ -42,7 +42,7 @@ services:
           - "postgres_data:/var/lib/postgresql/data"
 
     test_db:
-        image: postgres:11.3
+        image: kartoza/postgis
         environment:
             - POSTGRES_USER=meep
             - POSTGRES_PASSWORD=supersafe

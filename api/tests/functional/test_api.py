@@ -16,10 +16,10 @@ def test_get_locations_list(app):
 
     # insert a location into the database
     location_1 = Location(address='123 test street', city='Kansas City',
-        state='MO', zip_code=66213, latitude='39.123432', longitude='-83.123456')
+        state='MO', zip_code=66213, location='POINT(-83.123456 39.123432)')
 
     location_2 = Location(address='456 test way', city='Kansas City',
-        state='KS', zip_code=66210, latitude='39.654321', longitude='-83.654321')
+        state='KS', zip_code=66210, location='POINT(-83.654321 39.654321)')
 
     db.session.add(location_1)
     db.session.add(location_2)
@@ -31,11 +31,11 @@ def test_get_locations_list(app):
         resp_locations = data.get('locations')
         assert resp_locations is not None
 
-        test_location1 = '"address": "123 test street", "city": "Kansas City", "state": "MO", "zipCode": 66213, "latitude": 39.123432, "longitude": -83.123456'
-        test_location2 = '"address": "456 test way", "city": "Kansas City", "state": "KS", "zipCode": 66210, "latitude": 39.654321, "longitude": -83.654321'
-
-        assert test_location1 in json.dumps(resp_locations)
-        assert test_location2 in json.dumps(resp_locations)
+        test_location1 = {"address": "123 test street", "city": "Kansas City", "state": "MO", "zipCode": 66213, "location": "POINT(-83.123456 39.123432)"}
+        test_location2 = {"address": "456 test way", "city": "Kansas City", "state": "KS", "zipCode": 66210, "location": "POINT(-83.654321 39.654321)"}
+        breakpoint()
+        assert test_location1 in resp_locations
+        assert test_location2 in resp_locations
 
 
 def test_get_location_by_id(app):

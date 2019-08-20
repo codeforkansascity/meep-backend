@@ -1,5 +1,7 @@
 from flask import Blueprint, request
 from flask_restful import Api, Resource, fields
+from geoalchemy2 import functions
+
 from .base import BaseAPI, BaseListAPI
 from models import db, Project, ProjectType, Location
 
@@ -21,9 +23,12 @@ class LocationAPI(BaseAPI):
         'city': fields.String,
         'state': fields.String,
         'zipCode': fields.Integer(attribute='zip_code'),
-        'latitude': fields.Float,
-        'longitude': fields.Float
+        'location': fields.String
     }
+
+    # def get(self, id):
+    #     location = self.model.query.get(id)
+    #     breakpoint()
 
 
 api.add_resource(LocationAPI, '/locations/<int:id>', endpoint='location')
@@ -31,6 +36,7 @@ api.add_resource(LocationAPI, '/locations/<int:id>', endpoint='location')
 
 class LocationListAPI(BaseListAPI):
     base = LocationAPI
+
 
     # def get(self):
     #     """ Overrides inherited get method from BaseListAPI in order to implement
