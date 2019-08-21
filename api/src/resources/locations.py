@@ -28,15 +28,15 @@ class LocationAPI(BaseAPI):
 
     def get(self, id):
         location = self.model.query.get(id)
-
+        coords = location.coords
         return jsonify({
             'address': location.address,
             'city': location.city,
             'state': location.state,
-            'zipCode': location.zipCode,
+            'zipCode': location.zip_code,
             'latitude': coords.get('latitude'),
             'longitude': coords.get('longitude')
-        }, 200)
+        })
 
 
 
@@ -61,7 +61,7 @@ class LocationListAPI(BaseListAPI):
                 'latitude': coords.get('latitude'),
                 'longitude': coords.get('longitude')
             })
-        return jsonify({'locations': data}, 200)
+        return jsonify({'locations': data})
 
 
 
