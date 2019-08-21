@@ -3,6 +3,8 @@
 # also, the plain sqlalchemy docs
 # https://www.sqlalchemy.org/
 
+import json
+
 from flask_sqlalchemy import SQLAlchemy, Model
 from sqlalchemy import func
 from geoalchemy2 import Geometry
@@ -105,5 +107,17 @@ class Location(db.Model):
     def __repr__(self):
         return 'Location(address={self.address}, city={self.city}, '\
                'state={self.state}, zip_code={self.zip_code}, '\
-               'latitude={self.latitude}, longitude={self.longitude}, '\
+               'location={self.location}, '\
                'project_id={self.project_id})'.format(self=self)
+
+    @property
+    def coords(self):
+        try:
+            geojson = json.loads(
+                db.session.scalar(func.ST_AsGeoJSON(self.location))
+            )
+            assert geojson.get('type') == 'Point'
+        except (TypeError, AssertionError):
+            return {'longitude': None, 'latitude': None}
+
+        return dict(zip(('longitude', 'latitude'), geojson.get('coordinates')))
