@@ -3,3 +3,4 @@ flask-restful
 flask-SQLAlchemy
 psycopg2
 pytest
+passlib==1.7.1

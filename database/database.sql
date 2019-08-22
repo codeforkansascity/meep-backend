@@ -13,16 +13,16 @@ create table roles (
 
 create table users (
  id serial primary key,
- password_hash varchar(100),
+ password varchar(100),
  email varchar(20),
  role_id integer references roles(id)
 );
 
 create table project_types (
  id serial primary key,
- name varchar(30) 
+ name varchar(30)
 );
- 
+
 create table projects (
  id serial primary key,
  name varchar(100),
@@ -44,4 +44,3 @@ create table locations (
  location geometry,
  project_id integer references projects(id)
 );
- 

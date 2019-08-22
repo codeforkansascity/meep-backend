@@ -42,13 +42,13 @@ def seed_db(config='dev'):
         admin = Role(role_name = 'admin')
 
         #users
-        u1 = User(password_hash='bad password', email='greg@gmail.com')
+        u1 = User(password='bad password', email='greg@gmail.com')
         u1.role = user
-        u2 = User(password_hash='another bad password', email='jane@gmail.com')
+        u2 = User(password='another bad password', email='jane@gmail.com')
         u2.role = user
-        u3 = User(password_hash='iu3o24hyiurhdskjfhirewufhe', email='admin@yahoo.com')
+        u3 = User(password='iu3o24hyiurhdskjfhirewufhe', email='admin@yahoo.com')
         u3.role = admin
-        u4 = User(password_hash='xckvjxcv98743mcvx32mnrewryfds', email='ecokid@hotmail.com')
+        u4 = User(password='xckvjxcv98743mcvx32mnrewryfds', email='ecokid@hotmail.com')
 
         for user in u1, u2, u3, u4:
             db.session.add(user)

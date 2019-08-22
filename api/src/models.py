@@ -4,6 +4,7 @@
 # https://www.sqlalchemy.org/
 
 from flask_sqlalchemy import SQLAlchemy, Model
+from passlib.hash import pbkdf2_sha256 as hasher
 
 
 class BaseModel(Model):
@@ -33,16 +34,24 @@ class User(db.Model):
     """
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    password_hash = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(20), nullable=False, unique=True)
     # Many to one relationship with role
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
     role = db.relationship('Role', backref=db.backref('users', lazy='select'))
 
-    def __init__(self, email, password_hash):
-        self.email = email
-        self.password_hash = password_hash
+    def __init__(self, **kwargs):
+        super(User, self).__init__(**{k: kwargs[k] for k in kwargs if k != 'salt'})
+        email = kwargs.get('email')
+        self._salt = kwargs.get('salt') # for testing only
+        if not email:
+            raise ValueError('email is required')
+        # email_regex = re.compile(r'^[A-Za-z0-9_-]{2,}@')
+        password = kwargs.get('password')
+        if not password:
+            raise ValueError('password is required')
+        self.password = hasher.using(salt=self._salt).hash(password)
 
 
 class Role(db.Model):

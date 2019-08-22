@@ -1,3 +1,5 @@
+from passlib.hash import pbkdf2_sha256 as hasher
+
 from app import create_app
 from models import User, Role, Project, db, ProjectType, Location
 
@@ -9,6 +11,7 @@ def test_new_user(new_user):
     THEN check if email is defined correctly
     """
     assert new_user.email == 'evan@aol.com'
+    assert hasher.using(salt=b'himalayan').verify('1289rhth', new_user.password)
 
 def test_new_role(new_role):
     """
@@ -31,7 +34,6 @@ def test_new_project(new_project):
     assert new_project.year == 1999
     assert new_project.gge_reduced == 1.234
     assert new_project.ghg_reduced == 2.234
-
 
 def test_insert_location(app):
     location = Location(address='123 testing way')
