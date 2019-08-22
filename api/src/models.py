@@ -42,16 +42,15 @@ class User(db.Model):
     role = db.relationship('Role', backref=db.backref('users', lazy='select'))
 
     def __init__(self, **kwargs):
-        super(User, self).__init__(**{k: kwargs[k] for k in kwargs if k != 'salt'})
+        super(User, self).__init__(**kwargs)
         email = kwargs.get('email')
-        self._salt = kwargs.get('salt') # for testing only
         if not email:
             raise ValueError('email is required')
         # email_regex = re.compile(r'^[A-Za-z0-9_-]{2,}@')
         password = kwargs.get('password')
         if not password:
             raise ValueError('password is required')
-        self.password = hasher.using(salt=self._salt).hash(password)
+        self.password = hasher.hash(password)
 
 
 class Role(db.Model):

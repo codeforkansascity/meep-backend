@@ -6,7 +6,7 @@ from db_operations import reset
 
 @pytest.fixture(scope='function')
 def new_user():
-    user = User(email='evan@aol.com', password='1289rhth', salt=b'himalayan')
+    user = User(email='evan@aol.com', password='1289rhth')
     return user
 
 

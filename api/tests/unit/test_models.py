@@ -11,7 +11,7 @@ def test_new_user(new_user):
     THEN check if email is defined correctly
     """
     assert new_user.email == 'evan@aol.com'
-    assert hasher.using(salt=b'himalayan').verify('1289rhth', new_user.password)
+    assert hasher.verify('1289rhth', new_user.password)
 
 def test_new_role(new_role):
     """
