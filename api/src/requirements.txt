@@ -4,3 +4,4 @@ flask-SQLAlchemy
 psycopg2
 pytest
 passlib==1.7.1
+gunicorn==19.9.0
