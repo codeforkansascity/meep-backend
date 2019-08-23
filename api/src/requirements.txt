@@ -3,3 +3,4 @@ flask-restful
 flask-SQLAlchemy
 psycopg2
 pytest
+gunicorn==19.9.0
