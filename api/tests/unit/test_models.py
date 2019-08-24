@@ -1,3 +1,5 @@
+import time
+
 from passlib.hash import pbkdf2_sha256 as hasher
 import jwt
 
@@ -15,10 +17,31 @@ def test_new_user(new_user):
     assert hasher.verify('1289rhth', new_user.password)
 
 def test_encode_user_auth_token(app, new_user):
-    encoded_token = new_user.encode_auth_token('test_id')
+    encoded_token = new_user.encode_auth_token()
     assert isinstance(encoded_token, bytes)
     decoded_token = jwt.decode(encoded_token, key=app.config.get('PRIVATE_KEY'), algorithms='HS256')
-    assert decoded_token.get('sub') == 'test_id'
+    assert decoded_token.get('sub') == new_user.id
+
+
+def test_decode_user_auth_token(new_user):
+    encoded_token = new_user.encode_auth_token()
+    decoded_token = new_user.decode_auth_token(encoded_token)
+    assert decoded_token == new_user.id
+
+
+def test_decode_user_auth_token_invalid_token(new_user):
+    encoded_token = new_user.encode_auth_token()
+    decoded_token = new_user.decode_auth_token('let-me-in')
+    assert decoded_token == 'Token invalid. Please try again.'
+
+
+def test_decode_user_auth_token_expiration(new_user):
+    encoded_token = new_user.encode_auth_token(expiration_seconds=1)
+    time.sleep(2)
+    decoded_token = new_user.decode_auth_token(encoded_token)
+    assert decoded_token == 'Token signature has expired. Please log in again.'
+
+
 
 def test_new_role(new_role):
     """

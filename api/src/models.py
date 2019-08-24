@@ -55,18 +55,29 @@ class User(db.Model):
             raise ValueError('password is required')
         self.password = hasher.hash(password)
 
-    def encode_auth_token(self, user_id):
+    def encode_auth_token(self, expiration_seconds=5):
         payload = {
-            'exp': datetime.utcnow() + timedelta(seconds=5, days=0),
+            'exp': datetime.utcnow() + timedelta(seconds=expiration_seconds, days=0),
             'iat': datetime.utcnow(),
-            'sub': user_id
+            'sub': self.id
         }
         return jwt.encode(
             payload,
             current_app.config.get('PRIVATE_KEY'),
             algorithm='HS256'
         )
-        
+
+
+    @staticmethod
+    def decode_auth_token(auth_token):
+        try:
+            private_key = current_app.config.get('PRIVATE_KEY')
+            decoded_token = jwt.decode(auth_token, private_key, algorithms='HS256')
+            return decoded_token['sub']
+        except jwt.ExpiredSignatureError:
+            return 'Token signature has expired. Please log in again.'
+        except jwt.InvalidTokenError:
+            return 'Token invalid. Please try again.'
 
 class Role(db.Model):
     """User role for privileges."""
