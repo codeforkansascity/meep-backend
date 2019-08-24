@@ -25,6 +25,7 @@ services:
           - db
           - test_db
         environment:
+          - PRIVATE_KEY=\xc2\xacR\x97P.t\xffrF\x7f\xde"\xb4\n\xa9\x82\x9d\xba\xdb,,\x0e\x07
           - DEV_DATABASE_URL=postgresql://meep:supersafe@db:5432/meep_api
           - TEST_DATABASE_URL=postgresql://meep:supersafe@test_db:5432/test_meep_api
         links:

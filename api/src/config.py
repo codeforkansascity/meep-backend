@@ -1,8 +1,11 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+
 class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    PRIVATE_KEY = os.environ.get('PRIVATE_KEY')
+
 
 class DevConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
@@ -16,9 +19,10 @@ class TestConfig(Config):
         'sqlite:///test.db'
     TESTING = True
 
+
 class ProdConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.environ.get('PROD_DATABASE_URL') or \
-        'sqlite:///' + os.path.join('data.sqlite')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('PROD_DATABASE_URL')
+
 
 config = {
     'dev': DevConfig,

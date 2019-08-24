@@ -13,6 +13,9 @@ def create_app(config_name='dev'):
 
     # config data defined in config.py
     app.config.from_object(config[config_name])
+
+    assert app.config.get('PRIVATE_KEY') is not None
+
     with app.app_context():
         # initialize extensions
         db.init_app(app)

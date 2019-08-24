@@ -3,8 +3,11 @@
 # also, the plain sqlalchemy docs
 # https://www.sqlalchemy.org/
 
+from flask import current_app
 from flask_sqlalchemy import SQLAlchemy, Model
 from passlib.hash import pbkdf2_sha256 as hasher
+from datetime import datetime, timedelta
+import jwt
 
 
 class BaseModel(Model):
@@ -52,6 +55,18 @@ class User(db.Model):
             raise ValueError('password is required')
         self.password = hasher.hash(password)
 
+    def encode_auth_token(self, user_id):
+        payload = {
+            'exp': datetime.utcnow() + timedelta(seconds=5, days=0),
+            'iat': datetime.utcnow(),
+            'sub': user_id
+        }
+        return jwt.encode(
+            payload,
+            current_app.config.get('PRIVATE_KEY'),
+            algorithm='HS256'
+        )
+        
 
 class Role(db.Model):
     """User role for privileges."""

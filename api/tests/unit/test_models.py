@@ -1,4 +1,5 @@
 from passlib.hash import pbkdf2_sha256 as hasher
+import jwt
 
 from app import create_app
 from models import User, Role, Project, db, ProjectType, Location
@@ -12,6 +13,12 @@ def test_new_user(new_user):
     """
     assert new_user.email == 'evan@aol.com'
     assert hasher.verify('1289rhth', new_user.password)
+
+def test_encode_user_auth_token(app, new_user):
+    encoded_token = new_user.encode_auth_token('test_id')
+    assert isinstance(encoded_token, bytes)
+    decoded_token = jwt.decode(encoded_token, key=app.config.get('PRIVATE_KEY'), algorithms='HS256')
+    assert decoded_token.get('sub') == 'test_id'
 
 def test_new_role(new_role):
     """
