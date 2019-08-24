@@ -38,7 +38,7 @@ class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     password = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(20), nullable=False, unique=True)
+    email = db.Column(db.String(50), nullable=False, unique=True)
     # Many to one relationship with role
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
@@ -54,6 +54,9 @@ class User(db.Model):
         if not password:
             raise ValueError('password is required')
         self.password = hasher.hash(password)
+
+    def __repr__(self):
+        return "User(email={!r})".format(self.email)
 
     def encode_auth_token(self, expiration_seconds=5):
         payload = {

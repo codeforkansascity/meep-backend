@@ -5,6 +5,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PRIVATE_KEY = os.environ.get('PRIVATE_KEY')
+    TOKEN_EXPIRATION = os.environ.get('TOKEN_EXPIRATION')
 
 
 class DevConfig(Config):

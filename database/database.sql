@@ -14,7 +14,7 @@ create table roles (
 create table users (
  id serial primary key,
  password varchar(100),
- email varchar(20),
+ email varchar(50),
  role_id integer references roles(id)
 );
 
