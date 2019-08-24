@@ -3,6 +3,8 @@
 # also, the plain sqlalchemy docs
 # https://www.sqlalchemy.org/
 
+import re
+
 from flask import current_app
 from flask_sqlalchemy import SQLAlchemy, Model
 from passlib.hash import pbkdf2_sha256 as hasher
@@ -43,6 +45,8 @@ class User(db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
     role = db.relationship('Role', backref=db.backref('users', lazy='select'))
+    # TODO: write better email regex
+    email_regex = re.compile(r'\w+@\w+\.\w+')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -58,6 +62,13 @@ class User(db.Model):
     def __repr__(self):
         return "User(email={!r})".format(self.email)
 
+    @classmethod
+    def validate_email(cls, email):
+        assert cls.email_regex.match(email)
+
+    def validate_password(self, password):
+        assert hasher.verify(password, self.password)
+
     def encode_auth_token(self, expiration_seconds=5):
         payload = {
             'exp': datetime.utcnow() + timedelta(seconds=expiration_seconds, days=0),
@@ -69,7 +80,6 @@ class User(db.Model):
             current_app.config.get('PRIVATE_KEY'),
             algorithm='HS256'
         )
-
 
     @staticmethod
     def decode_auth_token(auth_token):

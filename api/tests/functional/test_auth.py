@@ -33,3 +33,49 @@ def test_register_new_user(app):
         assert response_data.get('message') == 'Successfully created user.'
         user = User.query.filter_by(email="idonotexistyet@gmail.com").first()
         assert user
+
+
+def test_login(app, new_user):
+    db.session.add(new_user)
+    db.session.commit()
+    with app.test_client() as client:
+        response = client.post('/auth/login',
+            json={
+                'email': new_user.email,
+                'password': '1289rhth'
+            })
+        assert response.status_code == 200
+        response_data = response.get_json()
+        assert response_data.get('status') == 'success'
+        assert response_data.get('message') == 'Login successful'
+        auth_token = response_data.get('auth_token')
+        assert auth_token is not None
+        assert auth_token.encode() == new_user.encode_auth_token()
+
+
+def test_nonregistered_user_login(app):
+    invalid_login_data = dict(
+        email='hackeremail@gmail.com',
+        password='12345'
+    )
+    with app.test_client() as client:
+        response = client.post('/auth/login',
+            json=invalid_login_data)
+        assert response.status_code == 404
+        response_data = response.get_json()
+        assert response_data.get('status') == 'failure'
+        assert response_data.get('message') == "User not found. Please register or try again."
+
+
+def test_invalid_email_login(app):
+    invalid_login_data = dict(
+        email='i.do.what.i.want',
+        password='password'
+    )
+    with app.test_client() as client:
+        response = client.post('/auth/login',
+            json=invalid_login_data)
+        assert response.status_code == 400
+        response_data = response.get_json()
+        assert response_data.get('status') == 'failure'
+        assert response_data.get('message') == "Invalid email address. Please register or try again."
