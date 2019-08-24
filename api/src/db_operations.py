@@ -85,28 +85,28 @@ def seed_db(config='dev'):
                      type=vehicle_transportation)
 
         # locations
-        p1.locations.append(Location(address='601 N Iowa St', city='Lawrence', state='KS', zip_code=66044, latitude=38.9930314, longitude=-95.2632409))
-        p2.locations.append(Location(address='14220 Wyandotte St', city='Kansas City', state='MO', zip_code=64145, latitude=38.8705357, longitude=-94.6095686))
+        p1.locations.append(Location(address='601 N Iowa St', city='Lawrence', state='KS',                                        zip_code=66044, location='POINT(38.9930314 -95.2632409)'))
+        p2.locations.append(Location(address='14220 Wyandotte St', city='Kansas City', state='MO',                                zip_code=64145, location='POINT(38.8705357 -94.6095686)'))
         p3.locations.extend([
-            Location(address='W 75th St & Wornall Rd', city='Kansas City', state='MO', zip_code=64114, latitude=38.9924194, longitude=-94.5965102),
-            Location(address='On 63rd & Brookside', city='Kansas City', state='MO', zip_code=64113, latitude=39.0131619, longitude=-94.5921776),
-            Location(address='On 63rd at Cherry Westbound', city='Kansas City', state='MO', zip_code=64110, latitude=39.0146112, longitude=-94.5955968),
-            Location(address='On 63rd at Paseo Westbound', city='Kansas City', state='MO', zip_code=64110, latitude=39.0142199, longitude=-94.5758463),
-            Location(address='On Brookside at 59th SB', city='Kansas City', state='MO', zip_code=64113, latitude=39.0180454, longitude=-94.5919601),
-            Location(address='On Brookside at 55th SB', city='Kansas City', state='MO', zip_code=64113, latitude=39.0227138, longitude=-94.5935497),
-            Location(address='On Brookside at 51st SB', city='Kansas City', state='MO', zip_code=64112, latitude=39.0338538, longitude=-94.585571)
+            Location(address='W 75th St & Wornall Rd', city='Kansas City', state='MO',                        zip_code=64114, location='POINT(38.9924194 -94.5965102)'),
+            Location(address='On 63rd & Brookside', city='Kansas City', state='MO', zip_code=64113,           location='POINT(39.0131619 -94.5921776)'),
+            Location(address='On 63rd at Cherry Westbound', city='Kansas City', state='MO',                   zip_code=64110, location='POINT(39.0146112 -94.5955968)'),
+            Location(address='On 63rd at Paseo Westbound', city='Kansas City', state='MO',                    zip_code=64110, location='POINT(39.0142199 -94.5758463)'),
+            Location(address='On Brookside at 59th SB', city='Kansas City', state='MO',                       zip_code=64113, location='POINT(39.0180454 -94.5919601)'),
+            Location(address='On Brookside at 55th SB', city='Kansas City', state='MO',                       zip_code=64113, location='POINT(39.0227138 -94.5935497)'),
+            Location(address='On Brookside at 51st SB', city='Kansas City', state='MO',                       zip_code=64112, location='POINT(39.0338538 -94.585571)')
         ])
-        p4.locations.append(Location(address='100 NW Vivion Rd', city='Kansas City', state='MO', zip_code=64118, latitude=39.1650181, longitude=-94.6187879))
+        p4.locations.append(Location(address='100 NW Vivion Rd', city='Kansas City', state='MO',                                  zip_code=64118, location='POINT(39.1650181 -94.6187879)'))
         p5.locations.extend([
-            Location(address='8400 E Truman Rd', city='Kansas City', state='MO', zip_code=64126, latitude=39.112502, longitude=-94.5194595),
-            Location(address='4121 N Kentucky Ave', city='Kansas City', state='MO', zip_code=64161, latitude=39.1128102, longitude=-94.7304727)
+            Location(address='8400 E Truman Rd', city='Kansas City', state='MO', zip_code=64126,              location='POINT(39.112502 -94.5194595)'),
+            Location(address='4121 N Kentucky Ave', city='Kansas City', state='MO', zip_code=64161,           location='POINT(39.1128102 -94.7304727)')
         ])
-        p6.locations.append(Location(address='3451-3599 W Luke St', city='Lincoln', state='NE', zip_code=68524, latitude=40.8502301, longitude=-96.7688027))
-        p7.locations.append(Location(address='1101 Riverside Dr', city='Jefferson City', state='MO', zip_code=65101, latitude=38.57268, longitude=-92.1573004))
+        p6.locations.append(Location(address='3451-3599 W Luke St', city='Lincoln', state='NE',                                   zip_code=68524, location='POINT(40.8502301 -96.7688027)'))
+        p7.locations.append(Location(address='1101 Riverside Dr', city='Jefferson City', state='MO',                              zip_code=65101, location='POINT(38.57268 -92.1573004)'))
         p8.locations.extend([
-            Location(address='2005 W 9th St', city='Lawrence', state='KS', zip_code=66044, latitude=38.781587, longitude=-95.3452984),
-            Location(address='2518 E Logan St', city='Ottowa', state='KS', zip_code=66067, latitude=38.781587, longitude=-95.3452984),
-            Location(address='1500 E 23rd St', city='Lawrence', state='KS', zip_code=66044, latitude=38.912997, longitude=-95.2525864),
+            Location(address='2005 W 9th St', city='Lawrence', state='KS', zip_code=66044,                    location='POINT(38.781587 -95.3452984)'),
+            Location(address='2518 E Logan St', city='Ottowa', state='KS', zip_code=66067,                    location='POINT(38.781587 -95.3452984)'),
+            Location(address='1500 E 23rd St', city='Lawrence', state='KS', zip_code=66044,                   location='POINT(38.912997 -95.2525864)'),
         ])
 
         for project in p1, p2, p3, p4, p5, p6, p7, p8:
