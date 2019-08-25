@@ -1,6 +1,8 @@
+import time
+
 import pytest
 
-from models import db, User
+from models import db, User, BlacklistedAuthToken
 
 def test_register_existing_user(app):
 
@@ -140,3 +142,133 @@ def test_user_auth_no_authorization_header(app):
         response_data = response.get_json()
         assert response_data.get('status') == 'failure'
         assert response_data.get('message') == 'Invalid auth token.'
+
+def test_logout_user(app):
+    with app.test_client() as client:
+        # register a new user and get auth token generated
+        auth_token = client.post('/auth/register',
+            json={
+                'email': 'superuser@hotmail.com',
+                'password': 'password'
+            })\
+            .get_json()\
+            .get('auth_token')
+        # login that user
+        login_resp = client.post('/auth/login',
+            json={
+                'email': 'superuser@hotmail.com',
+                'password': 'password'
+            })
+        assert login_resp.status_code == 200
+        assert login_resp.get_json().get('message') == 'Login successful'
+
+        response = client.post('/auth/logout',
+            headers={
+                'Authorization': f'Bearer {auth_token}'
+            })
+        assert response.status_code == 200
+        response_data = response.get_json()
+        assert response_data.get('status') == 'success'
+        assert response_data.get('message') == 'User logged out.'
+        # assert data.get('email') == 'superuser@hotmail.com'
+
+        # check that blacklisted token has been added to the database
+        bad_token = BlacklistedAuthToken.query.filter_by(token=auth_token).first()
+        assert bad_token is not None
+
+def test_invalid_logout(app):
+    with app.test_client() as client:
+        auth_token = client.post('/auth/register',
+            json={
+                'email': 'bestuser@gmail.com',
+                'password': 'password'
+            })\
+            .get_json()\
+            .get('auth_token')
+
+        login_response = client.post('/auth/login',
+            json={
+                'email': 'bestuser@gmail.com',
+                'password': 'password'
+            })
+        assert login_response.status_code == 200
+        status_response = client.get('/auth/status',
+            headers={
+                'Authorization': f'Bearer {auth_token}'
+            })
+        assert status_response.status_code == 200
+        assert status_response.get_json().get('status') == 'success'
+
+        time.sleep(2) # ensure auth token expires
+        response = client.post('/auth/logout',
+            headers={
+                'Authorization': f'Bearer {auth_token}'
+            })
+        assert response.status_code == 400
+        assert response.get_json().get('status') == 'failure'
+        assert response.get_json().get('message') == 'Token signature has expired. Please log in again.'
+
+
+def test_user_status_with_blacklisted_token(app):
+    with app.test_client() as client:
+        # register user
+        bad_token = client.post('/auth/register',
+            json={
+                'email': 'superduperuser@gmail.com',
+                'password': 'password'
+            }
+        )\
+        .get_json()\
+        .get('auth_token')
+        assert bad_token
+        # login user
+        login_resp = client.post('/auth/login',
+            json={
+                'email': 'superduperuser@gmail.com',
+                'password': 'password'
+            })
+        assert login_resp.status_code == 200
+        # blacklist users auth token
+        db.session.add(BlacklistedAuthToken(token=bad_token))
+        db.session.commit()
+        # check user status with blacklisted token
+        response = client.get('/auth/status',
+            headers=dict(Authorization=f'Bearer {bad_token}'))
+        assert response.status_code == 401
+        assert response.get_json().get('status') == 'failure'
+        assert response.get_json().get('message') == 'Token blacklisted. Please login again.'
+
+        db.session.delete(User.query.filter_by(email='superduperuser@gmail.com').first())
+        db.session.commit()
+
+
+def test_logout_with_blacklisted_token(app):
+    with app.test_client() as client:
+        # register user
+        register_res = client.post('/auth/register',
+            json={
+                'email': 'superuser@gmail.com',
+                'password': 'password'
+            })
+        assert register_res.status_code == 201
+        bad_token = register_res.get_json().get('auth_token')
+        assert bad_token is not None
+        # login user
+        login_resp = client.post('/auth/login',
+            json={
+                'email': 'superuser@gmail.com',
+                'password': 'password'
+            })
+        assert login_resp.status_code == 200
+        # blacklist users auth token
+        db.session.add(BlacklistedAuthToken(token=bad_token))
+        db.session.commit()
+        # check user status with blacklisted token
+        response = client.post('/auth/logout',
+            headers=dict(Authorization=f'Bearer {bad_token}'))
+        assert response.status_code == 401
+        assert response.get_json().get('status') == 'failure'
+        assert response.get_json().get('message') == 'Token blacklisted. Please login again.'
+
+        db.session.delete(User.query.filter_by(email='superuser@gmail.com').first())
+        db.session.commit()

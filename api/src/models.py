@@ -53,7 +53,6 @@ class User(db.Model):
         email = kwargs.get('email')
         if not email:
             raise ValueError('email is required')
-        # email_regex = re.compile(r'^[A-Za-z0-9_-]{2,}@')
         password = kwargs.get('password')
         if not password:
             raise ValueError('password is required')
@@ -69,7 +68,9 @@ class User(db.Model):
     def validate_password(self, password):
         assert hasher.verify(password, self.password)
 
-    def encode_auth_token(self, expiration_seconds=5):
+    def encode_auth_token(self, expiration_seconds=None):
+        if expiration_seconds is None:
+            expiration_seconds = current_app.config.get('TOKEN_EXPIRATION')
         payload = {
             'exp': datetime.utcnow() + timedelta(seconds=expiration_seconds, days=0),
             'iat': datetime.utcnow(),
@@ -83,14 +84,19 @@ class User(db.Model):
 
     @staticmethod
     def decode_auth_token(auth_token):
+        if isinstance(auth_token, bytes):
+            auth_token = auth_token.decode()
         try:
             private_key = current_app.config.get('PRIVATE_KEY')
             decoded_token = jwt.decode(auth_token, private_key, algorithms='HS256')
-            return decoded_token['sub']
         except jwt.ExpiredSignatureError:
             return 'Token signature has expired. Please log in again.'
         except jwt.InvalidTokenError:
             return 'Token invalid. Please try again.'
+        # check that the token has not been blacklisted
+        if BlacklistedAuthToken.is_token_blacklisted(auth_token):
+            return 'Token blacklisted. Please login again.'
+        return decoded_token['sub']
 
 class Role(db.Model):
     """User role for privileges."""
@@ -153,3 +159,26 @@ class Location(db.Model):
                'state={self.state}, zip_code={self.zip_code}, '\
                'latitude={self.latitude}, longitude={self.longitude}, '\
                'project_id={self.project_id})'.format(self=self)
+
+
+class BlacklistedAuthToken(db.Model):
+    __tablename__ = 'blacklisted_auth_tokens'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    token = db.Column(db.String(500), unique=True, nullable=False)
+    blacklisted_on = db.Column(db.DateTime, nullable=False)
+
+    def __init__(self, token):
+        self.token = token
+        self.blacklisted_on = datetime.now()
+
+    def __repr__(self):
+        return "BlacklistedAuthToken(token={!r})".format(self.token)
+
+    @classmethod
+    def blacklist(cls, token):
+        db.session.add(cls(token=token))
+        db.session.commit()
+
+    @classmethod
+    def is_token_blacklisted(cls, token):
+        return cls.query.filter_by(token=token).first() is not None

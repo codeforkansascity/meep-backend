@@ -91,7 +91,6 @@ class BaseListAPI(Resource):
         output_fields[self.base.model.__tablename__] = (
             fields.List(fields.Nested(self.base.output_fields))
         )
-        print(output_fields)
         return output_fields
 
     def post(self):

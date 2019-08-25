@@ -19,6 +19,7 @@ class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
         'sqlite:///test.db'
     TESTING = True
+    TOKEN_EXPIRATION = 1
 
 
 class ProdConfig(Config):

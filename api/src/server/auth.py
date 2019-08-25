@@ -2,7 +2,7 @@ import re
 
 from flask import Blueprint, request, jsonify, make_response, current_app
 
-from models import db, User
+from models import db, User, BlacklistedAuthToken
 
 auth_blueprint = Blueprint('api_auth', __name__)
 
@@ -66,9 +66,9 @@ def login_user():
 
 @auth_blueprint.route('/auth/status', methods=['GET'])
 def user_status():
-    authorization_header = request.headersToken invalid. Please try again.get('Authorization', '')
+    authorization_header = request.headers.get('Authorization', '')
     match = re.search(r'^Bearer\s(.+)$', authorization_header)
-    auth_token = match.group(1).encode() if match else ''
+    auth_token = match.group(1) if match else ''
     if auth_token:
         user_id = User.decode_auth_token(auth_token)
         if not isinstance(user_id, str):
@@ -99,4 +99,27 @@ def user_status():
 
 @auth_blueprint.route('/auth/logout', methods=['POST'])
 def logout_user():
-    pass
+    auth_header = request.headers.get('Authorization', '')
+    match = re.search(r'^Bearer (.+)$', auth_header)
+    auth_token = match.group(1) if match else ''
+    user_id = User.decode_auth_token(auth_token)
+    if isinstance(user_id, str): # if error decoding token, user_id is a string with the error message
+        status_code = 401 if 'blacklist' in user_id.lower() else 400
+        return make_response(jsonify({
+            'status': 'failure',
+            'message': user_id
+        })), status_code
+    # blacklist the token
+    try:
+        blacklisted_token = BlacklistedAuthToken(auth_token)
+        db.session.add(blacklisted_token)
+        db.session.commit()
+        return make_response(jsonify({
+            'status': 'success',
+            'message': 'User logged out.'
+        })), 200
+    except Exception:
+        return make_response(jsonify({
+            'status': 'failure',
+            'message': 'Internal server error'
+        })), 500
