@@ -1,55 +1,38 @@
 import time
+from functools import partial
 
 import pytest
+from flask import current_app
 
 from models import db, User, BlacklistedAuthToken
 
 def test_register_existing_user(app):
-
-    existing_user = User(email="iexist@gmail.com", password="password")
-    db.session.add(existing_user)
-    db.session.commit()
+    existing_user = create_user('iexist@gmail.com')
     with app.test_client() as client:
-        response = client.post('/auth/register',
-            json={
-                'email': 'iexist@gmail.com',
-                'password': 'password'
-            })
+        response, _ = register_user(client, 'iexist@gmail.com', 'password')
         assert response.status_code == 202
         response_data = response.get_json()
         assert response_data.get('status') == 'failure'
         assert response_data.get('message') == 'User already exists. Please log in.'
 
-
 def test_register_new_user(app):
     with app.test_client() as client:
-        new_user_data = dict(
-            email="idonotexistyet@gmail.com",
-            password="password"
-        )
-        response = client.post('/auth/register',
-            json=new_user_data)
+        response, auth_token = register_user(client, 'idonotexistyet@gmail.com')
         assert response.status_code == 201
         response_data = response.get_json()
         assert response_data.get('status') == 'success'
         assert response_data.get('message') == 'Successfully created user.'
-        auth_token = response_data.get('auth_token')
         assert auth_token is not None
         assert isinstance(auth_token.encode(), bytes)
         user = User.query.filter_by(email="idonotexistyet@gmail.com").first()
         assert user
         assert user.encode_auth_token() == auth_token.encode()
 
-
 def test_login(app, new_user):
     db.session.add(new_user)
     db.session.commit()
     with app.test_client() as client:
-        response = client.post('/auth/login',
-            json={
-                'email': new_user.email,
-                'password': '1289rhth'
-            })
+        response, _ = login_user(client, new_user.email, password='1289rhth')
         assert response.status_code == 200
         response_data = response.get_json()
         assert response_data.get('status') == 'success'
@@ -58,29 +41,17 @@ def test_login(app, new_user):
         assert auth_token is not None
         assert auth_token.encode() == new_user.encode_auth_token()
 
-
 def test_nonregistered_user_login(app):
-    invalid_login_data = dict(
-        email='hackeremail@gmail.com',
-        password='12345'
-    )
     with app.test_client() as client:
-        response = client.post('/auth/login',
-            json=invalid_login_data)
+        response, _ = login_user(client, 'hackeremail@gmail.com', password='12345')
         assert response.status_code == 404
         response_data = response.get_json()
         assert response_data.get('status') == 'failure'
         assert response_data.get('message') == "User not found. Please register or try again."
 
-
 def test_invalid_email_login(app):
-    invalid_login_data = dict(
-        email='i.do.what.i.want',
-        password='password'
-    )
     with app.test_client() as client:
-        response = client.post('/auth/login',
-            json=invalid_login_data)
+        response, _ = login_user(client, 'i.do.what.i.want')
         assert response.status_code == 400
         response_data = response.get_json()
         assert response_data.get('status') == 'failure'
@@ -92,15 +63,8 @@ def test_user_auth_status(app):
         password='password'
     )
     with app.test_client() as client:
-        auth_token = client.post('/auth/register', json=registration_data)\
-            .get_json()\
-            .get('auth_token')
-        authorization_header = f"Bearer {auth_token}"
-
-        response = client.get('/auth/status',
-            headers=dict(
-                Authorization=authorization_header
-            ))
+        _, auth_token = register_user(client, 'user@gmail.com')
+        response = get_auth_status(client, auth_token)
         assert response.status_code == 200
         response_data = response.get_json()
         assert response_data.get('status') == 'success'
@@ -114,29 +78,16 @@ def test_user_auth_invalid_token(app):
         password='password'
     )
     with app.test_client() as client:
-        auth_token = client.post('/auth/register', json=registration_data)\
-            .get_json()\
-            .get('auth_token')
-        authorization_header = f"Bearer thiscannotpossiblyberight"
-
-        response = client.get('/auth/status',
-            headers=dict(
-                Authorization=authorization_header
-            ))
+        _, auth_token = register_user(client, 'user@gmail.com')
+        response = get_auth_status(client, 'thiscannotpossiblyberight')
         assert response.status_code == 401
         response_data = response.get_json()
         assert response_data.get('status') == 'failure'
         assert response_data.get('message') == 'Token invalid. Please try again.'
 
 def test_user_auth_no_authorization_header(app):
-    registration_data = dict(
-        email='user@gmail.com',
-        password='password'
-    )
     with app.test_client() as client:
-        auth_token = client.post('/auth/register', json=registration_data)\
-            .get_json()\
-            .get('auth_token')
+        _, auth_token = register_user(client, 'user@gmail.com')
         response = client.get('/auth/status', headers=dict())
         assert response.status_code == 401
         response_data = response.get_json()
@@ -145,27 +96,12 @@ def test_user_auth_no_authorization_header(app):
 
 def test_logout_user(app):
     with app.test_client() as client:
-        # register a new user and get auth token generated
-        auth_token = client.post('/auth/register',
-            json={
-                'email': 'superuser@hotmail.com',
-                'password': 'password'
-            })\
-            .get_json()\
-            .get('auth_token')
-        # login that user
-        login_resp = client.post('/auth/login',
-            json={
-                'email': 'superuser@hotmail.com',
-                'password': 'password'
-            })
+        _, auth_token = register_user(client, 'superuser@hotmail.com')
+        login_resp, _ = login_user(client, 'superuser@hotmail.com')
         assert login_resp.status_code == 200
         assert login_resp.get_json().get('message') == 'Login successful'
 
-        response = client.post('/auth/logout',
-            headers={
-                'Authorization': f'Bearer {auth_token}'
-            })
+        response = logout_user(client, auth_token)
         assert response.status_code == 200
         response_data = response.get_json()
         assert response_data.get('status') == 'success'
@@ -178,32 +114,15 @@ def test_logout_user(app):
 
 def test_invalid_logout(app):
     with app.test_client() as client:
-        auth_token = client.post('/auth/register',
-            json={
-                'email': 'bestuser@gmail.com',
-                'password': 'password'
-            })\
-            .get_json()\
-            .get('auth_token')
-
-        login_response = client.post('/auth/login',
-            json={
-                'email': 'bestuser@gmail.com',
-                'password': 'password'
-            })
+        _, auth_token = register_user(client, 'bestuser@gmail.com')
+        login_response, _ = login_user(client, 'bestuser@gmail.com')
         assert login_response.status_code == 200
-        status_response = client.get('/auth/status',
-            headers={
-                'Authorization': f'Bearer {auth_token}'
-            })
+        status_response = get_auth_status(client, auth_token)
         assert status_response.status_code == 200
         assert status_response.get_json().get('status') == 'success'
 
         time.sleep(2) # ensure auth token expires
-        response = client.post('/auth/logout',
-            headers={
-                'Authorization': f'Bearer {auth_token}'
-            })
+        response = logout_user(client, auth_token)
         assert response.status_code == 400
         assert response.get_json().get('status') == 'failure'
         assert response.get_json().get('message') == 'Token signature has expired. Please log in again.'
@@ -211,64 +130,56 @@ def test_invalid_logout(app):
 
 def test_user_status_with_blacklisted_token(app):
     with app.test_client() as client:
-        # register user
-        bad_token = client.post('/auth/register',
-            json={
-                'email': 'superduperuser@gmail.com',
-                'password': 'password'
-            }
-        )\
-        .get_json()\
-        .get('auth_token')
+        _, bad_token = register_user(client, 'superduperuser@gmail.com')
         assert bad_token
-        # login user
-        login_resp = client.post('/auth/login',
-            json={
-                'email': 'superduperuser@gmail.com',
-                'password': 'password'
-            })
+        login_resp, _ = login_user(client, 'superduperuser@gmail.com')
         assert login_resp.status_code == 200
         # blacklist users auth token
         db.session.add(BlacklistedAuthToken(token=bad_token))
         db.session.commit()
         # check user status with blacklisted token
-        response = client.get('/auth/status',
-            headers=dict(Authorization=f'Bearer {bad_token}'))
+        response = get_auth_status(client, bad_token)
         assert response.status_code == 401
         assert response.get_json().get('status') == 'failure'
         assert response.get_json().get('message') == 'Token blacklisted. Please login again.'
-
-        db.session.delete(User.query.filter_by(email='superduperuser@gmail.com').first())
-        db.session.commit()
 
 
 def test_logout_with_blacklisted_token(app):
     with app.test_client() as client:
-        # register user
-        register_res = client.post('/auth/register',
-            json={
-                'email': 'superuser@gmail.com',
-                'password': 'password'
-            })
+        register_res, bad_token = register_user(client, 'superuser@gmail.com')
         assert register_res.status_code == 201
-        bad_token = register_res.get_json().get('auth_token')
         assert bad_token is not None
-        # login user
-        login_resp = client.post('/auth/login',
-            json={
-                'email': 'superuser@gmail.com',
-                'password': 'password'
-            })
+        login_resp, _ = login_user(client, 'superuser@gmail.com')
         assert login_resp.status_code == 200
-        # blacklist users auth token
-        db.session.add(BlacklistedAuthToken(token=bad_token))
-        db.session.commit()
-        # check user status with blacklisted token
-        response = client.post('/auth/logout',
-            headers=dict(Authorization=f'Bearer {bad_token}'))
+        BlacklistedAuthToken.blacklist(bad_token)
+        response = logout_user(client, bad_token)
         assert response.status_code == 401
         assert response.get_json().get('status') == 'failure'
         assert response.get_json().get('message') == 'Token blacklisted. Please login again.'
 
-        db.session.delete(User.query.filter_by(email='superuser@gmail.com').first())
-        db.session.commit()
+def create_user(email):
+    user = User(email=email, password='password')
+    db.session.add(user)
+    db.session.commit()
+
+def register_user(client, email, password='password'):
+    response = client.post('/auth/register',
+        json=dict(email=email, password=password))
+    auth_token = response.get_json().get('auth_token')
+    return response, auth_token
+
+def login_user(client, email, password='password'):
+    response = client.post('/auth/login',
+        json=dict(email=email, password=password))
+    auth_token = response.get_json().get('auth_token')
+    return response, auth_token
+
+def get_auth_status(client, auth_token):
+    return client.get('/auth/status',
+        headers={
+            'Authorization': f'Bearer {auth_token}'
+        })
+
+def logout_user(client, auth_token):
+    return client.post('/auth/logout',
+        headers=dict(Authorization=f'Bearer {auth_token}'))
