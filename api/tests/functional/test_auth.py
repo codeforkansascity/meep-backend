@@ -4,6 +4,7 @@ from functools import partial
 import pytest
 from flask import current_app
 
+from app import create_app, require_auth
 from models import db, User, BlacklistedAuthToken
 
 def test_register_existing_user(app):
@@ -183,3 +184,31 @@ def get_auth_status(client, auth_token):
 def logout_user(client, auth_token):
     return client.post('/auth/logout',
         headers=dict(Authorization=f'Bearer {auth_token}'))
+
+def test_route_authorization(app):
+    assert 'ping' in app.view_functions
+    app.view_functions['ping'] = require_auth(app.view_functions['ping'])
+    with app.test_client() as client:
+        register_user(client, 'someuser@gmail.com')
+        _, auth_token = login_user(client, 'someuser@gmail.com')
+        success_response = client.get('/ping',
+            headers={'Authorization': f'Bearer {auth_token}'})
+        assert success_response.status_code == 200
+        logout_user(client, auth_token)
+        blacklisted_response = client.get('/ping',
+            headers={'Authorization': f'Bearer {auth_token}'})
+        assert blacklisted_response.status_code == 401
+        res_data = blacklisted_response.get_json()
+        assert res_data.get('status') == 'Unauthorized token. Register or login.'
+        assert res_data.get('message') == 'Token blacklisted. Please login again.'
+        urls = res_data.get('urls')
+        assert urls.get('current').split('/')[-1] == 'ping'
+        assert urls.get('login').split('/')[-2:] == ['auth', 'login']
+        assert urls.get('register').split('/')[-2:] == ['auth', 'register']
+
+        # test route using an invalid token
+        unauthorized_response = client.get('/ping',
+            headers={'Authorization': 'Bearer jabberwocky'})
+        assert unauthorized_response.status_code == 401
+        res_data = unauthorized_response.get_json()
+        assert res_data.get('message') == 'Token invalid. Please try again.'

@@ -6,6 +6,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PRIVATE_KEY = os.environ.get('PRIVATE_KEY')
     TOKEN_EXPIRATION = os.environ.get('TOKEN_EXPIRATION')
+    REQUIRE_AUTH_TOKEN = True
 
 
 class DevConfig(Config):
@@ -13,6 +14,7 @@ class DevConfig(Config):
         'sqlite:///dev.db'
     TESTING = False
     TEMPLATES_AUTO_RELOAD = True
+    REQUIRE_AUTH_TOKEN = False
 
 
 class TestConfig(Config):
@@ -20,6 +22,7 @@ class TestConfig(Config):
         'sqlite:///test.db'
     TESTING = True
     TOKEN_EXPIRATION = 1
+    REQUIRE_AUTH_TOKEN = False
 
 
 class ProdConfig(Config):

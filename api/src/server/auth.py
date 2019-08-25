@@ -64,11 +64,15 @@ def login_user():
     return response, 200
 
 
-@auth_blueprint.route('/auth/status', methods=['GET'])
-def user_status():
+def get_auth_token_from_header(request):
     authorization_header = request.headers.get('Authorization', '')
     match = re.search(r'^Bearer\s(.+)$', authorization_header)
     auth_token = match.group(1) if match else ''
+    return auth_token
+
+@auth_blueprint.route('/auth/status', methods=['GET'])
+def user_status():
+    auth_token = get_auth_token_from_header(request)
     if auth_token:
         user_id = User.decode_auth_token(auth_token)
         if not isinstance(user_id, str):
@@ -99,9 +103,7 @@ def user_status():
 
 @auth_blueprint.route('/auth/logout', methods=['POST'])
 def logout_user():
-    auth_header = request.headers.get('Authorization', '')
-    match = re.search(r'^Bearer (.+)$', auth_header)
-    auth_token = match.group(1) if match else ''
+    auth_token = get_auth_token_from_header(request)
     user_id = User.decode_auth_token(auth_token)
     if isinstance(user_id, str): # if error decoding token, user_id is a string with the error message
         status_code = 401 if 'blacklist' in user_id.lower() else 400
