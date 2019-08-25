@@ -1,3 +1,5 @@
+import re
+
 from flask import Blueprint, request, jsonify, make_response, current_app
 
 from models import db, User
@@ -26,7 +28,7 @@ def register_user():
     return make_response(jsonify({
         'status': 'success',
         'message': 'Successfully created user.',
-        'auth_token': User.decode_auth_token(auth_token)
+        'auth_token': user.encode_auth_token().decode()
     })), 201
 
 
@@ -60,6 +62,39 @@ def login_user():
         'auth_token': auth_token.decode()
     }))
     return response, 200
+
+
+@auth_blueprint.route('/auth/status', methods=['GET'])
+def user_status():
+    authorization_header = request.headersToken invalid. Please try again.get('Authorization', '')
+    match = re.search(r'^Bearer\s(.+)$', authorization_header)
+    auth_token = match.group(1).encode() if match else ''
+    if auth_token:
+        user_id = User.decode_auth_token(auth_token)
+        if not isinstance(user_id, str):
+            user = User.query.filter_by(id=user_id).first()
+            response_data = {
+                'status': 'success',
+                'data': {
+                    'user_id': user.id,
+                    'email': user.email,
+                    'role': user.role.role_name if user.role else None
+                }
+            }
+            status_code = 200
+        else:
+            response_data = {
+                'status': 'failure',
+                'message': user_id
+            }
+            status_code = 401
+    else:
+        response_data = {
+            'status': 'failure',
+            'message': 'Invalid auth token.'
+        }
+        status_code = 401
+    return make_response(jsonify(response_data)), status_code
 
 
 @auth_blueprint.route('/auth/logout', methods=['POST'])
