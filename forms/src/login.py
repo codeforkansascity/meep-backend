@@ -37,7 +37,29 @@ def register():
 
 @login_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
-    pass
+    if request.method == 'GET':
+        return render_template('login.html')
+    elif request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        # send post request to the server
+        base_url = current_app.config.get('API_DOMAIN')
+        url = f'{base_url}/auth/login'
+        response = requests.post(url,
+            json={
+                'email': email,
+                'password': password
+            }
+        )
+        if response.status_code == 200:
+            auth_token = response.json().get('auth_token')
+            app.config['AUTH_TOKEN'] = auth_token
+            return redirect(url_for('index'), code=303)
+
+        print(response.json().get('message'))
+        return redirect(url_for('login.register'), code=303)
+
 
 @login_blueprint.route('/logout', methods=['GET', 'POST'])
 def logout():
