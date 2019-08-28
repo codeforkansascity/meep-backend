@@ -2,19 +2,24 @@ import os
 
 from flask import Flask
 from forms import forms_blueprint
+from login import login_blueprint
 
-app = Flask(__name__)
 
-app.config['API_DOMAIN'] = os.environ.get('API_DOMAIN', 'http://localhost/api')
+def create_app():
+    app = Flask(__name__)
 
-app.register_blueprint(forms_blueprint)
-app.register_blueprint(login_blueprint)
+    app.config['API_DOMAIN'] = os.environ.get('API_DOMAIN', 'http://localhost/api')
 
-@forms_blueprint.route("/index", methods=["GET"])
-def index():
-    return render_template('index.html')
+    app.register_blueprint(forms_blueprint)
+    app.register_blueprint(login_blueprint)
 
-@app.route('/ping')
-"""Endpoint to test if the app is running"""
-def ping():
-    return <h1>'pong'</h1>
+    @forms_blueprint.route("/index", methods=["GET"])
+    def index():
+        return render_template('index.html')
+
+    @app.route('/ping')
+    def ping():
+        """Endpoint to test if the app is running"""
+        return '<h1>pong</h1>'
+
+    return app

@@ -1,8 +1,8 @@
-from flask import Blueprint, redirect
+from flask import Blueprint, redirect, current_app, request, render_template
+import requests
 
 login_blueprint = Blueprint('login', __name__)
 
-base_url = app.config.get('API_DOMAIN')
 
 @login_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
@@ -16,6 +16,7 @@ def register():
         password = request.form.get('password')
 
         # send post request to the server
+        base_url = current_app.config.get('API_DOMAIN')
         url = f'{base_url}/auth/register'
         response = requests.post(url,
             json={
