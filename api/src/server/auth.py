@@ -25,6 +25,7 @@ def register_user():
     auth_token = user.encode_auth_token(
         expiration_seconds=int(current_app.config.get('TOKEN_EXPIRATION', 10)))
 
+
     return make_response(jsonify({
         'status': 'success',
         'message': 'Successfully created user.',

@@ -1,12 +1,10 @@
 from flask import render_template, Blueprint, request, redirect, url_for
-from sqlalchemy import func
-
-from models import db, Project, ProjectType, Location
+import requests
 
 forms_blueprint = Blueprint("forms", __name__)
 
 
-@forms_blueprint.route("/forms/project-types", methods=["GET", "POST"])
+@forms_blueprint.route("/project-types", methods=["GET", "POST"])
 def project_types_form():
     if request.method == "GET":
         project_types = ProjectType.query.all()
@@ -24,7 +22,7 @@ def project_types_form():
         pass
 
 
-@forms_blueprint.route("/forms/project-types/<int:type_id>", methods=["POST"])
+@forms_blueprint.route("/project-types/<int:type_id>", methods=["POST"])
 def delete_project_type(type_id):
     project_type = ProjectType.query.get(type_id)
     db.session.delete(project_type)
@@ -32,7 +30,7 @@ def delete_project_type(type_id):
     return redirect(url_for("forms.project_types_form"), code=303)
 
 
-@forms_blueprint.route("/forms/projects", methods=["GET", "POST"])
+@forms_blueprint.route("/projects", methods=["GET", "POST"])
 def projects_form():
     if request.method == "GET":
         project_name = request.args.get("projectName")
@@ -73,7 +71,7 @@ def projects_form():
 
 
 @forms_blueprint.route(
-    "/forms/projects/<int:project_id>", methods=["GET", "POST"]
+    "/projects/<int:project_id>", methods=["GET", "POST"]
 )
 def project_details(project_id):
     if request.method == "GET":
@@ -109,7 +107,7 @@ def project_details(project_id):
 
 
 @forms_blueprint.route(
-    "/forms/projects/<int:project_id>/locations", methods=["POST"]
+    "/projects/<int:project_id>/locations", methods=["POST"]
 )
 def project_locations(project_id):
     form = request.form
@@ -129,7 +127,7 @@ def project_locations(project_id):
 
 
 @forms_blueprint.route(
-    "/forms/projects/<int:project_id>/locations/<int:location_id>",
+    "/projects/<int:project_id>/locations/<int:location_id>",
     methods=["POST"],
 )
 def delete_locations_by_id(project_id, location_id):
@@ -150,7 +148,7 @@ def delete_locations_by_id(project_id, location_id):
     )
 
 
-@forms_blueprint.route("/forms/roles", methods=["GET", "POST"])
+@forms_blueprint.route("/roles", methods=["GET", "POST"])
 def roles_form():
     if request.method == "GET":
         pass
@@ -161,7 +159,7 @@ def roles_form():
         pass
 
 
-@forms_blueprint.route("/forms/users", methods=["GET", "POST"])
+@forms_blueprint.route("/users", methods=["GET", "POST"])
 def users_form():
     if request.method == "GET":
         pass
