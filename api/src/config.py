@@ -12,7 +12,7 @@ class Config:
 class DevConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
         'sqlite:///dev.db'
-    TESTING = False
+    TESTING = True
     TEMPLATES_AUTO_RELOAD = True
     REQUIRE_AUTH_TOKEN = False
 
