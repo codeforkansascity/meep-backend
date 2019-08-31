@@ -48,8 +48,7 @@ def new_location():
         city="Overland Park",
         state="KS",
         zip_code=66204,
-        latitude=38.992762,
-        longitude=-94668954,
+        location='POINT(-94.668954 38.992762)',
         project_id=1
     )
     return location

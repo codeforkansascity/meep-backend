@@ -16,7 +16,6 @@ class DevConfig(Config):
     TEMPLATES_AUTO_RELOAD = True
     REQUIRE_AUTH_TOKEN = False
 
-
 class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
         'sqlite:///test.db'

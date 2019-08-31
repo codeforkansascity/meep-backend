@@ -3,13 +3,18 @@
 # also, the plain sqlalchemy docs
 # https://www.sqlalchemy.org/
 
+from datetime import datetime, timedelta
+import json
 import re
 
 from flask import current_app
 from flask_sqlalchemy import SQLAlchemy, Model
+from geoalchemy2 import Geometry
 from passlib.hash import pbkdf2_sha256 as hasher
-from datetime import datetime, timedelta
+from sqlalchemy import func
 import jwt
+
+
 
 
 class BaseModel(Model):
@@ -148,8 +153,7 @@ class Location(db.Model):
     city = db.Column(db.String(50))
     state = db.Column(db.String(2))
     zip_code = db.Column(db.Integer)
-    latitude = db.Column(db.Float)
-    longitude = db.Column(db.Float)
+    location = db.Column(Geometry(geometry_type='POINT'))
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
 
     project = db.relationship('Project', backref='locations')
@@ -157,8 +161,20 @@ class Location(db.Model):
     def __repr__(self):
         return 'Location(address={self.address}, city={self.city}, '\
                'state={self.state}, zip_code={self.zip_code}, '\
-               'latitude={self.latitude}, longitude={self.longitude}, '\
+               'location={self.location}, '\
                'project_id={self.project_id})'.format(self=self)
+
+    @property
+    def coords(self):
+        try:
+            geojson = json.loads(
+                db.session.scalar(func.ST_AsGeoJSON(self.location))
+            )
+            assert geojson.get('type') == 'Point'
+        except (TypeError, AssertionError):
+            return {'longitude': None, 'latitude': None}
+
+        return dict(zip(('longitude', 'latitude'), geojson.get('coordinates')))
 
 
 class BlacklistedAuthToken(db.Model):
