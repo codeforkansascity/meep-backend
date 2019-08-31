@@ -1,12 +1,15 @@
 import pytest
 from app import create_app
-from models import User, Role, Project, db, ProjectType
+from models import User, Role, Project, db, ProjectType, Location
 from db_operations import reset
 
 
 @pytest.fixture(scope='function')
 def new_user():
     user = User('evan@aol.com', '1289rhth')
+    user.id = 456
+    user.role_id = 2
+    user.role = Role(id=2, role_name="user")
     return user
 
 
@@ -26,7 +29,9 @@ def new_project():
         website_url="www.aol.com",
         year=1999,
         gge_reduced=1.234,
-        ghg_reduced=2.234
+        ghg_reduced=2.234,
+        project_type_id=3,
+        type=ProjectType(id=3, type_name="someType")
     )
     return project
 
@@ -44,13 +49,25 @@ def new_projectType():
 def new_location():
     location = Location(
         id=5,
-        address="7510 Floyd St",
-        city="Overland Park",
-        state="KS",
-        zip_code=66204,
+        address="1 Infinite Loop",
+        city="Cupertino",
+        state="CA",
+        zip_code=95014,
         latitude=38.992762,
         longitude=-94668954,
-        project_id=1
+        project_id=2,
+        project=Project(
+            id=2,
+            name="testName",
+            description="testDescription",
+            photo_url="www.google.com",
+            website_url="www.aol.com",
+            year=1999,
+            gge_reduced=1.234,
+            ghg_reduced=2.234,
+            project_type_id=3,
+            type=ProjectType(id=3, type_name="someType")
+            )
     )
     return location
 
