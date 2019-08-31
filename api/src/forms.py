@@ -134,17 +134,10 @@ def project_locations(project_id):
 )
 def delete_locations_by_id(project_id, location_id):
     project = Project.query.get(project_id)
-    location = Location.query.get(location_id)
 
-    if location is not None:
-        project.locations = [
-            location
-            for locations in project.locations
-            if location.id != location_id
-        ]
-        db.session.delete(location)
-        db.session.add(project)
-        db.session.commit()
+    project.locations = list(filter(lambda location: location.id != location_id, project.locations))
+    db.session.add(project)
+    db.session.commit()
     return redirect(
         url_for("forms.project_details", project_id=project_id), code=303
     )

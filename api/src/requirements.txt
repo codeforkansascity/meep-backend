@@ -3,4 +3,5 @@ flask-restful
 flask-SQLAlchemy
 psycopg2
 pytest
+geoalchemy2==0.6.3
 gunicorn==19.9.0

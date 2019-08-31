@@ -56,3 +56,14 @@ def test_update_location(app):
     db.session.commit()
     selected_location = Location.query.filter_by(address='789 test road').first()
     assert selected_location.state == 'CO'
+
+def test_get_location_coordinates(app):
+    location = Location(location='POINT(-94.782234 38.880684)')
+    coords = location.coords
+    assert coords.get('latitude') == 38.880684
+    assert coords.get('longitude') == -94.782234
+
+    bad_location = Location(location=None)
+    bad_coords = bad_location.coords
+    assert bad_coords.get('latitude') == None
+    assert bad_coords.get('longitude') == None
