@@ -10,7 +10,6 @@ class DevConfig(Config):
     TESTING = True
     TEMPLATES_AUTO_RELOAD = True
 
-
 class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
         'sqlite:///test.db'

@@ -20,9 +20,9 @@ create table users (
 
 create table project_types (
  id serial primary key,
- name varchar(30) 
+ type_name varchar(30)
 );
- 
+
 create table projects (
  id serial primary key,
  name varchar(100),
@@ -44,4 +44,3 @@ create table locations (
  location geometry,
  project_id integer references projects(id)
 );
- 

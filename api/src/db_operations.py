@@ -19,44 +19,52 @@ import sys
 from models import *
 from app import create_app
 
+
 def reset(config='dev'):
     drop_tables(config)
     create_tables(config)
     seed_db(config)
+
 
 def drop_tables(config='dev'):
     app = create_app(config)
     with app.app_context():
         db.drop_all()
 
+
 def create_tables(config='dev'):
     app = create_app(config)
     with app.app_context():
         db.create_all()
 
+
 def seed_db(config='dev'):
     app = create_app(config)
     with app.app_context():
-        #roles
-        user = Role(role_name = 'user')
-        admin = Role(role_name = 'admin')
+        # roles
+        user = Role(role_name='user')
+        admin = Role(role_name='admin')
 
-        #users
+        # users
         u1 = User(password_hash='bad password', email='greg@gmail.com')
         u1.role = user
         u2 = User(password_hash='another bad password', email='jane@gmail.com')
         u2.role = user
-        u3 = User(password_hash='iu3o24hyiurhdskjfhirewufhe', email='admin@yahoo.com')
+        u3 = User(password_hash='iu3o24hyiurhdskjfhirewufhe',
+                  email='admin@yahoo.com')
         u3.role = admin
-        u4 = User(password_hash='xckvjxcv98743mcvx32mnrewryfds', email='ecokid@hotmail.com')
+        u4 = User(password_hash='xckvjxcv98743mcvx32mnrewryfds',
+                  email='ecokid@hotmail.com')
 
         for user in u1, u2, u3, u4:
             db.session.add(user)
 
-        #project types
+        # project types
         building = ProjectType(type_name='Building')
-        vehicle_transportation = ProjectType(type_name='Vehicle Transportation')
-        infastructure_transportation = ProjectType(type_name='Infastructure Transportation')
+        vehicle_transportation = ProjectType(
+            type_name='Vehicle Transportation')
+        infastructure_transportation = ProjectType(
+            type_name='Infastructure Transportation')
         for pt in building, vehicle_transportation, infastructure_transportation:
             db.session.add(pt)
 
@@ -85,34 +93,52 @@ def seed_db(config='dev'):
                      type=vehicle_transportation)
 
         # locations
-        p1.locations.append(Location(address='601 N Iowa St', city='Lawrence', state='KS', zip_code=66044, latitude=38.9930314, longitude=-95.2632409))
-        p2.locations.append(Location(address='14220 Wyandotte St', city='Kansas City', state='MO', zip_code=64145, latitude=38.8705357, longitude=-94.6095686))
+        p1.locations.append(Location(address='601 N Iowa St', city='Lawrence', state='KS',
+                                     zip_code=66044, location='POINT(38.9930314 -95.2632409)'))
+        p2.locations.append(Location(address='14220 Wyandotte St', city='Kansas City', state='MO',
+                                     zip_code=64145, location='POINT(38.8705357 -94.6095686)'))
         p3.locations.extend([
-            Location(address='W 75th St & Wornall Rd', city='Kansas City', state='MO', zip_code=64114, latitude=38.9924194, longitude=-94.5965102),
-            Location(address='On 63rd & Brookside', city='Kansas City', state='MO', zip_code=64113, latitude=39.0131619, longitude=-94.5921776),
-            Location(address='On 63rd at Cherry Westbound', city='Kansas City', state='MO', zip_code=64110, latitude=39.0146112, longitude=-94.5955968),
-            Location(address='On 63rd at Paseo Westbound', city='Kansas City', state='MO', zip_code=64110, latitude=39.0142199, longitude=-94.5758463),
-            Location(address='On Brookside at 59th SB', city='Kansas City', state='MO', zip_code=64113, latitude=39.0180454, longitude=-94.5919601),
-            Location(address='On Brookside at 55th SB', city='Kansas City', state='MO', zip_code=64113, latitude=39.0227138, longitude=-94.5935497),
-            Location(address='On Brookside at 51st SB', city='Kansas City', state='MO', zip_code=64112, latitude=39.0338538, longitude=-94.585571)
+            Location(address='W 75th St & Wornall Rd', city='Kansas City', state='MO',
+                     zip_code=64114, location='POINT(38.9924194 -94.5965102)'),
+            Location(address='On 63rd & Brookside', city='Kansas City', state='MO',
+                     zip_code=64113, location='POINT(39.0131619 -94.5921776)'),
+            Location(address='On 63rd at Cherry Westbound', city='Kansas City', state='MO',
+                     zip_code=64110, location='POINT(39.0146112 -94.5955968)'),
+            Location(address='On 63rd at Paseo Westbound', city='Kansas City', state='MO',
+                     zip_code=64110, location='POINT(39.0142199 -94.5758463)'),
+            Location(address='On Brookside at 59th SB', city='Kansas City', state='MO',
+                     zip_code=64113, location='POINT(39.0180454 -94.5919601)'),
+            Location(address='On Brookside at 55th SB', city='Kansas City', state='MO',
+                     zip_code=64113, location='POINT(39.0227138 -94.5935497)'),
+            Location(address='On Brookside at 51st SB', city='Kansas City', state='MO',
+                     zip_code=64112, location='POINT(39.0338538 -94.585571)')
         ])
-        p4.locations.append(Location(address='100 NW Vivion Rd', city='Kansas City', state='MO', zip_code=64118, latitude=39.1650181, longitude=-94.6187879))
+        p4.locations.append(Location(address='100 NW Vivion Rd', city='Kansas City', state='MO',
+                                     zip_code=64118, location='POINT(39.1650181 -94.6187879)'))
         p5.locations.extend([
-            Location(address='8400 E Truman Rd', city='Kansas City', state='MO', zip_code=64126, latitude=39.112502, longitude=-94.5194595),
-            Location(address='4121 N Kentucky Ave', city='Kansas City', state='MO', zip_code=64161, latitude=39.1128102, longitude=-94.7304727)
+            Location(address='8400 E Truman Rd', city='Kansas City', state='MO',
+                     zip_code=64126, location='POINT(39.112502 -94.5194595)'),
+            Location(address='4121 N Kentucky Ave', city='Kansas City', state='MO',
+                     zip_code=64161, location='POINT(39.1128102 -94.7304727)')
         ])
-        p6.locations.append(Location(address='3451-3599 W Luke St', city='Lincoln', state='NE', zip_code=68524, latitude=40.8502301, longitude=-96.7688027))
-        p7.locations.append(Location(address='1101 Riverside Dr', city='Jefferson City', state='MO', zip_code=65101, latitude=38.57268, longitude=-92.1573004))
+        p6.locations.append(Location(address='3451-3599 W Luke St', city='Lincoln', state='NE',
+                                     zip_code=68524, location='POINT(40.8502301 -96.7688027)'))
+        p7.locations.append(Location(address='1101 Riverside Dr', city='Jefferson City', state='MO',
+                                     zip_code=65101, location='POINT(38.57268 -92.1573004)'))
         p8.locations.extend([
-            Location(address='2005 W 9th St', city='Lawrence', state='KS', zip_code=66044, latitude=38.781587, longitude=-95.3452984),
-            Location(address='2518 E Logan St', city='Ottowa', state='KS', zip_code=66067, latitude=38.781587, longitude=-95.3452984),
-            Location(address='1500 E 23rd St', city='Lawrence', state='KS', zip_code=66044, latitude=38.912997, longitude=-95.2525864),
+            Location(address='2005 W 9th St', city='Lawrence', state='KS',
+                     zip_code=66044, location='POINT(38.781587 -95.3452984)'),
+            Location(address='2518 E Logan St', city='Ottowa', state='KS',
+                     zip_code=66067, location='POINT(38.781587 -95.3452984)'),
+            Location(address='1500 E 23rd St', city='Lawrence', state='KS',
+                     zip_code=66044, location='POINT(38.912997 -95.2525864)'),
         ])
 
         for project in p1, p2, p3, p4, p5, p6, p7, p8:
             db.session.add(project)
 
         db.session.commit()
+
 
 if __name__ == '__main__':
     cmd = sys.argv[1]
@@ -128,4 +154,5 @@ if __name__ == '__main__':
     elif cmd == 'reset':
         reset(config)
     else:
-        print('Unknown command. Use drop, create, or seed for 1st argument and either dev or test for 2nd argument')
+        print('Unknown command. Use drop, create, or seed for 1st argument \
+               and either dev or test for 2nd argument')

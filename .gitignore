@@ -109,5 +109,5 @@ venv.bak/
 # JetBrains IDE files
 .idea/
 
-# VS Code IDE files
-.vscode/
+# VS Code files
+.vscode

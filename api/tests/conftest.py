@@ -53,8 +53,7 @@ def new_location():
         city="Cupertino",
         state="CA",
         zip_code=95014,
-        latitude=38.992762,
-        longitude=-94668954,
+        location='POINT(-94.668954 38.992762)',
         project_id=2,
         project=Project(
             id=2,
