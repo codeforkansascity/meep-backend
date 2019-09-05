@@ -54,9 +54,9 @@ def new_location():
         state="CA",
         zip_code=95014,
         location='POINT(-94.668954 38.992762)',
-        project_id=2,
+        project_id=79,
         project=Project(
-            id=2,
+            id=79,
             name="testName",
             description="testDescription",
             photo_url="www.google.com",
