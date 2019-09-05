@@ -55,8 +55,7 @@ def test_new_location(new_location):
     assert new_location.city == "Cupertino"
     assert new_location.state == "CA"
     assert new_location.zip_code == 95014
-    assert new_location.latitude == 38.992762
-    assert new_location.longitude == -94668954
+    assert new_location.location == 'POINT(-94.668954 38.992762)'
     assert new_location.project_id == 2
     assert new_location.project.id == 2
     assert new_location.project.name == "testName"
