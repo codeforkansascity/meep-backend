@@ -75,7 +75,7 @@ class User(db.Model):
 
     def encode_auth_token(self, expiration_seconds=None):
         if expiration_seconds is None:
-            expiration_seconds = current_app.config.get('TOKEN_EXPIRATION')
+            expiration_seconds = int(current_app.config.get('TOKEN_EXPIRATION'))
         payload = {
             'exp': datetime.utcnow() + timedelta(seconds=expiration_seconds, days=0),
             'iat': datetime.utcnow(),
