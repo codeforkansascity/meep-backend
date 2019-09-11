@@ -137,3 +137,7 @@
   - Only run tests in a specific package by specifying its directory: `pytest ../tests/unit`
   - Only run tests in a specific module by specifying its directory and filename: `pytest ../tests/unit/test_models.py`
   - Only run a specific test in a specific module: `pytest ../tests/unit/test_models.py::test_insert_location`
+
+
+### meep Shell Script
+  - Checkout the `meep` shell script in the root directory for some shorter ways of running some of these commands with either the shell script itself or by copying the shorthand aliases into your dev environment.
