@@ -9,10 +9,10 @@ def test_new_user(new_user):
     THEN check if the object is instantiated correctly
     """
     assert new_user.id == 456
-    assert new_user.email == 'evan@aol.com'
-    assert new_user.password_hash == '1289rhth'
+    assert new_user.email == "evan@aol.com"
+    assert new_user.password_hash == "1289rhth"
     assert new_user.role_id == 2
-    assert new_user.role.role_name == 'user'
+    assert new_user.role.role_name == "user"
 
 
 def test_new_role(new_role):
@@ -65,7 +65,7 @@ def test_new_location(new_location):
     assert new_location.city == "Cupertino"
     assert new_location.state == "CA"
     assert new_location.zip_code == 95014
-    assert new_location.location == 'POINT(-94.668954 38.992762)'
+    assert new_location.location == "POINT(-94.668954 38.992762)"
     assert new_location.project_id == 79
     assert new_location.project.name == "testName"
     assert new_location.project.description == "testDescription"
@@ -83,7 +83,8 @@ def test_insert_location(app, new_location):
     """
     GIVEN a Flask application and a Location model
     WHEN a new location is added to the database
-    THEN check if that location and its correct attributes are returned from the database
+    THEN check if that location and its correct attributes are returned from
+    the database
     """
 
     # insert locations into the database
@@ -97,8 +98,8 @@ def test_insert_location(app, new_location):
     assert new_location.city == "Cupertino"
     assert new_location.state == "CA"
     assert new_location.zip_code == 95014
-    assert coords.get('latitude') == 38.992762
-    assert coords.get('longitude') == -94.668954
+    assert coords.get("latitude") == 38.992762
+    assert coords.get("longitude") == -94.668954
     assert new_location.project_id == 79
     assert new_location.project.name == "testName"
     assert new_location.project.description == "testDescription"
@@ -119,24 +120,27 @@ def test_update_location(app):
     THEN check if the updated location is correctly returned from the database
     """
     selected_location = Location.query.filter_by(id=5).first()
-    assert selected_location.state == 'CA'
-    selected_location.state = 'CO'
+    assert selected_location.state == "CA"
+    selected_location.state = "CO"
     db.session.commit()
     selected_location = Location.query.filter_by(id=5).first()
-    assert selected_location.state == 'CO'
+    assert selected_location.state == "CO"
+
 
 def test_get_location_coordinates(app):
     """
     GIVEN a Flask application
     WHEN an existing location's location is queried
-    THEN check if that location's coordinates are correctly returned from the database and that an unspecifed location correctly correctly returns None for its coordinates
+    THEN check if that location's coordinates are correctly returned from the
+    database and that an unspecifed location correctly correctly returns None
+    for its coordinates
     """
     selected_location = Location.query.filter_by(id=5).first()
     coords = selected_location.coords
-    assert coords.get('latitude') == 38.992762
-    assert coords.get('longitude') == -94.668954
+    assert coords.get("latitude") == 38.992762
+    assert coords.get("longitude") == -94.668954
 
     bad_location = Location(location=None)
     bad_coords = bad_location.coords
-    assert bad_coords.get('latitude') == None
-    assert bad_coords.get('longitude') == None
+    assert bad_coords.get("latitude") is None
+    assert bad_coords.get("longitude") is None
