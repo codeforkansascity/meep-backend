@@ -1,0 +1,113 @@
+#!/bin/sh
+
+# Usage instructions:
+# For *nix systems, run 'chmod +x meep' at the project root directory to make this script executable
+# Then you can run the shell script with './meep some_argument' e.g. type './meep dcu' to run 'docker-compose up --build -d'
+# If you add the meep-backend directory to your PATH variable, you can omit the './' so you could just type 'meep some_argument'
+# Finally, an alternative to using this shell script directly would be to just put the aliases listed below in your .bash_profile or
+# .bashrc or otherwise convert them to whatever Windows equivalent is appropriate
+
+
+meep_aliases="
+# MEEP shell commands 
+alias dcu='docker-compose up --build -d'  #docker-compose up 
+alias dcd='docker-compose down'  #docker-compose down 
+alias dcr='docker-compose down && docker-compose up --build -d'  #docker-compose reset 
+
+alias dbreset='docker container exec meep-backend_api_1 python /meep/api/src/db_operations.py reset dev'  #reset the dev db 
+
+alias tests='docker exec -it meep-backend_api_1 pytest -v'  #Shell into api container and run 'pytest -v' 
+alias testsnv='docker exec -it meep-backend_api_1 pytest'  #Shell into api container and run 'pytest' with no -v switch 
+
+alias shapi='docker container exec -it meep-backend_api_1 /bin/ash -l'  #Shell into api 
+alias shweb='docker container exec -it meep-backend_web_server_1 /bin/bash'  #Shell into web 
+alias shdb='docker container exec -it meep-backend_db_1 psql -U meep -h meep-backend_db_1 -d meep_api'  #Shell into the database 
+alias shtestdb='docker container exec -it meep-backend_test_db_1 psql -U meep -h meep-backend_test_db_1 -d test_meep_api'  #Shell into the test database 
+
+alias logs='docker-compose logs' #Show logs of all running containers 
+alias logsapi='docker logs meep-backend_api_1' #Show api logs 
+alias logsweb='docker logs meep-backend_web_server_1' #Show web server logs 
+alias logsdb='docker logs meep-backend_db_1' #Show database logs 
+alias logstestdb='docker logs meep-backend_test_db_1' #Show test database logs 
+"
+
+# Check there was only one argument passed to the script
+if [ $# != 1 ]
+then
+    echo 'Unrecognized command'
+    echo 'Please choose from these aliased commands:'
+    printf "$meep_aliases\n"
+    echo "EXAMPLE: Typing './meep dcu' at the project root directory on the command line would run 'docker-compose up --build -d'"
+    exit
+fi
+
+arg1=$1
+case $arg1 in
+dcu)
+    echo 'docker-compose up --build -d'
+    docker-compose up --build -d
+    ;;
+dcd)
+    echo 'docker-compose down'
+    docker-compose down
+    ;;
+dcr)
+    echo 'docker-compose down && docker-compose up --build -d'
+    docker-compose down && docker-compose up --build -d
+    ;;
+dbreset)
+    echo 'docker container exec meep-backend_api_1 python /meep/api/src/db_operations.py reset dev'
+    docker container exec meep-backend_api_1 python /meep/api/src/db_operations.py reset dev
+    ;;
+tests)
+    echo 'docker exec -it meep-backend_api_1 pytest -v'
+    docker exec -it meep-backend_api_1 pytest -v
+    ;;
+testsnv)
+    echo 'docker exec -it meep-backend_api_1 pytest'
+    docker exec -it meep-backend_api_1 pytest
+    ;;
+shapi)
+    echo 'docker container exec -it meep-backend_api_1 /bin/ash -l'
+    docker container exec -it meep-backend_api_1 /bin/ash -l
+    ;;
+shweb)
+    echo 'docker container exec -it meep-backend_web_server_1 /bin/bash'
+    docker container exec -it meep-backend_web_server_1 /bin/bash
+    ;;
+shdb)
+    echo 'docker container exec -it meep-backend_db_1 psql -U meep -h meep-backend_db_1 -d meep_api'
+    docker container exec -it meep-backend_db_1 psql -U meep -h meep-backend_db_1 -d meep_api
+    ;;
+shtestdb)
+    echo 'docker container exec -it meep-backend_test_db_1 psql -U meep -h meep-backend_test_db_1 -d test_meep_api'
+    docker container exec -it meep-backend_test_db_1 psql -U meep -h meep-backend_test_db_1 -d test_meep_api
+    ;;
+logs)
+    echo 'docker-compose logs'
+    docker-compose logs
+    ;;
+logsapi)
+    echo 'docker logs meep-backend_api_1'
+    docker logs meep-backend_api_1
+    ;;
+logsweb)
+    echo 'docker logs meep-backend_web_server_1'
+    docker logs meep-backend_web_server_1
+    ;;
+logsdb)
+    echo 'docker logs meep-backend_db_1'
+    docker logs meep-backend_db_1
+    ;;
+logstestdb)
+    echo 'docker logs meep-backend_test_db_1'
+    docker logs meep-backend_test_db_1
+    ;;
+*)
+    echo 'Unrecognized command'
+    echo 'Please choose from these aliased commands:'
+    printf "$meep_aliases\n"
+    echo "EXAMPLE: Typing './meep dcu' at the project root directory on the command line would run 'docker-compose up --build -d'"
+    exit
+    ;;
+esac
