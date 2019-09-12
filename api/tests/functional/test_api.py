@@ -12,20 +12,19 @@ from models import Location, Project, ProjectType, db
 def test_get_locations_list(app):
     """
     GIVEN a Flask application
-    WHEN the '/locations' page is requested (GET)
+    WHEN the '/api/locations' page is requested (GET)
     THEN check the response is valid
     """
 
-    # insert a location into the database
+    # insert locations into the database
     location_1 = Location(address='123 test street', city='Kansas City',
         state='MO', zip_code=66213, location='POINT(-83.123456 39.123432)')
-
     location_2 = Location(address='456 test way', city='Kansas City',
         state='KS', zip_code=66210, location='POINT(-83.654321 39.654321)')
-
     db.session.add(location_1)
     db.session.add(location_2)
     db.session.commit()
+
     with app.test_client() as client:
         response = client.get('/locations')
         assert response.status_code == 200
@@ -39,10 +38,18 @@ def test_get_locations_list(app):
 
 
 def test_get_location_by_id(app):
+    """
+    GIVEN a Flask application
+    WHEN the '/api/locations/{id}' page is requested (GET)
+    THEN check the response is valid
+    """
+
+    # insert a location into the database
     location = Location(address='123 test street', city='Kansas City',
         state='MO', zip_code=66213, location='POINT(-83.123456 39.123432)')
     db.session.add(location)
     db.session.commit()
+    
     id = db.session.scalar(func.max(Location.id))
     with app.test_client() as client:
         response = client.get(f'/locations/{id}')
@@ -68,10 +75,23 @@ def test_delete_location(app):
     pass
 
 def test_get_project_list(app):
-    pass
+    """
+    GIVEN a Flask application
+    WHEN the '/api/projects' page is requested (GET)
+    THEN check the response is valid
+    """
+
+    # insert projects into the database
+
 
 def test_get_project_by_id(app):
-    pass
+    """
+    GIVEN a Flask application
+    WHEN the '/api/projects/{id}' page is requested (GET)
+    THEN check the response is valid
+    """
+
+    # insert a projects into the database
 
 def test_post_project(app):
     pass
