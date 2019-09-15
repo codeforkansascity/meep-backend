@@ -1,12 +1,11 @@
 import csv
 import io
 
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource, fields, reqparse
 
-from app import db
 from .base import BaseAPI, BaseListAPI
-from models import Project, ProjectType
+from models import db, Project, ProjectType
 
 
 api_projects_blueprint = Blueprint("api_projects", __name__)
@@ -30,6 +29,18 @@ class ProjectAPI(BaseAPI):
         "ggeReduced": fields.Float(attribute="gge_reduced"),
         "ghgReduced": fields.Float(attribute="ghg_reduced"),
     }
+
+    def get(self, id):
+        project = self.model.query.get(id)
+        return jsonify({
+            "name": project.name,
+            "description": project.description,
+            "photoUrl": project.photo_url,
+            "websiteUrl": project.website_url,
+            "year": project.year,
+            "ggeReduced": project.gge_reduced,
+            "ghgReduced": project.ghg_reduced,
+        })
 
 
 api.add_resource(ProjectAPI, "/projects/<int:id>", endpoint="project")
