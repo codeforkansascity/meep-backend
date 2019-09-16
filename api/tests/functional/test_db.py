@@ -73,7 +73,9 @@ def test_insert_projectType(app, new_projectType):
     """
     db.session.add(new_projectType)
     db.session.commit()
-    selected_projectType = ProjectType.query.filter_by(type_name="typeName").first()
+    selected_projectType = ProjectType.query.filter_by(
+        type_name="typeName"
+    ).first()
     assert selected_projectType is new_projectType
     assert selected_projectType.type_name == "typeName"
 
@@ -85,11 +87,15 @@ def test_update_projectType(app):
     THEN check if the updated project type is correctly returned from the
     database
     """
-    selected_projectType = ProjectType.query.filter_by(type_name="typeName").first()
+    selected_projectType = ProjectType.query.filter_by(
+        type_name="typeName"
+    ).first()
     assert selected_projectType.type_name == "typeName"
     selected_projectType.type_name = "updatedTypeName"
     db.session.commit()
-    selected_projectType = ProjectType.query.filter_by(id=selected_projectType.id).first()
+    selected_projectType = ProjectType.query.filter_by(
+        id=selected_projectType.id
+    ).first()
     assert selected_projectType.type_name == "updatedTypeName"
 
 
@@ -102,7 +108,9 @@ def test_insert_location(app, new_location):
     """
     db.session.add(new_location)
     db.session.commit()
-    selected_location = Location.query.filter_by(address="1 Infinite Loop").first()
+    selected_location = Location.query.filter_by(
+        address="1 Infinite Loop"
+    ).first()
     assert selected_location is new_location
     assert selected_location.address == "1 Infinite Loop"
     assert selected_location.city == "Cupertino"
@@ -119,11 +127,15 @@ def test_update_location(app):
     WHEN an existing location is updated
     THEN check if the updated location is correctly returned from the database
     """
-    selected_location = Location.query.filter_by(address="1 Infinite Loop").first()
+    selected_location = Location.query.filter_by(
+        address="1 Infinite Loop"
+    ).first()
     assert selected_location.state == "CA"
     selected_location.state = "CO"
     db.session.commit()
-    selected_location = Location.query.filter_by(id=selected_location.id).first()
+    selected_location = Location.query.filter_by(
+        id=selected_location.id
+    ).first()
     assert selected_location.state == "CO"
 
 
@@ -135,7 +147,9 @@ def test_get_location_coordinates(app):
     database and that an unspecifed location correctly returns None for its
     coordinates
     """
-    selected_location = Location.query.filter_by(address="1 Infinite Loop").first()
+    selected_location = Location.query.filter_by(
+        address="1 Infinite Loop"
+    ).first()
     coords = selected_location.coords
     assert coords.get("latitude") == 38.992762
     assert coords.get("longitude") == -94.668954

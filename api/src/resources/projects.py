@@ -32,15 +32,17 @@ class ProjectAPI(BaseAPI):
 
     def get(self, id):
         project = self.model.query.get(id)
-        return jsonify({
-            "name": project.name,
-            "description": project.description,
-            "photoUrl": project.photo_url,
-            "websiteUrl": project.website_url,
-            "year": project.year,
-            "ggeReduced": project.gge_reduced,
-            "ghgReduced": project.ghg_reduced,
-        })
+        return jsonify(
+            {
+                "name": project.name,
+                "description": project.description,
+                "photoUrl": project.photo_url,
+                "websiteUrl": project.website_url,
+                "year": project.year,
+                "ggeReduced": project.gge_reduced,
+                "ghgReduced": project.ghg_reduced,
+            }
+        )
 
 
 api.add_resource(ProjectAPI, "/projects/<int:id>", endpoint="project")
@@ -118,7 +120,8 @@ class ProjectUploadAPI(Resource):
         ex: using curl enter the following in a command prompt:
         curl -X POST -F file=@"local_filepath" http://localhost:8001/uploads
 
-        check that projects were added to the database by going to the /projects endpoint
+        check that projects were added to the database by going to the
+        /projects endpoint
         """
         # Pull in arguments from the post request
         file = request.files["file"]
@@ -127,7 +130,8 @@ class ProjectUploadAPI(Resource):
         # TODO: add error handling, gives error if trying to add the same project with the same name again. Need to handle that error
         # sqlite3.IntegrityError: UNIQUE constraint failed: projects.name
 
-        # convert the incoming file object to a file stream object in the proper mode and encoding setting
+        # convert the incoming file object to a file stream object in the
+        # proper mode and encoding setting
         file.stream.seek(0)  # seek to the beginning of the file
         contents = file.stream.read().decode(
             "utf-8"
