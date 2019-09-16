@@ -143,16 +143,26 @@ def seed_db(config='dev'):
 if __name__ == '__main__':
     cmd = sys.argv[1]
     config = sys.argv[2]
+    start_message = "Starting " + config + " database " + cmd + " operation..."
+    completed_message = "Completed " + config + " database " + cmd + " operation."
     if config != 'dev' and config != 'test':
         print("Unknown config: Enter dev or test as 2nd argument")
     elif cmd == 'drop':
+        print(start_message)
         drop_tables(config)
+        print(completed_message)
     elif cmd == 'create':
+        print(start_message)
         create_tables(config)
+        print(completed_message)
     elif cmd == 'seed':
+        print(start_message)
         seed_db(config)
+        print(completed_message)
     elif cmd == 'reset':
+        print(start_message)
         reset(config)
+        print(completed_message)
     else:
         print('Unknown command. Use drop, create, or seed for 1st argument \
                and either dev or test for 2nd argument')
