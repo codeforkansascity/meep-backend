@@ -137,13 +137,19 @@ def test_delete_projectType(app):
     WHEN an existing projectType is deleted from the database
     THEN check if that projectType is actually deleted from the database
     """
-    selected_projectType = ProjectType.query.filter_by(type_name="updatedTypeName").first()
+    selected_projectType = ProjectType.query.filter_by(
+        type_name="updatedTypeName"
+    ).first()
     assert selected_projectType.type_name == "updatedTypeName"
     db.session.delete(selected_projectType)
     db.session.commit()
-    selected_projectType = ProjectType.query.filter_by(id=selected_projectType.id).first()
+    selected_projectType = ProjectType.query.filter_by(
+        id=selected_projectType.id
+    ).first()
     assert selected_projectType is None
-    selected_projectType = ProjectType.query.filter_by(type_name="updatedTypeName").first()
+    selected_projectType = ProjectType.query.filter_by(
+        type_name="updatedTypeName"
+    ).first()
     assert selected_projectType is None
 
 
@@ -213,11 +219,17 @@ def test_delete_location(app):
     WHEN an existing location is deleted from the database
     THEN check if that location is actually deleted from the database
     """
-    selected_location = Location.query.filter_by(address="1 Infinite Loop").first()
+    selected_location = Location.query.filter_by(
+        address="1 Infinite Loop"
+    ).first()
     assert selected_location.address == "1 Infinite Loop"
     db.session.delete(selected_location)
     db.session.commit()
-    selected_location = Location.query.filter_by(id=selected_location.id).first()
+    selected_location = Location.query.filter_by(
+        id=selected_location.id
+    ).first()
     assert selected_location is None
-    selected_location = Location.query.filter_by(address="1 Infinite Loop").first()
+    selected_location = Location.query.filter_by(
+        address="1 Infinite Loop"
+    ).first()
     assert selected_location is None
