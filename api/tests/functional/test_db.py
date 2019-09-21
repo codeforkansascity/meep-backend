@@ -30,6 +30,22 @@ def test_update_user(app):
     assert selected_user.email == "evan@geocities.com"
 
 
+def test_delete_user(app):
+    """
+    GIVEN a Flask application
+    WHEN an existing user is deleted from the database
+    THEN check if that user is actually deleted from the database
+    """
+    selected_user = User.query.filter_by(email="evan@geocities.com").first()
+    assert selected_user.email == "evan@geocities.com"
+    db.session.delete(selected_user)
+    db.session.commit()
+    selected_user = User.query.filter_by(id=selected_user.id).first()
+    assert selected_user is None
+    selected_user = User.query.filter_by(email="evan@geocities.com").first()
+    assert selected_user is None
+
+
 def test_insert_project(app, new_project):
     """
     GIVEN a Flask application and a Project model
@@ -62,6 +78,22 @@ def test_update_project(app):
     db.session.commit()
     selected_project = Project.query.filter_by(id=selected_project.id).first()
     assert selected_project.description == "updatedDescription"
+
+
+def test_delete_project(app):
+    """
+    GIVEN a Flask application
+    WHEN an existing project is deleted from the database
+    THEN check if that project is actually deleted from the database
+    """
+    selected_project = Project.query.filter_by(name="someTestName").first()
+    assert selected_project.name == "someTestName"
+    db.session.delete(selected_project)
+    db.session.commit()
+    selected_project = Project.query.filter_by(id=selected_project.id).first()
+    assert selected_project is None
+    selected_project = Project.query.filter_by(name="someTestName").first()
+    assert selected_project is None
 
 
 def test_insert_projectType(app, new_projectType):
@@ -99,6 +131,22 @@ def test_update_projectType(app):
     assert selected_projectType.type_name == "updatedTypeName"
 
 
+def test_delete_projectType(app):
+    """
+    GIVEN a Flask application
+    WHEN an existing projectType is deleted from the database
+    THEN check if that projectType is actually deleted from the database
+    """
+    selected_projectType = ProjectType.query.filter_by(type_name="updatedTypeName").first()
+    assert selected_projectType.type_name == "updatedTypeName"
+    db.session.delete(selected_projectType)
+    db.session.commit()
+    selected_projectType = ProjectType.query.filter_by(id=selected_projectType.id).first()
+    assert selected_projectType is None
+    selected_projectType = ProjectType.query.filter_by(type_name="updatedTypeName").first()
+    assert selected_projectType is None
+
+
 def test_insert_location(app, new_location):
     """
     GIVEN a Flask application and a Location model
@@ -121,24 +169,6 @@ def test_insert_location(app, new_location):
     assert coords.get("longitude") == -94.668954
 
 
-def test_update_location(app):
-    """
-    GIVEN a Flask application
-    WHEN an existing location is updated
-    THEN check if the updated location is correctly returned from the database
-    """
-    selected_location = Location.query.filter_by(
-        address="1 Infinite Loop"
-    ).first()
-    assert selected_location.state == "CA"
-    selected_location.state = "CO"
-    db.session.commit()
-    selected_location = Location.query.filter_by(
-        id=selected_location.id
-    ).first()
-    assert selected_location.state == "CO"
-
-
 def test_get_location_coordinates(app):
     """
     GIVEN a Flask application
@@ -157,3 +187,37 @@ def test_get_location_coordinates(app):
     bad_coords = bad_location.coords
     assert bad_coords.get("latitude") is None
     assert bad_coords.get("longitude") is None
+
+
+def test_update_location(app):
+    """
+    GIVEN a Flask application
+    WHEN an existing location is updated
+    THEN check if the updated location is correctly returned from the database
+    """
+    selected_location = Location.query.filter_by(
+        address="1 Infinite Loop"
+    ).first()
+    assert selected_location.state == "CA"
+    selected_location.state = "CO"
+    db.session.commit()
+    selected_location = Location.query.filter_by(
+        id=selected_location.id
+    ).first()
+    assert selected_location.state == "CO"
+
+
+def test_delete_location(app):
+    """
+    GIVEN a Flask application
+    WHEN an existing location is deleted from the database
+    THEN check if that location is actually deleted from the database
+    """
+    selected_location = Location.query.filter_by(address="1 Infinite Loop").first()
+    assert selected_location.address == "1 Infinite Loop"
+    db.session.delete(selected_location)
+    db.session.commit()
+    selected_location = Location.query.filter_by(id=selected_location.id).first()
+    assert selected_location is None
+    selected_location = Location.query.filter_by(address="1 Infinite Loop").first()
+    assert selected_location is None
