@@ -2,69 +2,25 @@
 <html lang="en" dir="ltr">
  <head>
   <meta charset="utf-8">
-  <title></title>
+  <link rel="stylesheet" href="../static/styles/main.css">
+  <title>Projects</title>
  </head>
  <body>
   <nav>
-   <a href="/forms/project-types">Back to project types</a>
-  </nav>
-  <form class="create-new-project" action="/forms/projects" method="post">
-   <label for="project-name">Project Name</label>
-   <input id="project-name" type="text" name="project_name" value="">
-
-   <br>
-
-   <label for="project-description">Project Description</label>
-   <input type="text-area" name="project_description" value="">
-
-   <br>
-
-   <label for="project-photo-url">Upload Photo Url</label>
-   <input type="text" name="project_photo_url" value="">
-
-   <br>
-
-   <label for="project-website-url">Project Website</label>
-   <input type="text" name="project_website_url" value="">
-
-   <br>
-
-   <label for="project-year">Project Year</label>
-   <input type="text" name="project_year" value="">
-
-   <br>
-
-   <label for="project-gge-reduced">GGE reduced</label>
-   <input type="text" name="project_gge_reduced" value="">
-
-   <br>
-
-   <label for="project-ghg-reduced">GHG reduced</label>
-   <input type="text" name="project_ghg_reduced" value="">
-
-   <br>
-
-
-   <label for="select-project-type">Select Project Type</label>
-   <select id="select-project-type" name="project_type_name">
-    <option value="blank"></option>
-    {% for project_type in project_types %}
-      <option value="{{ project_type.type_name }}">{{ project_type.type_name }}</option>
-    {% endfor %}
-   </select>
-
-   <br>
-
-   <button type="submit" name="submit_new_project">Create Project</button>
-  </form>
-
-  <h1>Projects</h1>
-
-  <div id="projects-list">
+   <button href="/forms/project-types">Back to project types</button>
+   <div>
    <form class="projects-search" action="/forms/projects" method="get">
     <input type="search" name="projectName" value="">
     <button type="submit">Search Project Names</button>
-   </form>
+  </form>
+  </div>
+  </nav>
+
+  <h1>Projects</h1>
+
+  <main>
+  <div id="projects-list">
+
    <ul>
     {% for project in projects %}
       <li>
@@ -82,5 +38,56 @@
     {% endfor %}
    </ul>
   </div>
+
+  <form class="create-new-project" action="/api/forms/projects" method="post">
+    <h2>Add a Project</h2>
+    <label for="project-name">Project Name</label><br>
+    <input id="project-name" type="text" name="project_name" value="">
+ 
+    <br>
+ 
+    <label for="project-description">Project Description</label><br>
+    <input type="text-area" name="project_description" value="">
+ 
+    <br>
+ 
+    <label for="project-photo-url">Upload Photo Url</label><br>
+    <input type="text" name="project_photo_url" value="">
+ 
+    <br>
+ 
+    <label for="project-website-url">Project Website</label><br>
+    <input type="text" name="project_website_url" value="">
+ 
+    <br>
+ 
+    <label for="project-year">Project Year</label><br>
+    <input type="text" name="project_year" value="">
+ 
+    <br>
+ 
+    <label for="project-gge-reduced">GGE reduced</label><br>
+    <input type="text" name="project_gge_reduced" value="">
+ 
+    <br>
+ 
+    <label for="project-ghg-reduced">GHG reduced</label><br>
+    <input type="text" name="project_ghg_reduced" value="">
+ 
+    <br>
+ 
+    <label for="select-project-type">Select Project Type</label><br>
+    <select id="select-project-type" name="project_type_name">
+     <option value="blank"></option>
+     {% for project_type in project_types %}
+       <option value="{{ project_type.type_name }}">{{ project_type.type_name }}</option>
+     {% endfor %}
+    </select>
+ 
+    <br>
+ 
+    <button type="submit" name="submit_new_project">Create Project</button>
+   </form>
+  </main>
  </body>
 </html>

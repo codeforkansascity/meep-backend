@@ -2,20 +2,21 @@
 <html lang="en" dir="ltr">
  <head>
   <meta charset="utf-8">
-  <title></title>
+  <link rel="stylesheet" href="../static/styles/main.css">
+  <title>Project Types</title>
  </head>
  <body>
   <nav>
-   <a href="/forms/projects">All projects</a>
+   <button href="/forms/projects">Back to projects</button>
   </nav>
   <h1>Project Types</h1>
-
+<main>
   <div class="project-types-list">
    <ol>
     {% for project_type in project_types %}
-      <li>
-       <form class="delete-project-type" action="/forms/project-types/{{ project_type.id }}" method="post">
-        {{ project_type.type_name }}
+      <li class="delete-project-type">
+       <form action="/forms/project-types/{{ project_type.id }}" method="post">
+        {{ project_type.type_name }}<br>
         <button type="submit">Delete</button>
        </form>
       </li>
@@ -24,13 +25,15 @@
   </div>
 
   <form action="/forms/project-types" method="post">
+    <h2>Create Project Type</h2>
     <div class="new-project-type">
-     <label for="project-type">New Project Type</label>
+     <label for="project-type">Project Type Name</label><br>
      <input id="project-type" type="text" name="project_type" value="">
     </div>
     <div class="button">
-       <button type="submit">Create</button>
+       <button type="submit">Create Project Type</button>
     </div>
   </form>
+</main>
  </body>
 </html>
