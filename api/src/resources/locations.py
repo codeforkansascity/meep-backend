@@ -76,3 +76,38 @@ class LocationProjectAPI(Resource):
 
 
 api.add_resource(LocationProjectAPI, '/locations/<int:id>/project', endpoint='location_project')
+
+
+class LocationMapComponent(BaseListAPI):
+    base = LocationAPI
+
+    def get(self):
+        locations = Location.query.all()
+        data = []
+        for location in locations:
+            # Get lat long info for the location
+            coords = location.coords
+            # This to be populated later for polygons and other shapes
+            LatLongArray = []
+            LatLongCenter = {'lat': coords.get('latitude'), 'long': coords.get('longitude')}
+
+            # Do a query to get more info about the project using the project id
+            # TODO: Find a better way to do these queries
+            thisProject = Project.query.filter_by(id = location.project_id).all()
+            thisProject = thisProject[0]  # take the one entry out of the list
+
+            # find the project type:
+            thisProjectType = ProjectType.query.filter_by(id = thisProject.project_type_id).all()
+            thisProjectType = thisProjectType[0]  # take the one entry out of the list
+
+            # Compile the information into format needed
+            data.append({
+                'points': LatLongArray,
+                'project_name': thisProject.name,  #this needs to be project name...
+                'center': LatLongCenter,
+                'project_id': location.project_id,
+                'project_type': thisProjectType.type_name   #need to look this up
+            })
+        return jsonify({'LocationMarkers': data})
+
+api.add_resource(LocationMapComponent, '/locationMap', '/locationMap/')
