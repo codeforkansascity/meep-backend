@@ -7,12 +7,12 @@
  </head>
  <body>
   <nav>
-    <button href="/forms/projects">Back to projects</button>
+    <a href="/api/forms/projects"><button>Back to projects</button></a>
    </nav>
-  <h1>Edit Project</h1>
+  <h1>{{ project.name }}</h1>
   <main>
     <div class="project-details">
-  <form class="" action="/forms/projects/{{ project.id }}" method="post">
+  <form class="" action="/api/forms/projects/{{ project.id }}" method="post">
     <h2>{{ project.name }}</h2>
    <label for="project-name">Project Name</label><br>
    <input id="update-project-name" type="text" name="project_name" value="{{ project.name }}">
@@ -51,9 +51,13 @@
 
    <label for="update-project-type">Select Project Type</label><br>
    <select id="update-project-type" name="project_type">
-    <option value="--{{ project.type.type_name }}--"></option>
+    <!-- <option value="--{{ project.type.type_name }}--">{{ project.type.type_name }}</option> -->
     {% for project_type in project_types %}
-      <option value="{{ project_type.type_name }}">{{ project_type.type_name }}</option>
+      {% if project.type.type_name == project_type.type_name %}
+        <option value="{{ project_type.type_name }}" selected>{{ project_type.type_name }}</option>
+      {% else %}
+        <option value="{{ project_type.type_name }}">{{ project_type.type_name }}</option>
+      {% endif %}
     {% endfor %}
    </select>
 
@@ -80,14 +84,14 @@
       <label for="">Zip Code</label><br>
       <input type="text" name="" value="{{ location.zip_code }}">
 
-      <form class="delete-location" action="/forms/projects/{{ project.id }}/locations/{{ location.id }}" method="post">
+      <form class="delete-location" action="/api/forms/projects/{{ project.id }}/locations/{{ location.id }}" method="post">
        <button type="submit" name="delete-location">Delete</button>
       </form>
 
    {% endfor %}
   
   <h2>Add Location</h2>
-  <form action="/forms/projects/{{ project.id }}/locations" method="post">
+  <form action="/api/forms/projects/{{ project.id }}/locations" method="post">
    <div class="project-location">
     <label for="location-address">Address</label><br>
     <input type="text" name="address" value=""><br>

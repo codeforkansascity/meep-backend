@@ -7,9 +7,9 @@
  </head>
  <body>
   <nav>
-   <button href="/forms/project-types">Back to project types</button>
+   <a href="/api/forms/project-types"><button>Back to project types</button></a>
    <div>
-   <form class="projects-search" action="/forms/projects" method="get">
+   <form class="projects-search" action="/api/forms/projects" method="get">
     <input type="search" name="projectName" value="">
     <button type="submit">Search Project Names</button>
   </form>
@@ -31,7 +31,7 @@
         <span class='project-type'>{{ project.type.type_name }}</span>
        </div>
        <div class="update-button">
-        <a href="/forms/projects/{{ project.id }}"><button type="button" name="button">Update</button></a>
+        <a href="/api/forms/projects/{{ project.id }}"><button type="button" name="button">Update</button></a>
 
        </div>
       </li>

@@ -7,7 +7,7 @@
  </head>
  <body>
   <nav>
-   <button href="/forms/projects">Back to projects</button>
+   <a href="/api/forms/projects"><button>Back to projects</button></a>
   </nav>
   <h1>Project Types</h1>
 <main>
@@ -15,7 +15,7 @@
    <ol>
     {% for project_type in project_types %}
       <li class="delete-project-type">
-       <form action="/forms/project-types/{{ project_type.id }}" method="post">
+       <form action="/api/forms/project-types/{{ project_type.id }}" method="post">
         {{ project_type.type_name }}<br>
         <button type="submit">Delete</button>
        </form>
@@ -24,7 +24,7 @@
    </ol>
   </div>
 
-  <form action="/forms/project-types" method="post">
+  <form action="/api/forms/project-types" method="post">
     <h2>Create Project Type</h2>
     <div class="new-project-type">
      <label for="project-type">Project Type Name</label><br>

@@ -18,7 +18,7 @@ def project_types_form():
         project_type = ProjectType(type_name=type_name)
         db.session.add(project_type)
         db.session.commit()
-        return redirect(url_for("forms.project_types_form"), code=303)
+        return redirect("/api/forms/project-types", code=303)
     else:
         # raise method not found error
         pass
@@ -29,7 +29,7 @@ def delete_project_type(type_id):
     project_type = ProjectType.query.get(type_id)
     db.session.delete(project_type)
     db.session.commit()
-    return redirect(url_for("forms.project_types_form"), code=303)
+    return redirect("/api/forms/project-types", code=303)
 
 
 @forms_blueprint.route("/forms/projects", methods=["GET", "POST"])
@@ -66,7 +66,7 @@ def projects_form():
             new_project.type = project_type
         db.session.add(new_project)
         db.session.commit()
-        return redirect(url_for("forms.projects_form"), code=303)
+        return redirect("/api/forms/projects/" + str(new_project.id), code=303)
     else:
         # raise method not found error
         pass
@@ -82,9 +82,9 @@ def project_details(project_id):
         return render_template(
             "project_detail.html", project=project, project_types=project_types
         )
+    # Update Project
     elif request.method == "POST":
         project = Project.query.get(project_id)
-
         form = request.form
         project.name = form.get("project_name")
         project.description = form.get("project_description")
@@ -99,10 +99,7 @@ def project_details(project_id):
 
         db.session.add(project)
         db.session.commit()
-        return redirect(
-            url_for("forms.project_details", project_id=project_id), code=303
-        )
-
+        return redirect("/api/forms/projects/" + str(project_id), code=303)
     else:
         # raise method not found error
         pass
@@ -123,14 +120,11 @@ def project_locations(project_id):
     project.locations.append(location)
     db.session.add(project)
     db.session.commit()
-    return redirect(
-        url_for("forms.project_details", project_id=project_id), code=303
-    )
+    return redirect("/api/forms/projects/" + str(project_id))
 
 
 @forms_blueprint.route(
-    "/forms/projects/<int:project_id>/locations/<int:location_id>",
-    methods=["POST"],
+    "/forms/projects/<int:project_id>/locations/<int:location_id>", methods=["POST"]
 )
 def delete_locations_by_id(project_id, location_id):
     project = Project.query.get(project_id)
@@ -138,9 +132,8 @@ def delete_locations_by_id(project_id, location_id):
     project.locations = list(filter(lambda location: location.id != location_id, project.locations))
     db.session.add(project)
     db.session.commit()
-    return redirect(
-        url_for("forms.project_details", project_id=project_id), code=303
-    )
+    return redirect("/api/forms/projects/" + str(project_id))
+        # url_for("forms.project_details", project_id=project_id), code=303
 
 
 @forms_blueprint.route("/forms/roles", methods=["GET", "POST"])

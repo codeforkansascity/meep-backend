@@ -86,7 +86,7 @@ button {
 }
 
 .project-details {
-    margin: auto;
+    margin: 0 auto;
     flex: 2;
 }
 
