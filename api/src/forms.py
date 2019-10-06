@@ -124,16 +124,19 @@ def project_locations(project_id):
 
 
 @forms_blueprint.route(
-    "/forms/projects/<int:project_id>/locations/<int:location_id>", methods=["POST"]
+    "/forms/projects/<int:project_id>/locations/<int:location_id>",
+    methods=["POST"],
 )
 def delete_locations_by_id(project_id, location_id):
     project = Project.query.get(project_id)
 
-    project.locations = list(filter(lambda location: location.id != location_id, project.locations))
+    project.locations = list(
+        filter(lambda location: location.id != location_id, project.locations)
+    )
     db.session.add(project)
     db.session.commit()
     return redirect("/api/forms/projects/" + str(project_id))
-        # url_for("forms.project_details", project_id=project_id), code=303
+    # url_for("forms.project_details", project_id=project_id), code=303
 
 
 @forms_blueprint.route("/forms/roles", methods=["GET", "POST"])
