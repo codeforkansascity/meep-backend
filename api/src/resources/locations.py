@@ -92,13 +92,10 @@ class LocationMapComponent(BaseListAPI):
             LatLongCenter = {'lat': coords.get('latitude'), 'long': coords.get('longitude')}
 
             # Do a query to get more info about the project using the project id
-            # TODO: Find a better way to do these queries
-            thisProject = Project.query.filter_by(id = location.project_id).all()
-            thisProject = thisProject[0]  # take the one entry out of the list
+            thisProject = Project.query.filter_by(id = location.project_id).first()
 
             # find the project type:
-            thisProjectType = ProjectType.query.filter_by(id = thisProject.project_type_id).all()
-            thisProjectType = thisProjectType[0]  # take the one entry out of the list
+            thisProjectType = ProjectType.query.filter_by(id = thisProject.project_type_id).first()
 
             # Compile the information into format needed
             data.append({
