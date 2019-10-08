@@ -105,6 +105,6 @@ class LocationMapComponent(BaseListAPI):
                 'project_id': location.project_id,
                 'project_type': thisProjectType.type_name 
             })
-        return jsonify({'LocationMarkers': data})
+        return jsonify(data)
 
 api.add_resource(LocationMapComponent, '/locationMap', '/locationMap/')
