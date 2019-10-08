@@ -100,10 +100,10 @@ class LocationMapComponent(BaseListAPI):
             # Compile the information into format needed
             data.append({
                 'points': LatLongArray,
-                'project_name': thisProject.name,  #this needs to be project name...
+                'project_name': thisProject.name,
                 'center': LatLongCenter,
                 'project_id': location.project_id,
-                'project_type': thisProjectType.type_name   #need to look this up
+                'project_type': thisProjectType.type_name 
             })
         return jsonify({'LocationMarkers': data})
 
