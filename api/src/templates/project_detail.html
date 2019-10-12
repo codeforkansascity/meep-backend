@@ -15,37 +15,37 @@
   <form class="" action="/api/forms/projects/{{ project.id }}" method="post">
     <h2>{{ project.name }}</h2>
    <label for="project-name">Project Name</label><br>
-   <input id="update-project-name" type="text" name="project_name" value="{{ project.name }}">
+   <input id="update-project-name" type="text" name="project_name" value="{{ project.name }}" minlength="2" maxlength="100" required>
 
    <br>
 
    <label for="update-project-description">Project Description</label><br>
-   <input type="text-area" name="project_description" value="{{ project.description }}">
+   <input type="text-area" name="project_description" value="{{ project.description }}" maxlength="250">
 
    <br>
 
    <label for="update-project-photo-url">Upload Photo Url</label><br>
-   <input id='update-project-photo-url' type="text" name="project_photo_url" value="{{ project.photo_url }}">
+   <input id='update-project-photo-url' type="url" name="project_photo_url" value="{{ project.photo_url }}">
 
    <br>
 
    <label for="update-project-website-url">Project Website</label><br>
-   <input id='update-project-website-url' type="text" name="project_website_url" value="{{ project.website_url }}">
+   <input id='update-project-website-url' type="url" name="project_website_url" value="{{ project.website_url }}">
 
    <br>
 
    <label for="project-year">Project Year</label><br>
-   <input type="text" name="project_year" value="{{ project.year }}">
+   <input type="number" name="project_year" value="{{ project.year }}" min="1500" max="2200">
 
    <br>
 
    <label for="update-project-gge-reduced">GGE reduced</label><br>
-   <input id='update-project-gge-reduced' type="text" name="project_gge_reduced" value="{{ project.gge_reduced }}">
+   <input id='update-project-gge-reduced' type="number" name="project_gge_reduced" value="{{ project.gge_reduced }}" step="any">
 
    <br>
 
    <label for="update-project-ghg-reduced">GHG reduced</label><br>
-   <input id="update-project-ghg-reduced" type="text" name="project_ghg_reduced" value="{{ project.ghg_reduced }}">
+   <input id="update-project-ghg-reduced" type="number" name="project_ghg_reduced" value="{{ project.ghg_reduced }}" step="any">
 
    <br>
 
@@ -82,7 +82,7 @@
       <input type="text" name="" value="{{ location.state }}"><br>
 
       <label for="">Zip Code</label><br>
-      <input type="text" name="" value="{{ location.zip_code }}">
+      <input type="number" name="" value="{{ location.zip_code }}">
 
       <form class="delete-location" action="/api/forms/projects/{{ project.id }}/locations/{{ location.id }}" method="post">
        <button type="submit" name="delete-location">Delete</button>
@@ -93,17 +93,17 @@
   <h2>Add Location</h2>
   <form action="/api/forms/projects/{{ project.id }}/locations" method="post">
    <div class="project-location">
-    <label for="location-address">Address</label><br>
+    <label for="location-address" maxlength="50" required>Address</label><br>
     <input type="text" name="address" value=""><br>
 
     <label for="">City</label><br>
-    <input type="text" name="city" value=""><br>
+    <input type="text" name="city" value="" minlength="2" maxlength="50" required><br>
 
     <label for="">State</label><br>
-    <input type="text" name="state" value=""><br>
+    <input type="text" name="state" value="" minlength="2" maxlength="2" required><br>
 
     <label for="">Zip Code</label><br>
-    <input type="text" name="zip_code" value=""><br>
+    <input type="text" name="zip_code" value="" minlength="5" maxlength="5"><br>
 
     <button type="submit" name="new-location">Add Location</button>
    </div>

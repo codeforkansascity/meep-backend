@@ -42,37 +42,37 @@
   <form class="create-new-project" action="/api/forms/projects" method="post">
     <h2>Add a Project</h2>
     <label for="project-name">Project Name</label><br>
-    <input id="project-name" type="text" name="project_name" value="">
+    <input id="project-name" type="text" name="project_name" value="" minlength="2" maxlength="100" required>
  
     <br>
  
     <label for="project-description">Project Description</label><br>
-    <input type="text-area" name="project_description" value="">
+    <input type="text-area" name="project_description" value="" maxlength="250">
  
     <br>
  
     <label for="project-photo-url">Upload Photo Url</label><br>
-    <input type="text" name="project_photo_url" value="">
+    <input type="url" name="project_photo_url" value="http://">
  
     <br>
  
     <label for="project-website-url">Project Website</label><br>
-    <input type="text" name="project_website_url" value="">
+    <input type="url" name="project_website_url" value="http://">
  
     <br>
  
     <label for="project-year">Project Year</label><br>
-    <input type="text" name="project_year" value="">
+    <input type="number" name="project_year" value="" min="1500" max="2200">
  
     <br>
  
     <label for="project-gge-reduced">GGE reduced</label><br>
-    <input type="text" name="project_gge_reduced" value="">
+    <input type="number" name="project_gge_reduced" value="" step="any">
  
     <br>
  
     <label for="project-ghg-reduced">GHG reduced</label><br>
-    <input type="text" name="project_ghg_reduced" value="">
+    <input type="number" name="project_ghg_reduced" value="" step="any">
  
     <br>
  
