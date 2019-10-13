@@ -25,12 +25,12 @@
    <br>
 
    <label for="update-project-photo-url">Upload Photo Url</label><br>
-   <input id='update-project-photo-url' type="url" name="project_photo_url" value="{{ project.photo_url }}">
+   <input id='update-project-photo-url' type="text" name="project_photo_url" value="{{ project.photo_url }}" pattern="^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$">
 
    <br>
 
    <label for="update-project-website-url">Project Website</label><br>
-   <input id='update-project-website-url' type="url" name="project_website_url" value="{{ project.website_url }}">
+   <input id='update-project-website-url' type="text" name="project_website_url" value="{{ project.website_url }}" pattern="^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$">
 
    <br>
 
