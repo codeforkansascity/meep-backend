@@ -2,21 +2,7 @@
 
 ## Setup
 
-### Running Api container with remote development database
-  1. Install Docker
-  2. Get the password for the development database from the meep slack channel.
-  3. cd into the api directory
-  4. Build the docker image
-  ```sudo docker image build --rm -t meep_api --build-arg db_password=<pwd-from-step-2> -f ./dev.Dockerfile .```
-    - Make sure to replace <pwd-from-step-2> with
-    the database password you got by asking on Slack, and don't forget the "." at the end of the command!
-  5. Start the api in a container:
-  ```docker container run -d -p 8000:8000 --rm --name meep_api meep_api```
-  6. Go to a browser and enter the url ```http://localhost:8000/projects``` to see if it worked.
-
-
-
-### Docker-compose
+## Docker-compose
   1. Install Docker. Compose should be bundled with it.
   2. Start the containers: ```docker-compose up --build -d```.
   3. Seed the development database: ```docker container exec meep-backend_api_1 python /meep/api/src/db_operations.py reset dev```. You should only need to do this the first time you run the app.
