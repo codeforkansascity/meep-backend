@@ -1,3 +1,5 @@
+import re
+
 from flask import render_template, Blueprint, request, redirect, url_for
 from sqlalchemy import func
 
@@ -49,14 +51,20 @@ def projects_form():
         )
     elif request.method == "POST":
         form = request.form
+        gge_reduced = form.get('project_gge_reduced')
+        if gge_reduced:
+            gge_reduced = float(''.join(filter(lambda c: re.match('[.0-9]', c), gge_reduced)))
+        ghg_reduced = form.get('project_ghg_reduced')
+        if ghg_reduced:
+            ghg_reduced = float(''.join(filter(lambda c: re.match('[.0-9]', c), ghg_reduced)))
         new_project = Project(
             name=form.get("project_name"),
             description=form.get("project_description"),
             photo_url=form.get("project_photo_url"),
             website_url=form.get("project_website_url"),
             year=form.get("project_year"),
-            gge_reduced=form.get("project_gge_reduced"),
-            ghg_reduced=form.get("project_ghg_reduced"),
+            gge_reduced=gge_reduced,
+            ghg_reduced=ghg_reduced,
         )
         project_type_name = form.get("project_type_name")
         if project_type_name:
