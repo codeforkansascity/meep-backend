@@ -98,15 +98,6 @@ def build_project_year_query(min_year, max_year):
     return year_query
 
 
-def format_map_component_output(location, project):
-    return {
-        'points': LatLongArray,
-        'project_name': thisProject.name,
-        'center': LatLongCenter,
-        'project_id': location.project_id,
-        'project_type': thisProjectType.type_name
-    }
-
 def query_projects(min_year, max_year, project_types):
     if project_types is None:
         project_types = []
