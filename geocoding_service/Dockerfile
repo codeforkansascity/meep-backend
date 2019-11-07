@@ -6,10 +6,10 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-WORKDIR /src
+COPY config config
 
-COPY src .
+COPY src src
 
-# CMD ["python", "run.py"]
+WORKDIR src
 
-CMD ["bin", "bash"]
+CMD ["python", "run.py", "/geocoding_service/config/config.json"]

@@ -1,10 +1,6 @@
 import aiohttp
 import asyncio
 import json
-import logging
-import os
-
-from pprint import pprint
 
 
 class GoogleGeocodingClient:
@@ -42,13 +38,23 @@ class GoogleGeocodingClient:
         data = json.loads(text)
 
         if data.get('status') == 'OK':
-            return self._format_response_data(data)
+            try:
+                return self._format_response_data(data)
+            except Exception as e:
+                return {
+                    'address': address,
+                    'city': city,
+                    'state': state,
+                    'zip_code': None,
+                    'latitude': None,
+                    'longitude': None
+                }
         else:
             return {
                 'address': address,
                 'city': city,
                 'state': state,
-                'zip': None,
+                'zip_code': None,
                 'latitude': None,
                 'longitude': None
             }
@@ -62,21 +68,27 @@ class GoogleGeocodingClient:
             street_address = data.get('results')[0]
 
         address_components = street_address.get('address_components')
-        [street_number, *_] = list(filter(lambda c: 'street_number' in c.get('types'), address_components))
-        [street, *_] = list(filter(lambda c: 'route' in c.get('types'), address_components))
-        [city, *_] = list(filter(lambda c: 'locality' in c.get('types'),  address_components))
-        [state, *_] = list(filter(lambda c: 'administrative_area_level_1' in c.get('types'), address_components))
-        [zip_code, *_] = list(filter(lambda c: 'postal_code' in c.get('types'), address_components))
+        street_number = list(filter(lambda c: 'street_number' in c.get('types'), address_components))
+        street_number = street_number[0] if street_number else None
+        street = list(filter(lambda c: 'route' in c.get('types'), address_components))
+        street = street[0] if street else None
+        city = list(filter(lambda c: 'locality' in c.get('types'),  address_components))
+        city = city[0] if city else None
+        state = list(filter(lambda c: 'administrative_area_level_1' in c.get('types'), address_components))
+        state = state[0] if state else None
+        zip_code = list(filter(lambda c: 'postal_code' in c.get('types'), address_components))
+        zip_code = zip_code[0] if zip_code else None
 
-        location = street_address.get('geometry').get('location')
-        latitude = location.get('lat')
-        longitude = location.get('lng')
+        geometry = street_address.get('geometry')
+        location = geometry.get('location') if geometry else None
+        latitude = location.get('lat') if location else None
+        longitude = location.get('lng') if location else None
 
         return {
-            'address': f"{street_number.get('short_name')} {street.get('short_name')}",
-            'city': city.get('short_name'),
+            'address': f"{street_number.get('short_name', '')} {street.get('short_name', '')}".strip(),
+            'city': city.get('short_name') if city else None,
             'state': state.get('short_name'),
-            'zip': zip_code.get('short_name'),
+            'zip_code': zip_code.get('short_name'),
             'latitude': latitude,
             'longitude': longitude
         }
@@ -92,58 +104,55 @@ class GoogleGeocodingClient:
         return asyncio.run(self._bulk_geocode_async(locations))
 
 
-
-
-
 states = {
-    'alabama' : 'AL',
-    'alaska' : 'AK',
-    'arizona' : 'AZ',
-    'arkansas' : 'AR',
-    'california' : 'CA',
-    'colorado' : 'CO',
-    'connecticut' : 'CT',
-    'delaware' : 'DE',
-    'florida' : 'FL',
-    'georgia' : 'GA',
-    'hawaii' : 'HI',
-    'idaho' : 'ID',
-    'illinois' : 'IL',
-    'indiana' : 'IN',
-    'iowa' : 'IA',
-    'kansas' : 'KS',
-    'kentucky' : 'KY',
-    'louisiana' : 'LA',
-    'maine' : 'ME',
-    'maryland' : 'MD',
-    'massachusetts' : 'MA',
-    'michigan' : 'MI',
-    'minnesota' : 'MN',
-    'mississippi' : 'MS',
-    'missouri' : 'MO',
-    'montana' : 'MT',
-    'nebraska' : 'NE',
-    'nevada' : 'NV',
-    'new hampshire' : 'NH',
-    'new jersey' : 'NJ',
-    'new mexico' : 'NM',
+    'alabama': 'AL',
+    'alaska': 'AK',
+    'arizona': 'AZ',
+    'arkansas': 'AR',
+    'california': 'CA',
+    'colorado': 'CO',
+    'connecticut': 'CT',
+    'delaware': 'DE',
+    'florida': 'FL',
+    'georgia': 'GA',
+    'hawaii': 'HI',
+    'idaho': 'ID',
+    'illinois': 'IL',
+    'indiana': 'IN',
+    'iowa': 'IA',
+    'kansas': 'KS',
+    'kentucky': 'KY',
+    'louisiana': 'LA',
+    'maine': 'ME',
+    'maryland': 'MD',
+    'massachusetts': 'MA',
+    'michigan': 'MI',
+    'minnesota': 'MN',
+    'mississippi': 'MS',
+    'missouri': 'MO',
+    'montana': 'MT',
+    'nebraska': 'NE',
+    'nevada': 'NV',
+    'new hampshire': 'NH',
+    'new jersey': 'NJ',
+    'new mexico': 'NM',
     'new york': 'NY',
-    'north carolina' : 'NC',
-    'north dakota' : 'ND',
-    'ohio' : 'OH',
-    'oklahoma' : 'OK',
-    'oregon' : 'OR',
-    'pennsylvania' : 'PA',
-    'rhode island' : 'RI',
-    'south carolina' : 'SC',
-    'south dakota' : 'SD',
-    'tennessee' : 'TN',
-    'texas' : 'TX',
-    'utah' : 'UT',
-    'vermont' : 'VT',
-    'virginia' : 'VA',
-    'washington' : 'WA',
-    'west virginia' : 'WV',
-    'wisconsin' : 'WI',
-    'wyoming' : 'WY'
+    'north carolina': 'NC',
+    'north dakota': 'ND',
+    'ohio': 'OH',
+    'oklahoma': 'OK',
+    'oregon': 'OR',
+    'pennsylvania': 'PA',
+    'rhode island': 'RI',
+    'south carolina': 'SC',
+    'south dakota': 'SD',
+    'tennessee': 'TN',
+    'texas': 'TX',
+    'utah': 'UT',
+    'vermont': 'VT',
+    'virginia': 'VA',
+    'washington': 'WA',
+    'west virginia': 'WV',
+    'wisconsin': 'WI',
+    'wyoming': 'WY'
 }
