@@ -1,7 +1,7 @@
 import csv
 import io
 
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource, fields, reqparse
 
 from app import db
@@ -149,4 +149,44 @@ class ProjectUploadAPI(Resource):
 
 api.add_resource(
     ProjectUploadAPI, "/projects/upload/csv", endpoint="project_uploads"
+)
+
+
+class ProjectDetailAPI(Resource):
+    def get(self, id):
+        project = Project.query.filter_by(id=id).first()
+        return jsonify(dict(
+            img = project.photo_url,
+            project_name = project.name,
+            details = project.description,
+            project_type = project.type.type_name if project.type else None,
+            date = str(project.year),
+            emissions_data = {
+                'gge_reduced': project.gge_reduced,
+                'ghg_reduced': project.ghg_reduced
+            }
+        ))
+
+
+api.add_resource(
+    ProjectDetailAPI,
+    "/projects/<int:id>/detail",
+    endpoint="project_detail",
+)
+
+
+class ProjectSummaryAPI(Resource):
+    def get(self, id):
+        project = Project.query.filter_by(id=id).first()
+        return jsonify(dict(
+            img = project.photo_url,
+            project_name = project.name,
+            project_details = project.description,
+            date = str(project.year)
+        ))
+
+api.add_resource(
+    ProjectSummaryAPI,
+    "/projects/<int:id>/summary",
+    endpoint="project_summary",
 )
