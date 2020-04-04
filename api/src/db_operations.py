@@ -1,4 +1,4 @@
-'''
+"""
 basic operations for creating and dropping tables, resetting the database,
 and seeding with data for development
 
@@ -13,7 +13,7 @@ python db_operations.py seed dev
 python db_operations.py reset test
 
 Currently only dev and test configs work
-'''
+"""
 import sys
 
 from models import *
@@ -63,9 +63,9 @@ def seed_db(config='dev'):
         building = ProjectType(type_name='Building')
         vehicle_transportation = ProjectType(
             type_name='Vehicle Transportation')
-        infastructure_transportation = ProjectType(
-            type_name='Infastructure Transportation')
-        for pt in building, vehicle_transportation, infastructure_transportation:
+        infrastructure_transportation = ProjectType(
+            type_name='Infrastructure Transportation')
+        for pt in building, vehicle_transportation, infrastructure_transportation:
             db.session.add(pt)
 
         # projects
@@ -76,7 +76,7 @@ def seed_db(config='dev'):
                      type=building)
         p3 = Project(name='City of Kansas City Missouri - CNG Shuttle',
                      year=2017, gge_reduced=269133.3, ghg_reduced=226.6102386,
-                     type=infastructure_transportation)
+                     type=infrastructure_transportation)
         p4 = Project(name='City of Kansas City Missouri - CNG Vans',
                      year=2017, gge_reduced=87652.7, ghg_reduced=113.5540729,
                      type=vehicle_transportation)

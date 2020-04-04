@@ -3,6 +3,7 @@ from flask import Flask
 from config import config
 from models import db
 
+
 def create_app(config_name='dev'):
     """App factory method for initializing flask extensions and registering
     blueprints. See http://flask.pocoo.org/docs/1.0/patterns/appfactories/

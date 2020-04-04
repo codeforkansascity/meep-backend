@@ -30,6 +30,7 @@ class BaseModel(Model):
 # globally accessible database connection
 db = SQLAlchemy(model_class=BaseModel)
 
+
 class User(db.Model):
     """A user of the application.
     By convention, all foreign key Columns must end in '_id'
@@ -75,7 +76,13 @@ class Project(db.Model):
                            backref=db.backref('projects', lazy='select'))
 
     def __repr__(self):
-        return f'Project(name={self.name}, description={self.description}, photo_url={self.photo_url}, website_url={self.website_url}, year={self.year}, ghg_reduced={self.ghg_reduced}, gge_reduced={self.gge_reduced})'
+        return f'Project(name={self.name},' \
+               f'description={self.description},' \
+               f'photo_url={self.photo_url},' \
+               f'website_url={self.website_url},' \
+               f'year={self.year},' \
+               f'ghg_reduced={self.ghg_reduced}, ' \
+               f'gge_reduced={self.gge_reduced})'
 
 
 class ProjectType(db.Model):

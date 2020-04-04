@@ -31,8 +31,8 @@ class LocationAPI(BaseAPI):
         'location': fields.String
     }
 
-    def get(self, id):
-        location = self.model.query.get(id)
+    def get(self, resource_id):
+        location = self.model.query.get(resource_id)
         coords = location.coords
         return jsonify({
             'address': location.address,
@@ -44,16 +44,15 @@ class LocationAPI(BaseAPI):
         })
 
 
-
-
 api.add_resource(LocationAPI, '/locations/<int:id>', endpoint='location')
 
 
 class LocationListAPI(BaseListAPI):
-    base = LocationAPI
+    base = LocationAPI()
+    model = Location
 
     def get(self):
-        locations = Location.query.all()
+        locations = self.model.query.all()
         data = []
         for location in locations:
             coords = location.coords
@@ -69,18 +68,20 @@ class LocationListAPI(BaseListAPI):
         return jsonify({'locations': data})
 
 
-
 api.add_resource(LocationListAPI, '/locations', '/locations/')
 
 
 class LocationProjectAPI(Resource):
+    base = LocationAPI()
+    model = Location
     """Given a location, return the associated project"""
-    def get(self, id):
-        location = Location.query.get(id)
+    def get(self, resource_id):
+        location = self.model.query.get(resource_id)
         return location.project.json
 
 
 api.add_resource(LocationProjectAPI, '/locations/<int:id>/project', endpoint='location_project')
+
 
 class LocationMarkerAPI(BaseListAPI):
     base = LocationAPI()
@@ -89,7 +90,6 @@ class LocationMarkerAPI(BaseListAPI):
         return jsonify({
             'locationMarkers': get_location_markers()
         })
-
 
 
 api.add_resource(LocationMarkerAPI, '/location-markers', '/location-markers/')

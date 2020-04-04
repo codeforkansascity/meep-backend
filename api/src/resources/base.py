@@ -37,16 +37,16 @@ class BaseAPI(Resource):
             parser.add_argument(col)
         self.parser = parser
 
-    def get(self, id):
+    def get(self, resource_id):
         # get an instance of a SQLAlchemy model for the json attribute
-        resource = self.model.query.get(id)
+        resource = self.model.query.get(resource_id)
         # marshal ensures that the json provided as the first argument takes
         # the format defined in output_fields
         return marshal(resource.json, self.output_fields), 200
 
-    def put(self, id):
+    def put(self, resource_id):
         args = self.parser.parse_args()
-        resource = self.model.query.get(id) # get instance of model
+        resource = self.model.query.get(resource_id)  # get instance of model
         for k, v in args.items():
             if v is not None:
                 setattr(resource, k, v)  # since we don't know the class we
@@ -54,9 +54,9 @@ class BaseAPI(Resource):
         db.session.commit()  # db is the sqlalchemy instance
         return 200
 
-    def delete(self, id):
+    def delete(self, resource_id):
         # the same ideas from the put method apply here
-        resource = self.model.query.get(id)
+        resource = self.model.query.get(resource_id)
         db.session.delete(resource)
         db.session.commit()
         return 200

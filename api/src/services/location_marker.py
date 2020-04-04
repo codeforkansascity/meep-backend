@@ -6,7 +6,6 @@ from sqlalchemy import func
 
 from models import db, Project, ProjectType, Location
 
-
 LocationMarkerNT = namedtuple(
     'LocationMarkerNT',
     [
@@ -19,6 +18,7 @@ LocationMarkerNT = namedtuple(
         'gge_reduced'
     ]
 )
+
 
 class LocationMarker(LocationMarkerNT):
     @property
@@ -33,13 +33,15 @@ class LocationMarker(LocationMarkerNT):
             'ghg_reduced': self.ghg_reduced
         }
 
+
 LatLngNT = namedtuple(
     'LatLngNT',
-     [
+    [
         'lat',
         'lng'
     ]
 )
+
 
 class LatLng(LatLngNT):
     def __eq__(self, o):
@@ -60,7 +62,7 @@ def get_location_markers():
     projects = Project.query.all()
     projects_by_name = group_projects_by_name(projects)
     projects_agg = [aggregate_project_group(name, group)
-        for (name, group) in projects_by_name.items()]
+                    for (name, group) in projects_by_name.items()]
     return [lm.json for lm in projects_agg]
 
 
@@ -73,16 +75,17 @@ def group_projects_by_name(projects):
 
 def aggregate_project_group(name, group):
     agg_project = reduce(
-        lambda agg, next: {
-            'gge_reduced': agg['gge_reduced'] + next.gge_reduced,
-            'ghg_reduced': agg['ghg_reduced'] + next.ghg_reduced,
-            'project_types': set(agg['project_types'] | { next.type.type_name }) if next.type else agg['project_types'],
-            'project_ids': set(agg['project_ids'] | { next.id }) if next.id else agg['project_ids'],
+        lambda agg, next_resource: {
+            'gge_reduced': agg['gge_reduced'] + next_resource.gge_reduced,
+            'ghg_reduced': agg['ghg_reduced'] + next_resource.ghg_reduced,
+            'project_types': set(agg['project_types'] | {next_resource.type.type_name}) if next_resource.type else agg[
+                'project_types'],
+            'project_ids': set(agg['project_ids'] | {next_resource.id}) if next_resource.id else agg['project_ids'],
             'points': agg['points'] | {
                 LatLng(
                     lat=loc.coords['latitude'],
                     lng=loc.coords['longitude']
-                ) for loc in next.locations if loc.location is not None}
+                ) for loc in next_resource.locations if loc.location is not None}
         },
         group,
         {
@@ -100,6 +103,7 @@ def aggregate_project_group(name, group):
 
     agg_project['center'] = compute_centroid(agg_project['points'])
     return LocationMarker(**agg_project)
+
 
 def compute_centroid(points):
     points = list(points)

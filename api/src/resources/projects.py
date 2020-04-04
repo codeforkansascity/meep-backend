@@ -8,7 +8,6 @@ from app import db
 from .base import BaseAPI, BaseListAPI
 from models import Project, ProjectType
 
-
 api_projects_blueprint = Blueprint("api_projects", __name__)
 api = Api(api_projects_blueprint)
 
@@ -67,8 +66,9 @@ api.add_resource(
 class ProjectTypeListProjectsAPI(Resource):
     """Return all projects with a given project type"""
 
-    def get(self, id):
-        project_type = ProjectType.query.get(id)
+    @staticmethod
+    def get(resource_id):
+        project_type = ProjectType.query.get(resource_id)
         projects = project_type.projects
         return {"projects": [project.json for project in projects]}
 
@@ -83,8 +83,9 @@ api.add_resource(
 class ProjectLocationsAPI(Resource):
     """Return all locations associated with a given project"""
 
-    def get(self, id):
-        project = Project.query.get(id)
+    @staticmethod
+    def get(resource_id):
+        project = Project.query.get(resource_id)
         return {"locations": [loc.json for loc in project.locations]}
 
 
@@ -101,7 +102,8 @@ class ProjectUploadAPI(Resource):
         self.parser = reqparse.RequestParser()  # for input validation
         self.parser.add_argument("file")  # TODO: where should this add be?
 
-    def post(self):
+    @staticmethod
+    def post():
         """
         Test this endpoint using curl or the requests library
         ex: using curl enter the following in a command prompt:
@@ -113,8 +115,8 @@ class ProjectUploadAPI(Resource):
         file = request.files["file"]
 
         # TODO: add error handling or settings to specify which file extensions are allowed
-        # TODO: add error handling, gives error if trying to add the same project with the same name again. Need to handle that error
-        # sqlite3.IntegrityError: UNIQUE constraint failed: projects.name
+        # TODO: add error handling, gives error if trying to add the same project with the same name again.
+        #  Need to handle that error sqlite3.IntegrityError: UNIQUE constraint failed: projects.name
 
         # convert the incoming file object to a file stream object in the proper mode and encoding setting
         file.stream.seek(0)  # seek to the beginning of the file
@@ -153,15 +155,16 @@ api.add_resource(
 
 
 class ProjectDetailAPI(Resource):
-    def get(self, id):
-        project = Project.query.filter_by(id=id).first()
+    @staticmethod
+    def get(resource_id):
+        project = Project.query.filter_by(id=resource_id).first()
         return jsonify(dict(
-            img = project.photo_url,
-            project_name = project.name,
-            details = project.description,
-            project_type = project.type.type_name if project.type else None,
-            date = str(project.year),
-            emissions_data = {
+            img=project.photo_url,
+            project_name=project.name,
+            details=project.description,
+            project_type=project.type.type_name if project.type else None,
+            date=str(project.year),
+            emissions_data={
                 'gge_reduced': project.gge_reduced,
                 'ghg_reduced': project.ghg_reduced
             }
@@ -176,14 +179,16 @@ api.add_resource(
 
 
 class ProjectSummaryAPI(Resource):
-    def get(self, id):
-        project = Project.query.filter_by(id=id).first()
+    @staticmethod
+    def get(resource_id):
+        project = Project.query.filter_by(id=resource_id).first()
         return jsonify(dict(
-            img = project.photo_url,
-            project_name = project.name,
-            project_details = project.description,
-            date = str(project.year)
+            img=project.photo_url,
+            project_name=project.name,
+            project_details=project.description,
+            date=str(project.year)
         ))
+
 
 api.add_resource(
     ProjectSummaryAPI,
