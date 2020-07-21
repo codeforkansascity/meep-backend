@@ -51,9 +51,8 @@ class LatLng(LatLngNT):
     @property
     def json(self):
         return {
-            # 5 seems like a good number of sig digits: see --> https://gis.stackexchange.com/a/8674
-            'lat': round(self.lat, 5),
-            'lng': round(self.lng, 5)
+            'lat': self.lat,
+            'lng': self.lng
         }
 
 
