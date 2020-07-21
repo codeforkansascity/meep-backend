@@ -110,6 +110,17 @@ class Location(db.Model):
                'location={self.location}, '\
                'project_id={self.project_id})'.format(self=self)
 
+
+    @property
+    def json(self):
+        return {
+            'address': self.address,
+            'city': self.city,
+            'state': self.state,
+            'zip_code': self.zip_code,
+            **self.coords
+        }
+
     @property 
     def as_geojson(self):
         return json.loads(

@@ -85,7 +85,7 @@ class ProjectLocationsAPI(Resource):
 
     def get(self, id):
         project = Project.query.get(id)
-        return {"locations": [ loc.coords for loc in project.locations]}
+        return {"locations": [loc.json for loc in project.locations]}
 
 
 api.add_resource(
