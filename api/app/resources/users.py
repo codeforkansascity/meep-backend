@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask_restful import Api, fields
 from .base import BaseAPI, BaseListAPI
-from models import User, Role
+from ..models import User, Role
 
 api_users_blueprint = Blueprint('api_users', __name__)
 api = Api(api_users_blueprint)

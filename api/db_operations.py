@@ -16,7 +16,7 @@ Currently only dev and test configs work
 '''
 import sys
 
-from models import *
+from app.models import *
 from app import create_app
 
 

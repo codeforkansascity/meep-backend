@@ -4,7 +4,7 @@ from collections import defaultdict, namedtuple
 from geoalchemy2 import functions
 from sqlalchemy import func
 
-from models import db, Project, ProjectType, Location
+from ..models import db, Project, ProjectType, Location
 
 
 LocationMarkerNT = namedtuple(

@@ -5,8 +5,8 @@ from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource, fields, reqparse
 
 from app import db
-from .base import BaseAPI, BaseListAPI
-from models import Project, ProjectType
+from app.resources.base import BaseAPI, BaseListAPI
+from app.models import Project, ProjectType
 
 
 api_projects_blueprint = Blueprint("api_projects", __name__)

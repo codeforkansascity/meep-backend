@@ -7,8 +7,8 @@ from geoalchemy2 import functions
 from sqlalchemy import func
 
 from .base import BaseAPI, BaseListAPI
-from models import db, Project, ProjectType, Location
-from services.location_marker import get_location_markers
+from ..models import db, Project, ProjectType, Location
+from ..services.location_marker import get_location_markers
 
 
 api_locations_blueprint = Blueprint('api_locations', __name__)

@@ -3,7 +3,7 @@ import re
 from flask import render_template, Blueprint, request, redirect, url_for
 from sqlalchemy import func
 
-from models import db, Project, ProjectType, Location
+from .models import db, Project, ProjectType, Location
 
 forms_blueprint = Blueprint("forms", __name__)
 
