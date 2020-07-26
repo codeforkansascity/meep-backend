@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 from datetime import datetime
 # from .config import config
 from app.models import db
+from flask_cors import CORS
 
 def create_app(config_name='dev'):
     """App factory method for initializing flask extensions and registering
@@ -22,6 +23,7 @@ def create_app(config_name='dev'):
         # initialize extensions
         print(app.config['SQLALCHEMY_DATABASE_URI'])
         db.init_app(app)
+        CORS(app)
         from .resources.locations import api_locations_blueprint
         from .resources.projects import api_projects_blueprint
         from .resources.users import api_users_blueprint
