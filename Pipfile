@@ -12,6 +12,7 @@ sqlalchemy = "*"
 geoalchemy2 = "*"
 flask-sqlalchemy = "*"
 psycopg2 = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "3.7"
