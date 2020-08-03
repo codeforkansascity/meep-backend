@@ -110,14 +110,29 @@ class Location(db.Model):
                'location={self.location}, '\
                'project_id={self.project_id})'.format(self=self)
 
+
+    @property
+    def json(self):
+        return {
+            'address': self.address,
+            'city': self.city,
+            'state': self.state,
+            'zip_code': self.zip_code,
+            **self.coords
+        }
+
+    @property 
+    def as_geojson(self):
+        return json.loads(
+            db.session.scalar(func.ST_AsGeoJSON(self.location))
+        )
+
     @property
     def coords(self):
         try:
-            geojson = json.loads(
-                db.session.scalar(func.ST_AsGeoJSON(self.location))
-            )
+            geojson = self.as_geojson
             assert geojson.get('type') == 'Point'
         except (TypeError, AssertionError):
             return {'longitude': None, 'latitude': None}
-
+        
         return dict(zip(('longitude', 'latitude'), geojson.get('coordinates')))

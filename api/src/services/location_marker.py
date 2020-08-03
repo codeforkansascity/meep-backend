@@ -103,13 +103,14 @@ def aggregate_project_group(name, group):
 
 def compute_centroid(points):
     points = list(points)
-    if len(points) == 0:
+    n = len(points)
+    if n == 0:
         return None
     try:
         lat = sum(p.lat for p in points)
-        lat /= len([p for p in points])
+        lat /= n
         lng = sum(p.lng for p in points)
-        lng /= len([p for p in points])
+        lng /= n
         return LatLng(lat=lat, lng=lng)
     except ZeroDivisionError as e:
         return None
