@@ -57,7 +57,7 @@ local_settings.py
 db.sqlite3
 
 # Flask stuff:
-instance/
+instance/env.prod.cfg
 .webassets-cache
 
 # Scrapy stuff:
@@ -105,3 +105,9 @@ venv.bak/
 
 # postgresql
 /postgresql
+
+# JetBrains IDE files
+.idea/
+
+# VS Code files
+.vscode

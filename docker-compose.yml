@@ -13,29 +13,40 @@ services:
 
 
     api:
-        build: api/src
+        build: api
         volumes:
           - ./api/src:/meep/api/src
+          - ./api/tests:/meep/api/tests
         expose:
           - 8000
         ports:
           - 8000:8000
         depends_on:
           - db
+          - test_db
         environment:
-          - DEV_DATABASE_URL=postgres://meep:supersafe@db:5432/meep_api
+          - DEV_DATABASE_URL=postgresql://meep:supersafe@db:5432/meep_api
+          - TEST_DATABASE_URL=postgresql://meep:supersafe@test_db:5432/test_meep_api
         links:
           - db
+          - test_db
 
 
     db:
-        image: postgres:11.3
+        image: kartoza/postgis
         environment:
           - POSTGRES_USER=meep
           - POSTGRES_PASSWORD=supersafe
           - POSTGRES_DB=meep_api
         volumes:
           - "postgres_data:/var/lib/postgresql/data"
+
+    test_db:
+        image: kartoza/postgis
+        environment:
+            - POSTGRES_USER=meep
+            - POSTGRES_PASSWORD=supersafe
+            - POSTGRES_DB=test_meep_api
 
 volumes:
     postgres_data:

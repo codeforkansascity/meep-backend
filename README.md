@@ -1,98 +1,110 @@
-# meep-backend
+# Meep Backend 2.0
 
-## Setup
+See the old [`README.md`](./README.old.md) for information about how to install and setup this repo using Docker, and for Windows/Linux.
 
-### Docker-compose
-  1. Install Docker. Compose should be bundled with it.
-  2. Start the containers: ```docker compose up --build -d```.
-  3. Seed the development database: ```docker container exec meep-backend_api_1 python /meep/api/src/db_operations.py reset```
-  4. In a browser, or some other client, type ```localhost/api/locations```. If you see a bunch of json data, it worked!
+For the time being, the following instructions are for how to set up the Meep Backend end _locally_ with the Meep frontend on Linux/macOS.
 
-### Useful docker commands
-  - Shell into database:
-    ```
-    docker container exec -it meep-backend_db_1 psql -U meep -h meep-backend_db_1 -d meep_api
-    ```
-    password: ```supersafe```
-  - Shell into api container
-    ```
-    docker container exec -it meep-backend_api_1 /bin/ash
-    ```
-  - Shell into nginx container
-    ```
-    docker container exec -it meep-backend_web_server_1 /bin/bash
-    ```
-  - view log files (similar for api)
-    ```
-    docker logs meep-backend_web_server_1
-    ```
+## Requirements
 
-### Run only the api container with Docker:
-  1. Install Docker
-  2. Build docker image from dockerfile:
-    ```
-    docker build -t meep-backend:gunicorn src
-    ```
-  3. Create and run a container from the image:
-    ```
-    docker run -p 8001:8000 meep-backend:gunicorn
-    ```
-    or to allow live editing of the code in the container, do
-    ```
-    docker run -p 8001:8000 -v $(pwd)/src:/meep/api/src meep-backend:gunicorn
-    ```
+- PostgreSQL 9+
+- PostgreSQL extension PostGIS
+- Python 3.7+ ([`requirements.txt`](./api/src/requirements.txt))
 
-      - On windows, the command for live editing probably won't work. instead of ```$(pwd)/src``` on the left side of the           bind mount, you will have to provide an absolute path to the project folder that contains the Dockerfile (src at the         time of writing). After that, there is a chance that you will get a different error. Restart docker and try again. It         usually works on the second attempt. Please note that this is a temporary workaround while we find a less annoying way       to run the project on windows.  
-  4. In a browser, try typing ```http://localhost:8001/locations``` to see
-    if it worked.
+## Install
 
-### Unix without docker
-  1. Install python
-     ```
-     sudo apt-get install python3
-     ```
-  2. clone the master branch
-  3. create a virtual environment in the project root directory
-  4. activate the virtual environment ```source venv/bin/activate```
-  5. pip install requiremnets ```pip install -r requirements.txt```
-  6. create a sqlite database ```touch dev.db```
-  7. set dev database environment variable ```export DEV_DATABASE_URL=sqlite:///dev.db```
-  8. Open the database in sqlite with ```sqlite3 dev.db;``` check to see if it created the tables with ```.tables```
-  9. try to display data from a table ```select * from projects;``` you should see a list of projects display
+### Install `pipenv`
 
-  10. set flask environment variable to development
-    ```
-    export FLASK_ENV=development
-    ```
-  11. Set flask app environment variable
-    ```
-    export FLASK_APP="src/app:create_app()"
-    ```
-  12. run the app
-    ```
-    flask run
-    ```
-  13. test to see if it worked: in a browser, type ```localhost:5000/projects``` you should see some json containing project data
+- Install `pipenv` if you don't have it already.
 
-### Windows without docker
-  1. Install python
-  2. Install pip
-  3. Install virtualenv
-  4. clone the master branch
-  5. create a virtual environment in the project root directory
-  6. activate the virtual environment ```venv\Scripts\activate```
-  7. pip install requirements ```pip install -r requirements.txt```
-  8. set dev database environment variable ```set DEV_DATABASE_URL=sqlite:///dev.db```
-  9. set flask environment variable to development
-    ```
-    set FLASK_ENV=development
-    ```
-  10. set flask app variable to point towards app.py
-    ```
-    set FLASK_APP=src\app.py
-    ```
-  11. run the app
-    ```
-    flask run
-    ```
-  11. test to see if it worked: in a browser, type ```localhost:5000/projects``` you should see some json containing project data
+#### Linux
+
+```sh
+pip install pipenv
+```
+
+#### macOS with Homebrew
+
+```sh
+brew install pipenv
+```
+
+### Git clone the repo
+
+```sh
+git clone https://github.com/codeforkansascity/meep-backend.git
+```
+
+And the `cd` to `./meep-backend`.
+
+### Install Python dependencies
+
+```sh
+pipenv install
+```
+
+### Make sure PostgreSQL/PostGIS is setup
+
+The test database has been switched from sqlite3 to PostgreSQL with the PostGIS extension. See [https://postgis.net/install/](https://postgis.net/install/) for how to set up the db for either Linux or macOS. If you aren't familiar with PostgreSQL, it is recommended you use 
+
+> Note: To access the db using SQLAlchemy, you may have to change your database authentication with the `pd_hba.conf` file. How this should happen depends on your OS, but in general see [https://www.postgresql.org/docs/9.6/auth-pg-hba-conf.html](https://www.postgresql.org/docs/9.6/auth-pg-hba-conf.html).
+
+> Note: Remember to start the PostgreSQL server if you haven't set it up to start at boot.
+
+#### Steps
+
+- When you install PostgreSQL, make sure to install the PostGIS extension
+- Create a password for the user `postgres`, e.g. `1234`
+- Create a new database called `meep-test`
+
+The default config file is `api/instance/env.test.cfg`:
+
+```python
+PG_USER = 'postgres'
+PG_PASS = '1234'
+PG_HOSTNAME = '127.0.0.1'
+PG_DBNAME = 'meep-test'
+
+TESTING = True
+SQLALCHEMY_TRACK_MODIFICATIONS = True
+DEBUG = True
+```
+
+### Run the test script
+
+For the moment, only a test environment is setup to integrate with the meep frontend.
+
+The script is `scripts/local/run_test_server.sh` and it contains the following
+
+```sh
+#!/bin/sh
+source $(pipenv --venv)/bin/activate
+export APP_SETTINGS=env.test.cfg
+export FLASK_APP="api/app:create_app()"
+export FLASK_ENV=test
+python api/db_operations.py reset test
+flask run
+```
+
+If first activates the `pipenv` environment, uses `api/instance/env.test.cfg` as the Flask configuration file, resets the PostgreSQL/PostGIS database using `python api/db_operations.py reset test` (if you want to run this manually, do `pipenv api/db_operations.py reset test`). Finally, it starts the backend API as a Flask app.
+
+#### Make sure the test script is executable
+
+```sh
+chmod +x scripts/local/run_test_server.sh
+```
+
+#### Run the server
+
+```sh
+./scripts/local/run_test_server.sh
+```
+
+### Test the server
+
+If everything went correctly, in the terminal you should see:
+
+![terminal screenshote](docs/images/terminal.png)
+
+and if you open your browser to `127.0.0.1:5000/ping` you should see
+
+![json response in browser](docs/images/ping.png)
