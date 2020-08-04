@@ -107,7 +107,7 @@ class Location(db.Model):
         return f'Location(address={self.address}, city={self.city}, '\
                f'state={self.state}, zip_code={self.zip_code}, '\
                f'location={self.location}, '\
-               f'project_id={self.project_id})'.format(self=self)
+               f'project_id={self.project_id})'
 
     @property
     def json(self):
