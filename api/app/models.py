@@ -13,7 +13,6 @@ from geoalchemy2 import Geometry
 class BaseModel(Model):
     """Base class shared by all models to implement common attributes and methods.
     Needed to instantiate SQLAlchemy object.
-    TODO: find a way to move this to models.py without breaking the app
     """
 
     @property
@@ -105,19 +104,33 @@ class Location(db.Model):
     project = db.relationship('Project', backref='locations')
 
     def __repr__(self):
-        return 'Location(address={self.address}, city={self.city}, '\
-               'state={self.state}, zip_code={self.zip_code}, '\
-               'location={self.location}, '\
-               'project_id={self.project_id})'.format(self=self)
+        return f'Location(address={self.address}, city={self.city}, '\
+               f'state={self.state}, zip_code={self.zip_code}, '\
+               f'location={self.location}, '\
+               f'project_id={self.project_id})'.format(self=self)
+
+    @property
+    def json(self):
+        return {
+            'address': self.address,
+            'city': self.city,
+            'state': self.state,
+            'zip_code': self.zip_code,
+            **self.coords
+        }
+
+    @property 
+    def as_geojson(self):
+        return json.loads(
+            db.session.scalar(func.ST_AsGeoJSON(self.location))
+        )
 
     @property
     def coords(self):
         try:
-            geojson = json.loads(
-                db.session.scalar(func.ST_AsGeoJSON(self.location))
-            )
+            geojson = self.as_geojson
             assert geojson.get('type') == 'Point'
         except (TypeError, AssertionError):
             return {'longitude': None, 'latitude': None}
-
+        
         return dict(zip(('longitude', 'latitude'), geojson.get('coordinates')))

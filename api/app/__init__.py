@@ -21,7 +21,6 @@ def create_app(config_name='dev'):
     )
     with app.app_context():
         # initialize extensions
-        print(app.config['SQLALCHEMY_DATABASE_URI'])
         db.init_app(app)
         CORS(app)
         from .resources.locations import api_locations_blueprint

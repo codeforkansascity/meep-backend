@@ -1,47 +1,11 @@
-from functools import partial, reduce
-from collections import defaultdict, namedtuple
-
-from geoalchemy2 import functions
-from sqlalchemy import func
-
+from dataclasses import dataclass, field
 from ..models import db, Project, ProjectType, Location
 
+@dataclass
+class LatLng:
+    lat: float = field()
+    lng: float = field()
 
-LocationMarkerNT = namedtuple(
-    'LocationMarkerNT',
-    [
-        'points',
-        'project_name',
-        'center',
-        'project_ids',
-        'project_types',
-        'ghg_reduced',
-        'gge_reduced'
-    ]
-)
-
-class LocationMarker(LocationMarkerNT):
-    @property
-    def json(self):
-        return {
-            'points': [p.json for p in self.points],
-            'project_name': self.project_name,
-            'center': self.center.json if self.center is not None else None,
-            'project_ids': self.project_ids,
-            'project_types': self.project_types,
-            'gge_reduced': self.gge_reduced,
-            'ghg_reduced': self.ghg_reduced
-        }
-
-LatLngNT = namedtuple(
-    'LatLngNT',
-     [
-        'lat',
-        'lng'
-    ]
-)
-
-class LatLng(LatLngNT):
     def __eq__(self, o):
         return self.lat == o.lat and self.lng == o.lng
 
@@ -55,61 +19,64 @@ class LatLng(LatLngNT):
             'lng': self.lng
         }
 
+@dataclass
+class LocationMarker:
+    points: list = field()
+    project_name: str = field()
+    center: list = field()
+    project_ids: list = field()
+    project_types: list = field()
+    ghg_reduced: float = field()
+    gge_reduced: float = field()
+    
+    @property
+    def json(self):
+        return {
+            'points': [LatLng(*pt).json for pt in self.points],
+            'project_name': self.project_name,
+            'center': LatLng(*self.center).json,
+            'project_ids': self.project_ids,
+            'project_types': self.project_types,
+            'gge_reduced': self.gge_reduced,
+            'ghg_reduced': self.ghg_reduced
+        }
 
 def get_location_markers():
-    projects = Project.query.all()
-    projects_by_name = group_projects_by_name(projects)
-    projects_agg = [aggregate_project_group(name, group)
-        for (name, group) in projects_by_name.items()]
-    return [lm.json for lm in projects_agg]
-
-
-def group_projects_by_name(projects):
-    grouped = defaultdict(list)
-    for project in projects:
-        grouped[project.name].append(project)
-    return grouped
-
-
-def aggregate_project_group(name, group):
-    agg_project = reduce(
-        lambda agg, next: {
-            'gge_reduced': agg['gge_reduced'] + next.gge_reduced,
-            'ghg_reduced': agg['ghg_reduced'] + next.ghg_reduced,
-            'project_types': set(agg['project_types'] | { next.type.type_name }) if next.type else agg['project_types'],
-            'project_ids': set(agg['project_ids'] | { next.id }) if next.id else agg['project_ids'],
-            'points': agg['points'] | {
-                LatLng(
-                    lat=loc.coords['latitude'],
-                    lng=loc.coords['longitude']
-                ) for loc in next.locations if loc.location is not None}
-        },
-        group,
-        {
-            'gge_reduced': 0,
-            'ghg_reduced': 0,
-            'project_types': set([]),
-            'project_ids': set([]),
-            'points': set([])
-        }
-    )
-    agg_project['project_types'] = list(agg_project['project_types'])
-    agg_project['project_ids'] = list(agg_project['project_ids'])
-    agg_project['points'] = list(agg_project['points'])
-    agg_project['project_name'] = name
-
-    agg_project['center'] = compute_centroid(agg_project['points'])
-    return LocationMarker(**agg_project)
-
-def compute_centroid(points):
-    points = list(points)
-    if len(points) == 0:
-        return None
-    try:
-        lat = sum(p.lat for p in points)
-        lat /= len([p for p in points])
-        lng = sum(p.lng for p in points)
-        lng /= len([p for p in points])
-        return LatLng(lat=lat, lng=lng)
-    except ZeroDivisionError as e:
-        return None
+    with db.engine.connect() as con:
+        result = con.execute('''
+            with projects_and_types as (
+                select 	projects.id, 
+                    name, 
+                    gge_reduced, 
+                    ghg_reduced, 
+                    type_name as project_type 
+                from 
+                projects
+                join
+                project_types
+                on projects.project_type_id = project_types.id
+            ), proj_locs as (
+                select 	name, 
+                    sum(gge_reduced) as gge_reduced, 
+                    sum(ghg_reduced) as ghg_reduced, 
+                    array_agg(project_type) as project_types, 
+                    array_agg(projects_and_types.id) as project_ids, 
+                    ST_Collect(location) as points 
+                from 
+                projects_and_types 
+                join 
+                locations
+                on projects_and_types.id = locations.id
+                group by name
+            )
+            select  ST_AsGeoJSON(points)::json -> 'coordinates' as points,
+                    name as project_name, 
+                    ST_AsGeoJSON(ST_Centroid(points))::json -> 'coordinates' as center,
+                    project_ids, 
+                    project_types, 
+                    ghg_reduced, 
+                    gge_reduced
+            from proj_locs;
+            ''')
+        
+        return [LocationMarker(*row).json for row in result.fetchall()]

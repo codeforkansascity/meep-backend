@@ -21,7 +21,7 @@ class BaseAPI(Resource):
 
     Attributes:
 
-        parser :
+        parser : Instance of `reqparse.RequestParser` - See https://flask-restful.readthedocs.io/en/latest/api.html#module-reqparse
 
         model : A sqlalchemy model used to reference data fields and
         issue queries. This must be specified in the base class.
@@ -49,8 +49,9 @@ class BaseAPI(Resource):
         resource = self.model.query.get(id) # get instance of model
         for k, v in args.items():
             if v is not None:
-                setattr(resource, k, v)  # since we don't know the class we
-                # are working with, use setattr
+                '''Since we don't know the class we are working with, use setattr
+                '''
+                setattr(resource, k, v)
         db.session.commit()  # db is the sqlalchemy instance
         return 200
 

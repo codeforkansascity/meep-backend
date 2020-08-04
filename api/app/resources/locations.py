@@ -66,7 +66,9 @@ class LocationListAPI(BaseListAPI):
                 'latitude': coords.get('latitude'),
                 'longitude': coords.get('longitude')
             })
-        return jsonify({'locations': data})
+        return jsonify({
+            'locations': data
+        })
 
 
 
@@ -86,8 +88,10 @@ class LocationMarkerAPI(BaseListAPI):
     base = LocationAPI()
 
     def get(self):
+        markers = get_location_markers()
+
         return jsonify({
-            'locationMarkers': get_location_markers()
+            'locationMarkers': markers
         })
 
 
