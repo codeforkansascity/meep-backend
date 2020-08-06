@@ -60,12 +60,16 @@ dbreset)
     docker container exec meep-backend_api_1 python /meep/api/src/db_operations.py reset dev
     ;;
 tests)
+    echo 'docker exec -it meep-backend_api_1 pytest'
+    docker exec -it meep-backend_api_1 pytest
+    ;;
+testsv)
     echo 'docker exec -it meep-backend_api_1 pytest -v'
     docker exec -it meep-backend_api_1 pytest -v
     ;;
-testsnv)
-    echo 'docker exec -it meep-backend_api_1 pytest'
-    docker exec -it meep-backend_api_1 pytest
+testsvv)
+    echo 'docker exec -it meep-backend_api_1 pytest -vv'
+    docker exec -it meep-backend_api_1 pytest -vv
     ;;
 shapi)
     echo 'docker container exec -it meep-backend_api_1 /bin/ash -l'
