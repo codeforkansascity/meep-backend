@@ -6,6 +6,7 @@
 import json
 
 from flask_sqlalchemy import SQLAlchemy, Model
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy import func
 from geoalchemy2 import Geometry
 
@@ -28,32 +29,7 @@ class BaseModel(Model):
 
 # globally accessible database connection
 db = SQLAlchemy(model_class=BaseModel)
-
-class User(db.Model):
-    """A user of the application.
-    By convention, all foreign key Columns must end in '_id'
-    This will ensure that the parser object in resource.py will work correctly.
-    """
-    __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
-    password_hash = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(20), nullable=False, unique=True)
-    # Many to one relationship with role
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-
-    role = db.relationship('Role', backref=db.backref('users', lazy='select'))
-
-    def __init__(self, email, password_hash):
-        self.email = email
-        self.password_hash = password_hash
-
-
-class Role(db.Model):
-    """User role for privileges."""
-    __tablename__ = 'roles'
-    id = db.Column(db.Integer, primary_key=True)
-    role_name = db.Column(db.String(20), nullable=False, unique=True)
-    # TODO: Add fields for privileges
+Session = sessionmaker()
 
 
 class Project(db.Model):
@@ -74,7 +50,13 @@ class Project(db.Model):
                            backref=db.backref('projects', lazy='select'))
 
     def __repr__(self):
-        return f'Project(name={self.name}, description={self.description}, photo_url={self.photo_url}, website_url={self.website_url}, year={self.year}, ghg_reduced={self.ghg_reduced}, gge_reduced={self.gge_reduced})'
+        return  f'Project(name={self.name}, '\
+                f'description={self.description}, '\
+                f'photo_url={self.photo_url}, '\
+                f'website_url={self.website_url}, '\
+                f'year={self.year}, '\
+                f'ghg_reduced={self.ghg_reduced}, '\
+                f'gge_reduced={self.gge_reduced})'
 
 
 class ProjectType(db.Model):
@@ -100,8 +82,12 @@ class Location(db.Model):
     zip_code = db.Column(db.Integer)
     location = db.Column(Geometry(geometry_type='POINT'))
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
-
     project = db.relationship('Project', backref='locations')
+
+    def update_address(self, address):
+        session = Session()
+        self.address = address
+        session.commit()
 
     def __repr__(self):
         return f'Location(address={self.address}, city={self.city}, '\

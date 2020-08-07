@@ -1,4 +1,0 @@
-aiohttp==3.6.2
-requests
-psycopg2-binary==2.8.4
-pytest

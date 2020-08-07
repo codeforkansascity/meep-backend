@@ -1,6 +1,57 @@
-import aiohttp
-import asyncio
-import json
+import aiohttp, asyncio, json
+
+states = {
+    'alabama': 'AL',
+    'alaska': 'AK',
+    'arizona': 'AZ',
+    'arkansas': 'AR',
+    'california': 'CA',
+    'colorado': 'CO',
+    'connecticut': 'CT',
+    'delaware': 'DE',
+    'florida': 'FL',
+    'georgia': 'GA',
+    'hawaii': 'HI',
+    'idaho': 'ID',
+    'illinois': 'IL',
+    'indiana': 'IN',
+    'iowa': 'IA',
+    'kansas': 'KS',
+    'kentucky': 'KY',
+    'louisiana': 'LA',
+    'maine': 'ME',
+    'maryland': 'MD',
+    'massachusetts': 'MA',
+    'michigan': 'MI',
+    'minnesota': 'MN',
+    'mississippi': 'MS',
+    'missouri': 'MO',
+    'montana': 'MT',
+    'nebraska': 'NE',
+    'nevada': 'NV',
+    'new hampshire': 'NH',
+    'new jersey': 'NJ',
+    'new mexico': 'NM',
+    'new york': 'NY',
+    'north carolina': 'NC',
+    'north dakota': 'ND',
+    'ohio': 'OH',
+    'oklahoma': 'OK',
+    'oregon': 'OR',
+    'pennsylvania': 'PA',
+    'rhode island': 'RI',
+    'south carolina': 'SC',
+    'south dakota': 'SD',
+    'tennessee': 'TN',
+    'texas': 'TX',
+    'utah': 'UT',
+    'vermont': 'VT',
+    'virginia': 'VA',
+    'washington': 'WA',
+    'west virginia': 'WV',
+    'wisconsin': 'WI',
+    'wyoming': 'WY'
+}
 
 
 class GoogleGeocodingClient:
@@ -14,16 +65,13 @@ class GoogleGeocodingClient:
         elif state.upper() in states.values():
             state = state.upper()
         else:
-            raise ValueError('Invalid State input "{}"'.format(state))
-
+            raise ValueError(f'Invalid State input "{state}"')
         params = {
             'address': ', '.join((address, city, state)).replace(' ', '+'),
             'key': self.api_key
         }
-
-        query_str = '&'.join('{}={}'.format(param, val) for (param, val) in params.items())
-        uri = 'https://maps.googleapis.com/maps/api/geocode/json?{}'.format(query_str)
-        return uri
+        query = '&'.join(f'{param}={val}' for param, val in params.items())
+        return f'https://maps.googleapis.com/maps/api/geocode/json?{query}'
 
     async def _fetch(self, session, uri):
         async with session.get(uri) as response:
@@ -94,6 +142,8 @@ class GoogleGeocodingClient:
         }
 
     async def _bulk_geocode_async(self, locations):
+        '''`locations` is a list of `(address, city, state)` tuples
+        '''
         tasks = (self._geocode_async(*loc) for loc in locations)
         return await asyncio.gather(*tasks)
 
@@ -104,55 +154,3 @@ class GoogleGeocodingClient:
         return asyncio.run(self._bulk_geocode_async(locations))
 
 
-states = {
-    'alabama': 'AL',
-    'alaska': 'AK',
-    'arizona': 'AZ',
-    'arkansas': 'AR',
-    'california': 'CA',
-    'colorado': 'CO',
-    'connecticut': 'CT',
-    'delaware': 'DE',
-    'florida': 'FL',
-    'georgia': 'GA',
-    'hawaii': 'HI',
-    'idaho': 'ID',
-    'illinois': 'IL',
-    'indiana': 'IN',
-    'iowa': 'IA',
-    'kansas': 'KS',
-    'kentucky': 'KY',
-    'louisiana': 'LA',
-    'maine': 'ME',
-    'maryland': 'MD',
-    'massachusetts': 'MA',
-    'michigan': 'MI',
-    'minnesota': 'MN',
-    'mississippi': 'MS',
-    'missouri': 'MO',
-    'montana': 'MT',
-    'nebraska': 'NE',
-    'nevada': 'NV',
-    'new hampshire': 'NH',
-    'new jersey': 'NJ',
-    'new mexico': 'NM',
-    'new york': 'NY',
-    'north carolina': 'NC',
-    'north dakota': 'ND',
-    'ohio': 'OH',
-    'oklahoma': 'OK',
-    'oregon': 'OR',
-    'pennsylvania': 'PA',
-    'rhode island': 'RI',
-    'south carolina': 'SC',
-    'south dakota': 'SD',
-    'tennessee': 'TN',
-    'texas': 'TX',
-    'utah': 'UT',
-    'vermont': 'VT',
-    'virginia': 'VA',
-    'washington': 'WA',
-    'west virginia': 'WV',
-    'wisconsin': 'WI',
-    'wyoming': 'WY'
-}

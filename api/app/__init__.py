@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from datetime import datetime
 # from .config import config
-from app.models import db
+from app.models import db, Session
 from flask_cors import CORS
 
 def create_app(config_name='dev'):
@@ -22,17 +22,14 @@ def create_app(config_name='dev'):
     with app.app_context():
         # initialize extensions
         db.init_app(app)
+        Session.configure(bind=db.engine)
         CORS(app)
         from .resources.locations import api_locations_blueprint
         from .resources.projects import api_projects_blueprint
-        from .resources.users import api_users_blueprint
-        from .forms import forms_blueprint
 
         # register blueprints
         app.register_blueprint(api_locations_blueprint)
         app.register_blueprint(api_projects_blueprint)
-        app.register_blueprint(api_users_blueprint)
-        app.register_blueprint(forms_blueprint)
 
         app.config['UPTIME'] = datetime.now()
 
