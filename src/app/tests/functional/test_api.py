@@ -1,13 +1,9 @@
-import json
+import json, pytest
 from operator import itemgetter
-
 from flask import current_app
-import pytest
 from sqlalchemy import func
 
-from app import create_app
-from models import Location, Project, ProjectType, db
-
+from ..conftest import create_app, Location, Project, ProjectType, db
 
 def test_get_locations_list(app):
     """
@@ -65,15 +61,6 @@ def test_get_location_by_id(app):
         }
 
 
-def test_post_location(app):
-    pass
-
-def test_put_location(app):
-    pass
-
-def test_delete_location(app):
-    pass
-
 def test_get_project_list(app):
     """
     GIVEN a Flask application
@@ -92,12 +79,3 @@ def test_get_project_by_id(app):
     """
 
     # insert a projects into the database
-
-def test_post_project(app):
-    pass
-
-def test_put_project(app):
-    pass
-
-def test_delete_project(app):
-    pass

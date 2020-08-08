@@ -1,14 +1,10 @@
 import os, json, sys, asyncio
-from .service import Location
+
 from sqlalchemy import or_
 from geoalchemy2 import Geometry
 from .client import GoogleGeocodingClient
 from typing import List
-from .service import Location, db, Session, queries
-
-def get_all_locations(session):
-    session = Session()
-    return 
+from .. import Location, db, queries
 
 class GeocodingApi:
     def __init__(self, apikey):
@@ -29,7 +25,7 @@ class GeocodingApi:
         )
 
         if r['longitude'] and r['latitude']:
-            location.location = f'POINT({r.longitude},{r.latitude})'
+            location.location = f"POINT({r['longitude']} {r['latitude']})"
         location.address = r['address'] 
         location.city = r['city'] 
         location.state = r['state'] 
@@ -41,12 +37,11 @@ class GeocodingApi:
         return await asyncio.gather(*tasks)
 
     def run(self):
-        session = Session()
-        locations = session.query(Location).filter(
+        locations = db.session.query(Location).filter(
                 Location.address != None,
                 Location.city != None,
                 Location.state != None,
                 or_(Location.location != None, Location.zip_code == None)
             ).all()
         locations = asyncio.run(self.geocode_locations(locations))
-        session.commit()
+        db.session.commit()

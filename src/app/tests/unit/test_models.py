@@ -1,29 +1,4 @@
-from app import create_app
-from models import User, Role, Project, db, ProjectType, Location
-
-
-def test_new_user(new_user):
-    """
-    GIVEN a User model
-    WHEN a new User is created
-    THEN check if the object is instantiated correctly
-    """
-    assert new_user.id == 456
-    assert new_user.email == "evan@aol.com"
-    assert new_user.password_hash == "1289rhth"
-    assert new_user.role_id == 2
-    assert new_user.role.role_name == "user"
-
-
-def test_new_role(new_role):
-    """
-    GIVEN a Role model
-    WHEN a new Role is created
-    THEN check if the object is instantiated correctly
-    """
-    assert new_role.id == 8
-    assert new_role.role_name == "admin"
-
+from ..conftest import Project, db, ProjectType, Location
 
 def test_new_project(new_project):
     """
@@ -54,11 +29,13 @@ def test_new_projectType(new_projectType):
     assert new_projectType.type_name == "typeName"
 
 
+
+
 def test_new_location(new_location):
     """
     GIVEN a Location model
     WHEN a new Location is created
-    THEN check if the object is instantiated corectly
+    THEN check if the object is instantiated correctly
     """
     assert new_location.id == 5
     assert new_location.address == "1 Infinite Loop"

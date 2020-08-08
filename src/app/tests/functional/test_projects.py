@@ -3,7 +3,8 @@ import io
 
 import pytest
 
-from models import db, Project
+from ..conftest import db, Project
+
 
 def test_upload_projects(app):
     path_to_csv = os.path.abspath(os.path.dirname(__file__))

@@ -1,15 +1,3 @@
-create table if not exists roles (
- id serial primary key,
- role_name varchar(20)
-);
-
-create table if not exists users (
- id serial primary key,
- password_hash varchar(100),
- email varchar(20),
- role_id integer references roles(id)
-);
-
 create table if not exists project_types (
  id serial primary key,
  type_name varchar(30)

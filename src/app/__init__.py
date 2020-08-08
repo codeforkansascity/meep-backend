@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from datetime import datetime
 # from .config import config
-from app.models import db, Session
+from app.models import db
 from flask_cors import CORS
 
 def create_app(config_name='dev'):
@@ -22,7 +22,6 @@ def create_app(config_name='dev'):
     with app.app_context():
         # initialize extensions
         db.init_app(app)
-        Session.configure(bind=db.engine)
         CORS(app)
         from .resources.locations import api_locations_blueprint
         from .resources.projects import api_projects_blueprint

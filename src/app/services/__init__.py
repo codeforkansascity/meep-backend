@@ -4,7 +4,7 @@ class Queries:
     '''Store static query strings -- this way we only read from disk once.
     '''
     queries = [
-        ('location_marker_query', 'api/app/services/sql/get_location_markers.sql')
+        ('location_marker_query', 'src/app/services/sql/get_location_markers.sql')
     ]
 
     def __init__(self):
