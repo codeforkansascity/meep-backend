@@ -6,7 +6,6 @@
 import json
 
 from flask_sqlalchemy import SQLAlchemy, Model
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy import func
 from geoalchemy2 import Geometry
 
@@ -29,7 +28,6 @@ class BaseModel(Model):
 
 # globally accessible database connection
 db = SQLAlchemy(model_class=BaseModel)
-Session = sessionmaker()
 
 
 class Project(db.Model):
