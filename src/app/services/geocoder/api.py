@@ -45,3 +45,4 @@ class GeocodingApi:
             ).all()
         locations = asyncio.run(self.geocode_locations(locations))
         db.session.commit()
+        return locations
