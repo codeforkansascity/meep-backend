@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 source $(pipenv --venv)/bin/activate
 export APP_SETTINGS=env.test.cfg
 export FLASK_APP="src/app:create_app()"
