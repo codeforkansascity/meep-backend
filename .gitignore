@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+app/instance/env.test.cfg
+Pipfile.lock
+
 # C extensions
 *.so
 
