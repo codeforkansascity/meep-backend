@@ -6,7 +6,7 @@ from flask_restful import Api, Resource, fields, reqparse
 
 from app import db
 from app.resources.base import BaseAPI, BaseListAPI
-from app.models import Project, ProjectType
+from app.models import Project, ProjectType, Location
 
 
 api_projects_blueprint = Blueprint("api_projects", __name__)
@@ -95,7 +95,7 @@ api.add_resource(
 )
 
 
-class ProjectUploadAPI(Resource):
+class UploadAPI(Resource):
     def __init__(self):
         super().__init__()
         self.parser = reqparse.RequestParser()  # for input validation
@@ -137,7 +137,7 @@ class ProjectUploadAPI(Resource):
                 website_url=row["website_url"],
                 year=row["year"],
                 ghg_reduced=row["ghg_reduced"],
-                gge_reduced=row["gge_reduced"],
+                gge_reduced=row["gge_reduced"]
             )
             db.session.add(project)
         db.session.commit()
@@ -148,7 +148,7 @@ class ProjectUploadAPI(Resource):
 
 
 api.add_resource(
-    ProjectUploadAPI, "/projects/upload/csv", endpoint="project_uploads"
+    UploadAPI, "/upload", endpoint="project_uploads"
 )
 
 
