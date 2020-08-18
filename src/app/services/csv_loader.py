@@ -96,8 +96,11 @@ def load_from_file(local_file):
             db.session.add(project)
             db.session.commit()
 
-        db.session.flush()
-        db.session.refresh(project)
+            db.session.flush()
+            db.session.refresh(project)
+
+        else:
+            project = curr_project.one()
 
         location.project_id = project.id 
 
