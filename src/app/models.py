@@ -4,11 +4,9 @@
 # https://www.sqlalchemy.org/
 
 import json
-
 from flask_sqlalchemy import SQLAlchemy, Model
 from sqlalchemy import func
 from geoalchemy2 import Geometry
-
 
 class BaseModel(Model):
     """Base class shared by all models to implement common attributes and methods.
@@ -38,7 +36,9 @@ class Project(db.Model):
     description = db.Column(db.String(250))
     photo_url = db.Column(db.String(250))
     website_url = db.Column(db.String(250))
-    year = db.Column(db.Integer)
+    funder = db.Column(db.String(250))
+    fleet_or_station = db.Column(db.String(250))
+    year = db.Column(db.Integer, nullable=False)
     gge_reduced = db.Column(db.Float)
     ghg_reduced = db.Column(db.Float)
     # Many to one relationship with project types
@@ -81,6 +81,9 @@ class Location(db.Model):
     location = db.Column(Geometry(geometry_type='POINT'))
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
     project = db.relationship('Project', backref='locations')
+
+    def set_xy(self, x, y):
+        self.location = f'POINT({x} {y})'
 
     def update_address(self, address):
         session = Session()

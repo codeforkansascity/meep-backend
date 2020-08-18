@@ -37,7 +37,7 @@ def test_new_location(new_location):
     WHEN a new Location is created
     THEN check if the object is instantiated correctly
     """
-    assert new_location.id == 5
+    assert new_location.id == 5000
     assert new_location.address == "1 Infinite Loop"
     assert new_location.city == "Cupertino"
     assert new_location.state == "CA"
@@ -70,7 +70,7 @@ def test_insert_location(app, new_location):
 
     selected_location = Location.query.filter_by(id=5).first()
     coords = selected_location.coords
-    assert new_location.id == 5
+    assert new_location.id == 5000
     assert new_location.address == "1 Infinite Loop"
     assert new_location.city == "Cupertino"
     assert new_location.state == "CA"
