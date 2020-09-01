@@ -10,43 +10,31 @@ services:
           - ./web_server/nginx.conf:/etc/nginx/nginx.conf
         links:
           - api
-
-
     api:
-        build: api
+        build: ./src
+
         volumes:
-          - ./api/src:/meep/api/src
-          - ./api/tests:/meep/api/tests
+          - ./src:/meep/api/src
+          - ./src/tests:/meep/api/tests
         expose:
           - 8000
         ports:
           - 8000:8000
         depends_on:
           - db
-          - test_db
-        environment:
-          - DEV_DATABASE_URL=postgresql://meep:supersafe@db:5432/meep_api
-          - TEST_DATABASE_URL=postgresql://meep:supersafe@test_db:5432/test_meep_api
         links:
           - db
-          - test_db
-
-
     db:
+        env_file: .env
         image: kartoza/postgis
         environment:
-          - POSTGRES_USER=meep
-          - POSTGRES_PASSWORD=supersafe
-          - POSTGRES_DB=meep_api
+          - "POSTGRES_HOST_AUTH_METHOD=trust"
+          - POSTGRES_DBNAME=${PG_DBNAME}
+          - POSTGRES_USER=${PG_USER}
+          - POSTGRES_PASS=${PG_PASS}
+          - POSTGRES_HOSTNAME=${PG_HOSTNAME}
         volumes:
           - "postgres_data:/var/lib/postgresql/data"
-
-    test_db:
-        image: kartoza/postgis
-        environment:
-            - POSTGRES_USER=meep
-            - POSTGRES_PASSWORD=supersafe
-            - POSTGRES_DB=test_meep_api
 
 volumes:
     postgres_data:

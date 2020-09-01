@@ -5,7 +5,7 @@ from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource, fields, reqparse
 
 from app import db
-from app.resources.base import BaseAPI, BaseListAPI
+from app.resources.base import BaseAPI, BaseListAPI, validate_db
 from app.models import Project, ProjectType, Location
 
 
@@ -67,6 +67,7 @@ api.add_resource(
 class ProjectTypeListProjectsAPI(Resource):
     """Return all projects with a given project type"""
 
+    @validate_db
     def get(self, id):
         project_type = ProjectType.query.get(id)
         projects = project_type.projects
@@ -83,6 +84,7 @@ api.add_resource(
 class ProjectLocationsAPI(Resource):
     """Return all locations associated with a given project"""
 
+    @validate_db
     def get(self, id):
         project = Project.query.get(id)
         return {"locations": [loc.json for loc in project.locations]}
@@ -153,6 +155,8 @@ api.add_resource(
 
 
 class ProjectDetailAPI(Resource):
+
+    @validate_db
     def get(self, id):
         project = Project.query.filter_by(id=id).first()
         return jsonify(dict(
@@ -176,6 +180,8 @@ api.add_resource(
 
 
 class ProjectSummaryAPI(Resource):
+
+    @validate_db
     def get(self, id):
         project = Project.query.filter_by(id=id).first()
         return jsonify(dict(

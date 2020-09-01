@@ -8,7 +8,7 @@ from sqlalchemy import and_
 column_names = [
     "Project_ID",
     "Project_Year",
-    "Project_Owner",
+    "Project_Owner", # Organization
     "Project_Type",
     "Fleet_or_Station",
     "Project_Funder",
@@ -84,7 +84,7 @@ def load_from_file(local_file):
                 project_types |= set([project_type.type_name])
 
         
-        curr_project = db.session.query(Project)\
+        current_project = db.session.query(Project)\
                 .filter(
                     and_(
                         Project.year==project.year, 
@@ -92,7 +92,7 @@ def load_from_file(local_file):
                     )
                 )
 
-        if not db.session.query(curr_project.exists()).scalar():
+        if not db.session.query(current_project.exists()).scalar():
             db.session.add(project)
             db.session.commit()
 
@@ -100,7 +100,7 @@ def load_from_file(local_file):
             db.session.refresh(project)
 
         else:
-            project = curr_project.one()
+            project = current_project.one()
 
         location.project_id = project.id 
 

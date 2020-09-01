@@ -15,6 +15,7 @@ psycopg2 = "*"
 flask-cors = "*"
 pytest = "*"
 aiohttp = "*"
+gunicorn = "~=20.0"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"

@@ -1,5 +1,19 @@
 from app import db
 from flask_restful import Resource, reqparse, marshal, fields
+from functools import wraps
+import sqlalchemy
+
+def validate_db(f):
+    @wraps(f)
+    def wrapper(*args, **kw):
+        try:
+            value = f(*args, **kw)
+            return value
+        except sqlalchemy.exc.ProgrammingError:
+            db.create_all()
+            value = f(*args, **kw)
+            return value 
+    return wrapper
 
 '''There are two base classes for resources. The first is BaseAPI, and has GET,
 PUT, AND DELETE HTTP methods attached to it. The second is BaseListAPI, which
