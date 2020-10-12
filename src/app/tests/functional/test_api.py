@@ -13,10 +13,19 @@ def test_get_locations_list(app):
     """
 
     # insert locations into the database
-    location_1 = Location(address='123 test street', city='Kansas City',
-        state='MO', zip_code=66213, location='POINT(-83.123456 39.123432)')
-    location_2 = Location(address='456 test way', city='Kansas City',
-        state='KS', zip_code=66210, location='POINT(-83.654321 39.654321)')
+    location_1 = Location(
+        id=99999,
+        address='123 test street', 
+        city='Kansas City',
+        state='MO', zip_code=66213, 
+        location='POINT(-83.123456 39.123432)')
+    location_2 = Location(
+        id=99998,
+        address='456 test way', 
+        city='Kansas City',
+        state='KS', 
+        zip_code=66210, 
+        location='POINT(-83.654321 39.654321)')
     db.session.add(location_1)
     db.session.add(location_2)
     db.session.commit()
@@ -41,7 +50,9 @@ def test_get_location_by_id(app):
     """
 
     # insert a location into the database
-    location = Location(address='123 test street', city='Kansas City',
+    location = Location(
+        id=9997,
+        address='123 test street', city='Kansas City',
         state='MO', zip_code=66213, location='POINT(-83.123456 39.123432)')
     db.session.add(location)
     db.session.commit()

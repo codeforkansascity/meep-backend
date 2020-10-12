@@ -9,8 +9,8 @@ services:
         volumes:
           - ./web_server/nginx.conf:/etc/nginx/nginx.conf
         links:
-          - api
-    api:
+          - backend
+    backend:
         build: ./src
 
         volumes:

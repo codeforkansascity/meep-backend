@@ -83,12 +83,14 @@ class Location(db.Model):
     project = db.relationship('Project', backref='locations')
 
     def set_xy(self, x, y):
-        self.location = f'POINT({x} {y})'
+        if x and y:
+            self.location = f'POINT({x} {y})'
+        else:
+            self.location = None
 
     def update_address(self, address):
-        session = Session()
         self.address = address
-        session.commit()
+        db.session.commit()
 
     def __repr__(self):
         return f'Location(address={self.address}, city={self.city}, '\

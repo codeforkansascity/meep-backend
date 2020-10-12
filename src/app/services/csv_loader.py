@@ -8,7 +8,7 @@ from sqlalchemy import and_
 column_names = [
     "Project_ID",
     "Project_Year",
-    "Project_Owner", # Organization
+    "Organization", # Organization
     "Project_Type",
     "Fleet_or_Station",
     "Project_Funder",
@@ -20,13 +20,7 @@ column_names = [
     "State",
     "Zip",
     "Latitude",
-    "Longitude",
-    "blank_1",
-    "blank_2",
-    "blank_3",
-    "blank_4",
-    "blank_5",
-    "blank_6"
+    "Longitude"
 ]
 
 CsvRow = namedtuple('CsvRow', column_names)
@@ -50,12 +44,12 @@ def load_from_file(local_file):
             address=row.Address,
             city=row.City,
             state=row.State,
-            zip_code=row.Zip
+            zip_code=row.Zip if row.Zip else None
         )
         location.set_xy(row.Longitude, row.Latitude)
 
         project = Project(
-            name=row.Project_Owner,
+            name=row.Organization,
             description=row.Project_Description,
             year=int(row.Project_Year),
             fleet_or_station=row.Fleet_or_Station,
@@ -64,7 +58,7 @@ def load_from_file(local_file):
             gge_reduced=float(row.GGE_Reduced.replace(',', ''))
         )
 
-        if row.Project_ID != 'TBD':
+        if row.Project_ID not in ['0', 0]:
             project.id = row.Project_ID
 
         if not row.Project_Type in project_types:
