@@ -6,7 +6,7 @@ from flask_restful import Api, Resource, fields
 from geoalchemy2 import functions
 from sqlalchemy import func
 
-from .base import BaseAPI, BaseListAPI
+from .base import BaseAPI, BaseListAPI, validate_db
 from ..models import db, Project, ProjectType, Location
 from ..services.location_marker import get_location_markers
 
@@ -31,6 +31,7 @@ class LocationAPI(BaseAPI):
         'location': fields.String
     }
 
+    @validate_db
     def get(self, id):
         location = self.model.query.get(id)
         coords = location.coords
@@ -52,6 +53,7 @@ api.add_resource(LocationAPI, '/locations/<int:id>', endpoint='location')
 class LocationListAPI(BaseListAPI):
     base = LocationAPI
 
+    @validate_db
     def get(self):
         locations = Location.query.all()
         data = []
@@ -77,6 +79,7 @@ api.add_resource(LocationListAPI, '/locations', '/locations/')
 
 class LocationProjectAPI(Resource):
     """Given a location, return the associated project"""
+    @validate_db
     def get(self, id):
         location = Location.query.get(id)
         return location.project.json
@@ -87,6 +90,7 @@ api.add_resource(LocationProjectAPI, '/locations/<int:id>/project', endpoint='lo
 class LocationMarkerAPI(BaseListAPI):
     base = LocationAPI()
 
+    @validate_db
     def get(self):
         markers = get_location_markers()
 

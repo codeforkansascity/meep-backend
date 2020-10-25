@@ -6,15 +6,6 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-flask = "*"
-flask-restful = "*"
-sqlalchemy = "*"
-geoalchemy2 = "*"
-flask-sqlalchemy = "*"
-psycopg2 = "*"
-flask-cors = "*"
-pytest = "*"
-aiohttp = "*"
 
 [requires]
 python_version = "3.7"

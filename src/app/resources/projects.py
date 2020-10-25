@@ -5,8 +5,8 @@ from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource, fields, reqparse
 
 from app import db
-from app.resources.base import BaseAPI, BaseListAPI
-from app.models import Project, ProjectType
+from app.resources.base import BaseAPI, BaseListAPI, validate_db
+from app.models import Project, ProjectType, Location
 
 
 api_projects_blueprint = Blueprint("api_projects", __name__)
@@ -67,6 +67,7 @@ api.add_resource(
 class ProjectTypeListProjectsAPI(Resource):
     """Return all projects with a given project type"""
 
+    @validate_db
     def get(self, id):
         project_type = ProjectType.query.get(id)
         projects = project_type.projects
@@ -83,6 +84,7 @@ api.add_resource(
 class ProjectLocationsAPI(Resource):
     """Return all locations associated with a given project"""
 
+    @validate_db
     def get(self, id):
         project = Project.query.get(id)
         return {"locations": [loc.json for loc in project.locations]}
@@ -95,7 +97,7 @@ api.add_resource(
 )
 
 
-class ProjectUploadAPI(Resource):
+class UploadAPI(Resource):
     def __init__(self):
         super().__init__()
         self.parser = reqparse.RequestParser()  # for input validation
@@ -137,7 +139,7 @@ class ProjectUploadAPI(Resource):
                 website_url=row["website_url"],
                 year=row["year"],
                 ghg_reduced=row["ghg_reduced"],
-                gge_reduced=row["gge_reduced"],
+                gge_reduced=row["gge_reduced"]
             )
             db.session.add(project)
         db.session.commit()
@@ -148,11 +150,13 @@ class ProjectUploadAPI(Resource):
 
 
 api.add_resource(
-    ProjectUploadAPI, "/projects/upload/csv", endpoint="project_uploads"
+    UploadAPI, "/upload", endpoint="project_uploads"
 )
 
 
 class ProjectDetailAPI(Resource):
+
+    @validate_db
     def get(self, id):
         project = Project.query.filter_by(id=id).first()
         return jsonify(dict(
@@ -176,6 +180,8 @@ api.add_resource(
 
 
 class ProjectSummaryAPI(Resource):
+
+    @validate_db
     def get(self, id):
         project = Project.query.filter_by(id=id).first()
         return jsonify(dict(

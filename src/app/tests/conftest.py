@@ -5,7 +5,7 @@ from ..models import Project, db, ProjectType, Location
 from db_operations import reset
 from ..services.geocoder.client import GoogleGeocodingClient
 from ..services.geocoder.api import GeocodingApi
-
+from ..services.csv_loader import load_from_file
 
 @pytest.fixture(scope='function')
 def new_project():
@@ -34,7 +34,7 @@ def new_projectType():
 @pytest.fixture(scope='function')
 def new_location():
     location = Location(
-        id=5,
+        id=5000,
         address="1 Infinite Loop",
         city="Cupertino",
         state="CA",

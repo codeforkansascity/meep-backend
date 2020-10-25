@@ -9,6 +9,8 @@ Pipfile.lock
 # C extensions
 *.so
 
+staging/data/
+
 # Distribution / packaging
 .Python
 build/

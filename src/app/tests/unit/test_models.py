@@ -37,7 +37,7 @@ def test_new_location(new_location):
     WHEN a new Location is created
     THEN check if the object is instantiated correctly
     """
-    assert new_location.id == 5
+    assert new_location.id == 5000
     assert new_location.address == "1 Infinite Loop"
     assert new_location.city == "Cupertino"
     assert new_location.state == "CA"
@@ -68,9 +68,9 @@ def test_insert_location(app, new_location):
     db.session.add(new_location)
     db.session.commit()
 
-    selected_location = Location.query.filter_by(id=5).first()
+    selected_location = Location.query.filter_by(id=5000).first()
     coords = selected_location.coords
-    assert new_location.id == 5
+    assert new_location.id == 5000
     assert new_location.address == "1 Infinite Loop"
     assert new_location.city == "Cupertino"
     assert new_location.state == "CA"
@@ -96,11 +96,11 @@ def test_update_location(app):
     WHEN an existing location is updated
     THEN check if the updated location is correctly returned from the database
     """
-    selected_location = Location.query.filter_by(id=5).first()
+    selected_location = Location.query.filter_by(id=5000).first()
     assert selected_location.state == "CA"
     selected_location.state = "CO"
     db.session.commit()
-    selected_location = Location.query.filter_by(id=5).first()
+    selected_location = Location.query.filter_by(id=5000).first()
     assert selected_location.state == "CO"
 
 
@@ -112,7 +112,7 @@ def test_get_location_coordinates(app):
     database and that an unspecifed location correctly correctly returns None
     for its coordinates
     """
-    selected_location = Location.query.filter_by(id=5).first()
+    selected_location = Location.query.filter_by(id=5000).first()
     coords = selected_location.coords
     assert coords.get("latitude") == 38.992762
     assert coords.get("longitude") == -94.668954
