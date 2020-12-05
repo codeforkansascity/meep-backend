@@ -171,18 +171,18 @@ def seed_db_rand(config='dev', count=5):
             )
             # Select a random point centered around KC (39.0997° N, 94.5786° W)
             geolocator = Nominatim(user_agent='meep')
-            # Ensure location actually has the keys we need
-            while True:
-                randLat = 39.0997 + uniform(-5, 5)
-                randLng = -94.5786 + uniform(-5, 5)
-                randPoint = Point(latitude=randLat, longitude=randLng)
-                randLocation = geolocator.reverse(randPoint)
-                if all(key in randLocation.raw['address'] for key in ('house_number', 'road', 'city', 'state', 'postcode')):
-                    break
 
             # construct location(s) (single for building, possibly more for transportation)
             locationCount = 1 if ptype == building else randrange(1, 5)
             for _ in range(1, locationCount):
+                # Ensure location actually has the keys we need
+                while True:
+                    randLat = 39.0997 + uniform(-5, 5)
+                    randLng = -94.5786 + uniform(-5, 5)
+                    randPoint = Point(latitude=randLat, longitude=randLng)
+                    randLocation = geolocator.reverse(randPoint)
+                    if all(key in randLocation.raw['address'] for key in ('house_number', 'road', 'city', 'state', 'postcode')):
+                        break
                 randProject.locations.append(
                     Location(
                         address=' '.join(
@@ -190,7 +190,7 @@ def seed_db_rand(config='dev', count=5):
                         city=randLocation.raw['address']['city'],
                         state=states[randLocation.raw['address']
                                      ['state'].lower()],
-                        zip_code=randLocation.raw['address']['postcode'],
+                        zip_code=randLocation.raw['address']['postcode'][:6],
                         location=f'POINT({randLat} {randLng})'
                     )
                 )
