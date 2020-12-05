@@ -1,8 +1,10 @@
-from flask import Flask, jsonify
 from datetime import datetime
+
+from flask import Flask, jsonify
+from flask_cors import CORS
+
 # from .config import config
 from app.models import db
-from flask_cors import CORS
 
 def create_app(config_name='dev'):
     """App factory method for initializing flask extensions and registering

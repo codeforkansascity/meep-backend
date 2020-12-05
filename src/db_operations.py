@@ -15,15 +15,26 @@ python db_operations.py reset test
 Currently only dev and test configs work
 '''
 import sys
+import urllib
+from random import choice, random, randrange, uniform
 
-from app.models import *
+from geopy import Point
+from geopy.geocoders import Nominatim
+
 from app import create_app
+from app.constants import states
+from app.models import *
 
 
 def reset(config='dev'):
     drop_tables(config)
     create_tables(config)
     seed_db(config)
+
+
+def clear(config='dev'):
+    drop_tables(config)
+    create_tables(config)
 
 
 def drop_tables(config='dev'):
@@ -123,9 +134,75 @@ def seed_db(config='dev'):
         db.session.commit()
 
 
+# Generate a seed database from random data rather than a static set like above.
+def seed_db_rand(config='dev', count=5):
+    app = create_app(config)
+    with app.app_context():
+
+        # make word list for generating project names
+        word_site = "https://www.mit.edu/~ecprice/wordlist.10000"
+        response = urllib.request.urlopen(word_site)
+        txt = response.read()
+        WORDS = txt.splitlines()
+
+        # project types
+        building = ProjectType(type_name='Building')
+        transportation = ProjectType(type_name='Transportation')
+        for pt in building, transportation:
+            db.session.add(pt)
+
+        for p in range(count):
+            # Generate Project Name
+            wordList = []
+            for _ in range(randrange(1, 4)):
+                wordList.append(choice(WORDS).decode('utf-8'))
+            projectName = ' '.join(wordList).capitalize()  # construct name
+            # pick project type
+            ptype = choice([building, transportation])
+
+            # construct project
+            randProject = Project(
+                id=p,
+                name=projectName,
+                year=randrange(2010, 2020),
+                gge_reduced=uniform(500, 500000),
+                ghg_reduced=uniform(1, 1000),
+                type=ptype
+            )
+            # Select a random point centered around KC (39.0997° N, 94.5786° W)
+            geolocator = Nominatim(user_agent='meep')
+            # Ensure location actually has the keys we need
+            while True:
+                randLat = 39.0997 + uniform(-5, 5)
+                randLng = -94.5786 + uniform(-5, 5)
+                randPoint = Point(latitude=randLat, longitude=randLng)
+                randLocation = geolocator.reverse(randPoint)
+                if all(key in randLocation.raw['address'] for key in ('house_number', 'road', 'city', 'state', 'postcode')):
+                    break
+
+            # construct location(s) (single for building, possibly more for transportation)
+            locationCount = 1 if ptype == building else randrange(1, 5)
+            for _ in range(1, locationCount):
+                randProject.locations.append(
+                    Location(
+                        address=' '.join(
+                            (randLocation.raw['address']['house_number'], randLocation.raw['address']['road'])),
+                        city=randLocation.raw['address']['city'],
+                        state=states[randLocation.raw['address']
+                                     ['state'].lower()],
+                        zip_code=randLocation.raw['address']['postcode'],
+                        location=f'POINT({randLat} {randLng})'
+                    )
+                )
+
+            db.session.add(randProject)
+        db.session.commit()
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1]
     config = sys.argv[2]
+    project_count = sys.argv[3] if len(sys.argv) > 3 else 5
     if config != 'dev' and config != 'test':
         print("Unknown config: Enter dev or test as 2nd argument")
     elif cmd == 'drop':
@@ -134,8 +211,12 @@ if __name__ == '__main__':
         create_tables(config)
     elif cmd == 'seed':
         seed_db(config)
+    elif cmd == 'seed_rand':
+        seed_db_rand(config, int(project_count))
     elif cmd == 'reset':
         reset(config)
+    elif cmd == 'clear':
+        clear(config)
     else:
         print('Unknown command. Use drop, create, or seed for 1st argument \
                and either dev or test for 2nd argument')
