@@ -16,8 +16,8 @@ Currently only dev and test configs work
 '''
 import sys
 import urllib
-from time import time, sleep
 from random import choice, random, randrange, uniform
+from time import sleep, time
 
 from geopy import Point
 from geopy.geocoders import Nominatim
@@ -170,7 +170,6 @@ def seed_db_rand(config='dev', count=5):
                 ghg_reduced=uniform(1, 1000),
                 type=ptype
             )
-            # Select a random point centered around KC (39.0997° N, 94.5786° W)
             geolocator = Nominatim(user_agent='meep')
 
             # construct location(s) (single for building, possibly more for transportation)
@@ -178,6 +177,7 @@ def seed_db_rand(config='dev', count=5):
             for _ in range(1, locationCount):
                 # Ensure location actually has the keys we need
                 while True:
+                    # Select a random point centered around KC (39.0997° N, 94.5786° W)
                     randLat = 39.0997 + uniform(-5, 5)
                     randLng = -94.5786 + uniform(-5, 5)
                     randPoint = Point(latitude=randLat, longitude=randLng)
@@ -189,7 +189,7 @@ def seed_db_rand(config='dev', count=5):
                     # Wait for 1 second to comply with nominatim api usage limits
                     t_e = time()
                     if t_e - t_s < 1:
-                        sleep(1-(t_e - t_s)
+                        sleep(1-(t_e - t_s))
 
                 randProject.locations.append(
                     Location(
