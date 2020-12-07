@@ -16,6 +16,7 @@ Currently only dev and test configs work
 '''
 import sys
 import urllib
+from time import time, sleep
 from random import choice, random, randrange, uniform
 
 from geopy import Point
@@ -180,9 +181,16 @@ def seed_db_rand(config='dev', count=5):
                     randLat = 39.0997 + uniform(-5, 5)
                     randLng = -94.5786 + uniform(-5, 5)
                     randPoint = Point(latitude=randLat, longitude=randLng)
+                    t_s = time()
                     randLocation = geolocator.reverse(randPoint)
                     if all(key in randLocation.raw['address'] for key in ('house_number', 'road', 'city', 'state', 'postcode')):
                         break
+
+                    # Wait for 1 second to comply with nominatim api usage limits
+                    t_e = time()
+                    if t_e - t_s < 1:
+                        sleep(1-(t_e - t_s)
+
                 randProject.locations.append(
                     Location(
                         address=' '.join(
