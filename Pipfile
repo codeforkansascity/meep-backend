@@ -8,6 +8,7 @@ pylint = "*"
 random-word = "*"
 geopy = "*"
 autopep8 = "*"
+essential_generators = "*"
 
 [packages]
 aiohttp = "*"
