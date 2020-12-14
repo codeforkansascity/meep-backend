@@ -4,8 +4,24 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "*"
+random-word = "*"
+geopy = "*"
+autopep8 = "*"
+essential_generators = "*"
 
 [packages]
+aiohttp = "*"
+flask = "*"
+flask-cors = "*"
+flask-restful = "*"
+flask-sqlalchemy = "*"
+geoalchemy2 = "*"
+gunicorn = "~=20.0"
+psycopg2 = { version ="*", sys_platform = "!= 'darwin'" }
+psycopg2-binary = { version ="*", sys_platform = "== 'darwin'" }
+pytest = "*"
+sqlalchemy = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"

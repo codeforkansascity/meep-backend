@@ -99,6 +99,32 @@ chmod +x scripts/local/run_test_server.sh
 ./scripts/local/run_test_server.sh
 ```
 
+#### Run Test Server with Randomized Data
+
+You can also run the server with randomly generated data. To do this ensure the development packages are also installed:
+
+```sh
+pipenv install --dev
+```
+
+Export the Google Maps API key to your shell environment. This is the same key used in the frontend, ask a maintainer if you do not have it.
+
+```sh
+export GOOGLE_API_KEY='<key>'
+```
+
+Then run the test server with the `rand` argument and how many projects you want to generate. If you do not provide a number, it will generate the default of 5 projects.
+
+```sh
+./scripts/local/run_test_server.sh rand <number>
+```
+
+Generating projects can take several minutes. If you wish to re-use the last set of projects instead of waiting to regenerate more, you can run the script with the `last` argument:
+
+```sh
+./scripts/local/run_test_server.sh last
+```
+
 ### Test the server
 
 If everything went correctly, in the terminal you should see:

@@ -15,15 +15,31 @@ python db_operations.py reset test
 Currently only dev and test configs work
 '''
 import sys
+import urllib
+from os import environ
+from random import choice, random, randrange, uniform
+from time import sleep, time
 
-from app.models import *
+from string import punctuation
+
+import essential_generators
+from geopy import Point
+from geopy.geocoders import GoogleV3
+
 from app import create_app
+from app.constants import states
+from app.models import *
 
 
 def reset(config='dev'):
     drop_tables(config)
     create_tables(config)
     seed_db(config)
+
+
+def clear(config='dev'):
+    drop_tables(config)
+    create_tables(config)
 
 
 def drop_tables(config='dev'):
@@ -123,9 +139,81 @@ def seed_db(config='dev'):
         db.session.commit()
 
 
+# Generate a seed database from random data rather than a static set like above.
+def seed_db_rand(config='dev', count=5):
+    app = create_app(config)
+    with app.app_context():
+        gen = essential_generators.DocumentGenerator()
+        # project types
+        building = ProjectType(type_name='Building')
+        transportation = ProjectType(type_name='Transportation')
+        for pt in building, transportation:
+            db.session.add(pt)
+
+        for p in range(count):
+            # Generate Project Name
+            projectName = gen.gen_sentence(
+                min_words=1, max_words=3).capitalize().translate(str.maketrans('', '', punctuation))
+            # pick project type
+            ptype = choice([building, transportation])
+
+            # construct project
+            randProject = Project(
+                id=p,
+                name=projectName,
+                description=gen.gen_sentence(),
+                photo_url=gen.url(),
+                website_url=gen.url(),
+                year=randrange(2010, 2020),
+                gge_reduced=uniform(500, 500000),
+                ghg_reduced=uniform(1, 1000),
+                type=ptype
+            )
+            geolocator = GoogleV3(api_key=environ.get("GOOGLE_API_KEY"))
+
+            # construct location(s) (single for building, possibly more for transportation)
+            locationCount = 1 if ptype == building else randrange(1, 5)
+            for _ in range(0, locationCount):
+                while True:
+                    # Select a random point centered around KC (39.0997° N, 94.5786° W)
+                    randLat = 39.0997 + uniform(-2, 2)
+                    randLng = -94.5786 + uniform(-2, 2)
+                    randPoint = Point(latitude=randLat, longitude=randLng)
+                    t_s = time()
+                    randLocation = geolocator.reverse(randPoint)
+                    # Ensure location actually has the keys we need.
+                    # We can assume it does if street number is present.
+                    if randLocation.raw['address_components'][0]['types'][0] == 'street_number':
+                        break
+
+                    # Google allows up to 50 requests per second. Wait if we're doing more.
+                    t_e = time()
+                    if t_e - t_s < 0.02:
+                        sleep(1-(t_e - t_s))
+                randAddr = randLocation.raw['formatted_address']
+                # Split up result into array delimited by commas.
+                # 0 and 1 should always be Address and City, trimming to remove the whitespace after comma.
+                # Grab the space-delimited State and ZIP from 2 (discard first entry as it's just the space)
+                addrList = list(map(str.strip, randAddr.split(
+                    ',')[:2])) + randAddr.split(',')[2].split(' ')[1:]
+                randProject.locations.append(
+                    Location(
+                        address=addrList[0],
+                        city=addrList[1],
+                        state=addrList[2],
+                        zip_code=addrList[3],
+                        location=f'POINT({randLat} {randLng})'
+                    )
+                )
+
+            db.session.add(randProject)
+        db.session.commit()
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1]
     config = sys.argv[2]
+    project_count = sys.argv[3] if len(sys.argv) > 3 else 5
     if config != 'dev' and config != 'test':
         print("Unknown config: Enter dev or test as 2nd argument")
     elif cmd == 'drop':
@@ -134,8 +222,12 @@ if __name__ == '__main__':
         create_tables(config)
     elif cmd == 'seed':
         seed_db(config)
+    elif cmd == 'seed_rand':
+        seed_db_rand(config, int(project_count))
     elif cmd == 'reset':
         reset(config)
+    elif cmd == 'clear':
+        clear(config)
     else:
         print('Unknown command. Use drop, create, or seed for 1st argument \
                and either dev or test for 2nd argument')
