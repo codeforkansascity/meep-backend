@@ -176,8 +176,8 @@ def seed_db_rand(config='dev', count=5):
             for _ in range(0, locationCount):
                 while True:
                     # Select a random point centered around KC (39.0997° N, 94.5786° W)
-                    randLat = 39.0997 + uniform(-2, 2)
-                    randLng = -94.5786 + uniform(-2, 2)
+                    randLat = 39.0997 + uniform(-0.5, 0.5)
+                    randLng = -94.5786 + uniform(-0.5, 0.5)
                     randPoint = Point(latitude=randLat, longitude=randLng)
                     t_s = time()
                     randLocation = geolocator.reverse(randPoint)
