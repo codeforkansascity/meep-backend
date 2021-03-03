@@ -5,6 +5,7 @@ with
         select
             projects.id,
             name,
+            year as project_year,
             gge_reduced,
             ghg_reduced,
             type_name as project_type
@@ -19,6 +20,7 @@ with
     (
         select
             name,
+            sum(project_year) as project_year,
             sum(gge_reduced) as gge_reduced,
             sum(ghg_reduced) as ghg_reduced,
             array_agg(project_type) as project_types,
@@ -33,7 +35,8 @@ with
     )
 select
     ST_AsGeoJSON(points)::json -> 'coordinates' as points,
-    name as project_name, 
+    name as project_name,
+    project_year, 
     ST_AsGeoJSON(ST_Centroid(points))::json -> 'coordinates' as center,
     project_ids, 
     project_types, 

@@ -24,6 +24,7 @@ class LatLng:
 class LocationMarker:
     points: list = field()
     project_name: str = field()
+    year: int = field()
     center: list = field()
     project_ids: list = field()
     project_types: list = field()
@@ -35,6 +36,7 @@ class LocationMarker:
         return {
             'points': [LatLng(*pt).json for pt in self.points],
             'project_name': self.project_name,
+            'year': self.year,
             'center': LatLng(*self.center).json,
             'project_ids': self.project_ids,
             'project_types': self.project_types,
