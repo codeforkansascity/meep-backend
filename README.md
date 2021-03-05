@@ -8,7 +8,7 @@ For the time being, the following instructions are for how to set up the Meep Ba
 
 - PostgreSQL 9+
 - PostgreSQL extension PostGIS
-- Python 3.7+ ([`requirements.txt`](./api/src/requirements.txt))
+- Python 3.8+ (we recommend [pyenv](https://github.com/pyenv/pyenv) for managing versions)
 
 ## Install
 
@@ -34,31 +34,49 @@ brew install pipenv
 git clone https://github.com/codeforkansascity/meep-backend.git
 ```
 
-And the `cd` to `./meep-backend`.
+And the `cd` to `./meep-backend` .
 
 ### Install Python dependencies
 
 ```sh
-pipenv install
+pipenv install --dev
 ```
 
 ### Make sure PostgreSQL/PostGIS is setup
 
-The test database has been switched from sqlite3 to PostgreSQL with the PostGIS extension. See [https://postgis.net/install/](https://postgis.net/install/) for how to set up the db for either Linux or macOS. If you aren't familiar with PostgreSQL, it is recommended you use 
+The test database has been switched from sqlite3 to PostgreSQL with the PostGIS extension. See [https://postgis.net/install/](https://postgis.net/install/) for how to set up the db for either Linux or macOS. If you aren't familiar with PostgreSQL, it is recommended to use [PgAdmin](https://www.pgadmin.org/).
+
 
 > Note: To access the db using SQLAlchemy, you may have to change your database authentication with the `pd_hba.conf` file. How this should happen depends on your OS, but in general see [https://www.postgresql.org/docs/9.6/auth-pg-hba-conf.html](https://www.postgresql.org/docs/9.6/auth-pg-hba-conf.html).
 
 > Note: Remember to start the PostgreSQL server if you haven't set it up to start at boot.
 
-#### Steps
+#### PgAdmin Steps
 
 - When you install PostgreSQL, make sure to install the PostGIS extension
 - Create a password for the user `postgres`, e.g. `1234`
-- Create a new database called `meep-test`
+- Create a new database called `meep-test` and set the owner to `postgres`
+- Connect to `meep-test`
+- Run the CREATE EXTENSION command for postgis:
 
-The default config file is `api/instance/env.test.cfg`:
+```sql
+CREATE EXTENSION postgis;
+```
 
-```python
+#### psql CLI Steps
+
+``` sql
+pgsql postgres
+CREATE USER "postgres" WITH PASSWORD '1234';
+CREATE DATABASE "meep-test" WITH OWNER "postgres";
+\connect meep-test
+CREATE EXTENSION postgis;
+\q
+```
+
+The default config file is `src/instance/env.test.cfg` :
+
+``` python
 PG_USER = 'postgres'
 PG_PASS = '1234'
 PG_HOSTNAME = '127.0.0.1'
@@ -68,6 +86,8 @@ TESTING = True
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 DEBUG = True
 ```
+
+If you chose different configurations than listed in the previous step, update this to match. Otherwise, this can be left as-is.
 
 ### Run the test script
 
@@ -85,7 +105,7 @@ python api/db_operations.py reset test
 flask run
 ```
 
-If first activates the `pipenv` environment, uses `api/instance/env.test.cfg` as the Flask configuration file, resets the PostgreSQL/PostGIS database using `python api/db_operations.py reset test` (if you want to run this manually, do `pipenv api/db_operations.py reset test`). Finally, it starts the backend API as a Flask app.
+If first activates the `pipenv` environment, uses `src/instance/env.test.cfg` as the Flask configuration file, resets the PostgreSQL/PostGIS database using `python src/db_operations.py reset test` (if you want to run this manually, do `pipenv src/db_operations.py reset test` ). Finally, it starts the backend API as a Flask app.
 
 #### Make sure the test script is executable
 
@@ -101,25 +121,20 @@ chmod +x scripts/local/run_test_server.sh
 
 #### Run Test Server with Randomized Data
 
-You can also run the server with randomly generated data. To do this ensure the development packages are also installed:
-
-```sh
-pipenv install --dev
-```
-
+You can also run the server with randomly generated data.  
 Export the Google Maps API key to your shell environment. This is the same key used in the frontend, ask a maintainer if you do not have it.
 
 ```sh
 export GOOGLE_API_KEY='<key>'
 ```
 
-Then run the test server with the `rand` argument and how many projects you want to generate. If you do not provide a number, it will generate the default of 5 projects.
+Then run the test server with the `rand` argument and optionally how many projects you want to generate. If you do not provide a number, it will generate the default of 5 projects.
 
 ```sh
 ./scripts/local/run_test_server.sh rand <number>
 ```
 
-Generating projects can take several minutes. If you wish to re-use the last set of projects instead of waiting to regenerate more, you can run the script with the `last` argument:
+Generating projects can take a few minutes with larger numbers. If you wish to re-use the last set of projects instead of waiting to regenerate more, you can run the script with the `last` argument:
 
 ```sh
 ./scripts/local/run_test_server.sh last
