@@ -18,7 +18,7 @@ def create_app(config_name='dev'):
     # app.config.from_object(config[config_name])
     app.config.from_envvar('APP_SETTINGS')
     # get db string
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://{}:{}@{}/{}'.format(
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://{}:{}@{}/{}'.format(
         *[app.config[o] for o in ('PG_USER','PG_PASS', 'PG_HOSTNAME', 'PG_DBNAME')]
     )
     with app.app_context():
